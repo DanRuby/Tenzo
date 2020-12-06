@@ -1,0 +1,10 @@
+﻿<Window x:Class="TMSingleMeasurement.View.Markers"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:markers="clr-namespace:tEngine.Markers;assembly=tEngine"
+        Closing="Window_OnClosing"
+        Title="Markers" Height="300" Width="300">
+    <Grid>
+        <markers:UIMarkers x:Name="MarkersArea"/>
+    </Grid>
+</Window>

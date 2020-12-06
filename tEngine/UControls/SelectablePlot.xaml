@@ -1,0 +1,50 @@
+﻿<UserControl x:Class="tEngine.UControls.SelectablePlot"
+             xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+             xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             xmlns:oxy="http://oxyplot.org/wpf"
+             xmlns:uControls="clr-namespace:tEngine.UControls"
+             Loaded="SelectablePlot_OnLoaded"
+             SizeChanged="SelectablePlot_OnSizeChanged"
+             x:Name="root"
+             mc:Ignorable="d" 
+             d:DesignHeight="300" d:DesignWidth="300">
+    <Grid>
+        <Grid.Resources>
+        </Grid.Resources>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="2">
+            <StackPanel>
+                <uControls:RangeSlider x:Name="Slider"
+                    Minimum="0"
+                    Maximum="{Binding ElementName=root, Path=Maximum, Mode=OneWay}"
+                    LowerValue="{Binding ElementName=root, Path=BeginPoint, Mode=TwoWay}"
+                    UpperValue="{Binding ElementName=root, Path=EndPoint, Mode=TwoWay}"/>
+                <!--<TextBlock Text="{Binding ElementName=root, Path=Maximum, Mode=OneWay}" />
+                <TextBlock Text="{Binding ElementName=root, Path=BeginPoint, Mode=OneWay}" />
+                <TextBlock Text="{Binding ElementName=root, Path=EndPoint, Mode=OneWay}" />-->
+            </StackPanel>
+        </Grid>
+        <oxy:PlotView Grid.Row="0" x:Name="constPlot">
+            <oxy:PlotView.Axes>
+                <oxy:LinearAxis Position="Left" IsZoomEnabled="False" IsPanEnabled="False" IsAxisVisible="False"/>
+                <oxy:LinearAxis Position="Bottom" IsZoomEnabled="False" IsPanEnabled="False" IsAxisVisible="False"/>
+            </oxy:PlotView.Axes>
+            <oxy:LineSeries ItemsSource="{Binding ElementName=root, Path=LeftHandConst}" StrokeThickness="3" />
+            <oxy:LineSeries ItemsSource="{Binding ElementName=root, Path=RightHandConst}" StrokeThickness="3" />
+        </oxy:PlotView>
+        <oxy:PlotView Grid.Row="1" x:Name="tremorPlot">
+            <oxy:PlotView.Axes>
+                <oxy:LinearAxis Position="Left" IsZoomEnabled="False" IsPanEnabled="False" IsAxisVisible="False"/>
+                <oxy:LinearAxis Position="Bottom" IsZoomEnabled="False" IsPanEnabled="False" IsAxisVisible="False"/>
+            </oxy:PlotView.Axes>
+            <oxy:LineSeries ItemsSource="{Binding ElementName=root, Path=LeftHandTremor}" StrokeThickness="3" />
+            <oxy:LineSeries ItemsSource="{Binding ElementName=root, Path=RightHandTremor}" StrokeThickness="3" />
+        </oxy:PlotView>
+    </Grid>
+</UserControl>

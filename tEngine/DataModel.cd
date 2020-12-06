@@ -1,0 +1,268 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+  <Class Name="tEngine.DataModel.TData">
+    <Position X="6.25" Y="8.5" Width="2.25" />
+    <Members>
+      <Method Name="AddHands" Hidden="true" />
+      <Method Name="AddTaskFinal" Hidden="true" />
+      <Method Name="AddTaskQueue" Hidden="true" />
+      <Method Name="Async_BaseAnalys" Hidden="true" />
+      <Method Name="Async_SpectrumAnalys" Hidden="true" />
+      <Method Name="BaseAnalys" Hidden="true" />
+      <Method Name="CancelCalc" Hidden="true" />
+      <Method Name="Clear" Hidden="true" />
+      <Method Name="ClearData" Hidden="true" />
+      <Method Name="DataLength" Hidden="true" />
+      <Method Name="GetConst" Hidden="true" />
+      <Method Name="GetCorrelation" Hidden="true" />
+      <Method Name="GetPartOfCollection" Hidden="true" />
+      <Method Name="GetSpectrum" Hidden="true" />
+      <Method Name="GetSpectrumByHz" Hidden="true" />
+      <Method Name="GetTremor" Hidden="true" />
+      <Method Name="GetTremorAmplitude" Hidden="true" />
+      <Method Name="GetTremorPercent" Hidden="true" />
+      <Field Name="INDEX_CTS" Hidden="true" />
+      <Field Name="INDEX_ID" Hidden="true" />
+      <Field Name="INDEX_TASK" Hidden="true" />
+      <Method Name="LoadFromArray" Hidden="true" />
+      <Field Name="mCurrentPack" Hidden="true" />
+      <Field Name="mHandsData" Hidden="true" />
+      <Field Name="mLock" Hidden="true" />
+      <Field Name="mMutex" Hidden="true" />
+      <Field Name="mNowTaskCount" Hidden="true" />
+      <Field Name="mTime" Hidden="true" />
+      <Method Name="Param1" Hidden="true" />
+      <Method Name="Param2" Hidden="true" />
+      <Method Name="RemoveTaskQueue" Hidden="true" />
+      <Method Name="SpectrumAnalys" Hidden="true" />
+      <Method Name="StartCalc" Hidden="true" />
+      <Field Name="TaskPoolQueue" Hidden="true" />
+      <Method Name="TData" Hidden="true" />
+      <Method Name="ToByteArray" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <NestedTypes>
+      <Enum Name="tEngine.DataModel.TData.DataMode" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>DataModel\TData.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Enum>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>gkAAACoAACAAcAAyEKBCQAQQiAAQDAkBCKGAADJBIQE=</HashCode>
+      <FileName>DataModel\TData.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Left" />
+      <Property Name="Right" />
+    </ShowAsAssociation>
+    <ShowAsCollectionAssociation>
+      <Field Name="mHands" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="tEngine.DataModel.Hand">
+    <Position X="6.5" Y="12" Width="2" />
+    <Members>
+      <Field Name="MaxLength" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Const" Type="System.Int16" FixedFromPoint="true">
+      <Path>
+        <Point X="8.5" Y="13.125" />
+        <Point X="10.25" Y="13.125" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.183" Y="0.018" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Tremor" Type="System.Int16">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.152" Y="0.05" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAUAAARIAgAAAAAAAAIAIBAAAQAABBAAA=</HashCode>
+      <FileName>DataModel\Hand.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Const" />
+      <Property Name="Tremor" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="tEngine.TMeter.DataModel.User">
+    <Position X="11.5" Y="5.5" Width="2.5" />
+    <Members>
+      <Method Name="AddMsm" Hidden="true" />
+      <Property Name="BirthDateString" Hidden="true" />
+      <Method Name="DefaultPath" Hidden="true" />
+      <Field Name="FOLDER_KEY" Hidden="true" />
+      <Method Name="GetDefaultFiles" Hidden="true" />
+      <Method Name="GetMsm" Hidden="true" />
+      <Method Name="GetMsmCount" Hidden="true" />
+      <Method Name="GetMsms" Hidden="true" />
+      <Method Name="GetTestUser" Hidden="true" />
+      <Property Name="IsNotSaveChanges" Hidden="true" />
+      <Method Name="LoadFromArray" Hidden="true" />
+      <Field Name="mMsms" Hidden="true" />
+      <Method Name="Open" Hidden="true" />
+      <Method Name="RemoveMsm" Hidden="true" />
+      <Method Name="Save" Hidden="true" />
+      <Method Name="SaveDefaultPath" Hidden="true" />
+      <Method Name="ToByteArray" Hidden="true" />
+      <Method Name="ToString" Hidden="true" />
+      <Method Name="User" Hidden="true" />
+      <Method Name="UserLong" Hidden="true" />
+      <Method Name="UserShort" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Msms" Type="tEngine.TMeter.DataModel.Msm">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.212" Y="-0.256" Height="0.182" Width="2.434" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>CkAAAIAEAAABoBAEBIAAAAQMACQAAAAhChBCCABAgAA=</HashCode>
+      <FileName>TMeter\DataModel\User.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Msms" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Class Name="tEngine.TMeter.DataModel.Msm">
+    <Position X="6.25" Y="5.5" Width="2.5" />
+    <Members>
+      <Method Name="AddData" Hidden="true" />
+      <Method Name="Clear" Hidden="true" />
+      <Method Name="DataLength" Hidden="true" />
+      <Method Name="GetOwner" Hidden="true" />
+      <Method Name="GetTestMsm" Hidden="true" />
+      <Method Name="LoadFromArray" Hidden="true" />
+      <Field Name="mData" Hidden="true" />
+      <Method Name="Msm" Hidden="true" />
+      <Method Name="ToByteArray" Hidden="true" />
+      <Method Name="UserAssociated" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+      <Compartment Name="Fields" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Data" Type="tEngine.DataModel.TData" ManuallyRouted="true" FixedFromPoint="true" FixedToPoint="true">
+      <Path>
+        <Point X="8.75" Y="6.998" />
+        <Point X="9.125" Y="6.998" />
+        <Point X="9.125" Y="8.125" />
+        <Point X="5.875" Y="8.125" />
+        <Point X="5.875" Y="9.563" />
+        <Point X="6.25" Y="9.563" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="-1.372" Y="1.563" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Owner" Type="tEngine.TMeter.DataModel.User">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.165" Y="-0.274" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AACAAACFAIAAgEAAEMACAAAAAAEAABABAAACAABAEAA=</HashCode>
+      <FileName>TMeter\DataModel\Msm.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Data" />
+      <Property Name="Owner" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="tEngine.DataModel.HAND_DATA">
+    <Position X="9.25" Y="8.5" Width="1.5" />
+    <Members>
+      <Method Name="Clear" Hidden="true" />
+      <Method Name="HAND_DATA" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Constant" Type="tEngine.DataModel.STDATA" FixedToPoint="true">
+      <Path>
+        <Point X="10.75" Y="9.312" />
+        <Point X="12" Y="9.312" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.265" Y="0.048" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Correlation" Type="tEngine.DataModel.STDATA">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.138" Y="0.075" Height="0.182" Width="0.92" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Spectrum" Type="tEngine.DataModel.STDATA">
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.027" Y="0.042" Height="0.182" Width="1.051" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <AssociationLine Name="Tremor" Type="tEngine.DataModel.STDATA" FixedFromPoint="true">
+      <Path>
+        <Point X="10.75" Y="9.625" />
+        <Point X="12" Y="9.625" />
+      </Path>
+      <MemberNameLabel ManuallyPlaced="true" ManuallySized="true">
+        <Position X="0.146" Y="0.025" Height="0.182" Width="0.905" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAEAAAAAEAAAAABAAAAAACAAAEgAAAAAAAJAABA=</HashCode>
+      <FileName>DataModel\TData.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Constant" />
+      <Property Name="Correlation" />
+      <Property Name="Spectrum" />
+      <Property Name="Tremor" />
+    </ShowAsAssociation>
+  </Class>
+  <Class Name="tEngine.DataModel.STDATA">
+    <Position X="12" Y="8.75" Width="2" />
+    <Members>
+      <Method Name="Clear" Hidden="true" />
+      <Property Name="IsData" Hidden="true" />
+      <Field Name="mData" Hidden="true" />
+      <Method Name="STDATA" Hidden="true" />
+    </Members>
+    <Compartments>
+      <Compartment Name="Fields" Collapsed="true" />
+      <Compartment Name="Methods" Collapsed="true" />
+    </Compartments>
+    <AssociationLine Name="Data" Type="OxyPlot.DataPoint">
+      <MemberNameLabel ManuallyPlaced="true">
+        <Position X="0.143" Y="0.256" />
+      </MemberNameLabel>
+    </AssociationLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAABAAAAAAEAAAAAQAAAAAABAEAAIAAABAAAA=</HashCode>
+      <FileName>DataModel\TData.cs</FileName>
+    </TypeIdentifier>
+    <ShowAsCollectionAssociation>
+      <Property Name="Data" />
+    </ShowAsCollectionAssociation>
+  </Class>
+  <Struct Name="System.Int16" Collapsed="true">
+    <Position X="10.25" Y="12.75" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Struct>
+  <Struct Name="OxyPlot.DataPoint" Collapsed="true">
+    <Position X="12" Y="11.5" Width="1.5" />
+    <TypeIdentifier />
+    <Lollipop Position="0.2" Collapsed="true" />
+  </Struct>
+  <Font Name="Segoe UI" Size="9" />
+</ClassDiagram>

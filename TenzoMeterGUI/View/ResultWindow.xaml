@@ -1,0 +1,314 @@
+﻿<Window x:Class="TenzoMeterGUI.View.ResultWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:engine="clr-namespace:tEngine.DataModel;assembly=tEngine"
+
+        xmlns:conv="clr-namespace:tEngine.MVVM.Converters;assembly=tEngine"
+
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:view="clr-namespace:TenzoMeterGUI.View"
+        xmlns:uc="clr-namespace:tEngine.UControls;assembly=tEngine"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:dataModel="clr-namespace:tEngine.TMeter.DataModel;assembly=tEngine"
+        xmlns:converters="clr-namespace:TenzoMeterGUI.Converters"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type={x:Type view:ResultWindowVM}}"
+        Closing="Window_OnClosing"
+        x:Name="root"
+        Title="Графическая сводка результатов" Height="391.25" MinWidth="500" Width="500">
+    <Window.Resources>
+        <Style x:Key="SimpleText" TargetType="{x:Type TextBox}">
+            <Setter Property="Width" Value="60" />
+            <Setter Property="Height" Value="Auto" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <EventSetter Event="KeyDown" Handler="SimpleTextBox_OnKeyDown" />
+        </Style>
+        <Style x:Key="ColorSelect" TargetType="{x:Type Button}">
+            <Setter Property="Cursor" Value="Hand" />
+            <Setter Property="Width" Value="50" />
+            <Setter Property="Height" Value="Auto" />
+            <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+            <EventSetter Event="Click" Handler="ColorSelect_OnClick" />
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border BorderThickness="0,0,3,1" BorderBrush="#F0F0F0">
+                            <Border BorderThickness="0,0,1,1" BorderBrush="White">
+                                <Border BorderThickness="1,1,0,0" BorderBrush="#A0A0A0">
+
+                                    <Border BorderThickness="0,0,1,1" BorderBrush="#E3E3E3">
+                                        <Border BorderThickness="1,1,0,0" BorderBrush="#696969">
+                                            <Grid Background="{TemplateBinding Background}" />
+                                        </Border>
+                                    </Border>
+                                </Border>
+                            </Border>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+        <Border x:Key="plotEx" x:Shared="False" BorderThickness="4" CornerRadius="5" BorderBrush="Transparent"
+                Background="White">
+            <uc:PlotViewEx ShowPlot="False" ShowMenu="Collapsed"
+                           Loaded="OxyListItem_OnLoaded"
+                           Unloaded="OxyListItem_OnUnloaded"
+                           Tag="{Binding Tag, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ContentControl}}}" />
+        </Border>
+        <StackPanel x:Key="AxisParameters" x:Shared="False">
+            <CheckBox Content="Логарифмический масштаб" IsChecked="{Binding LogScale}" />
+            <DockPanel>
+                <CheckBox Content="Линии сетки" Margin="0" IsChecked="{Binding ShowGrid}" />
+                <Button DockPanel.Dock="Right" HorizontalAlignment="Right"
+                        Style="{DynamicResource ColorSelect}"
+                        Background="{Binding GridColor, Mode=TwoWay, Converter={conv:ColorToBrushConverter}}" />
+            </DockPanel>
+            <DockPanel IsEnabled="{Binding AutoScale, Converter={conv:BooleanInverse}}">
+                <TextBlock Text="Минимум" />
+                <TextBox DockPanel.Dock="Right" HorizontalAlignment="Right"
+                         Style="{StaticResource SimpleText}" Text="{Binding Minimum, Mode=TwoWay}" />
+            </DockPanel>
+            <DockPanel IsEnabled="{Binding AutoScale, Converter={conv:BooleanInverse}}">
+                <TextBlock Text="Максимум" />
+                <TextBox DockPanel.Dock="Right" HorizontalAlignment="Right"
+                         Style="{DynamicResource SimpleText}" Text="{Binding Maximum, Mode=TwoWay}" />
+            </DockPanel>
+        </StackPanel>
+
+    </Window.Resources>
+    <Grid>
+        <uc:WaitBagel Show="{Binding IsBusy}" Panel.ZIndex="101" Width="{Binding ActualWidth, ElementName=root}"
+                      Height="{Binding ActualHeight, ElementName=root}" />
+        <TabControl SelectedIndex="0">
+            <TabItem Header="Выбор измерений">
+                <ListView IsSynchronizedWithCurrentItem="True"
+							            uc:GridViewSort.AutoSort="True" 
+                    ItemsSource="{Binding Msms}">
+                    <ListView.View>
+                        <GridView AllowsColumnReorder="False">
+                            <GridViewColumn Width="28" uc:GridViewSort.PropertyName="IsShow">
+                                <GridViewColumn.CellTemplate>
+                                    <DataTemplate>
+                                        <Border>
+                                            <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                      IsChecked="{Binding Path=IsShow}" />
+                                        </Border>
+                                    </DataTemplate>
+                                </GridViewColumn.CellTemplate>
+                                <GridViewColumnHeader
+                                                      ToolTip="Строить графики" />
+                            </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding Index}" uc:GridViewSort.PropertyName="Index">
+                                <GridViewColumnHeader Content="№" />
+                            </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding Title}" uc:GridViewSort.PropertyName="Title">
+                                <GridViewColumnHeader Content="Название"
+                                                      ToolTip="{Binding Content, RelativeSource={RelativeSource Self}}" />
+                            </GridViewColumn>
+                            <GridViewColumn DisplayMemberBinding="{Binding MsmTime}"
+                                            uc:GridViewSort.PropertyName="MsmTime">
+                                <GridViewColumnHeader Content="Время, с"
+                                                      ToolTip="{Binding Content, RelativeSource={RelativeSource Self}}" />
+                            </GridViewColumn>
+                            <GridViewColumn
+                                DisplayMemberBinding="{Binding Data.IsSpectrum, Converter={converters:BooleanToSign}}"
+                                uc:GridViewSort.PropertyName="Data.IsSpectrum">
+                                <GridViewColumnHeader Content="Анализ"
+                                                      ToolTip="{Binding Content, RelativeSource={RelativeSource Self}}" />
+                            </GridViewColumn>
+                            <GridViewColumn
+                                DisplayMemberBinding="{Binding CreateTime, StringFormat='{}{0:dd/MM/yyyy HH:mm }'}"
+                                uc:GridViewSort.PropertyName="CreateTime">
+                                <GridViewColumnHeader Content="Дата проведения"
+                                                      ToolTip="{Binding Content, RelativeSource={RelativeSource Self}}" />
+                            </GridViewColumn>
+
+                        </GridView>
+                    </ListView.View>
+                </ListView>
+            </TabItem>
+            <TabItem Header="Графики">
+                <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Hidden">
+                    <DockPanel>
+                        <DockPanel.Resources>
+                            <Style TargetType="{x:Type RadioButton}">
+                                <Setter Property="Margin" Value="0,0,10,0" />
+                            </Style>
+                        </DockPanel.Resources>
+                        <GroupBox Header="Тип графиков" DockPanel.Dock="Top" Margin="3" Padding="3"
+                                  VerticalAlignment="Top">
+                            <WrapPanel>
+                                <RadioButton Content="Произвольное усилие" ToolTip="Произвольное усилие"
+                                             IsChecked="{Binding ShowMode, Converter={conv:RadioButtonConverter}, ConverterParameter={x:Static view:EShowMode.Const}}" />
+                                <RadioButton Content="Тремор" ToolTip="Тремор"
+                                             IsChecked="{Binding ShowMode, Converter={conv:RadioButtonConverter}, ConverterParameter={x:Static view:EShowMode.Tremor}}" />
+                                <RadioButton Content="Спектральная характеристика"
+                                             ToolTip="Спектральная характеристика"
+                                             IsChecked="{Binding ShowMode, Converter={conv:RadioButtonConverter}, ConverterParameter={x:Static view:EShowMode.Spectrum}}" />
+                                <RadioButton Content="АКФ" ToolTip="Автокорреляционная функция"
+                                             IsChecked="{Binding ShowMode, Converter={conv:RadioButtonConverter}, ConverterParameter={x:Static view:EShowMode.Correlation}}" />
+                            </WrapPanel>
+                        </GroupBox>
+                        <GroupBox Visibility="Collapsed" Header="Отображать" DockPanel.Dock="Top" Margin="3"
+                                  Padding="3" VerticalAlignment="Top">
+                            <WrapPanel>
+                                <RadioButton Content="Левая рука"
+                                             IsChecked="{Binding ShowHand, Converter={conv:RadioButtonConverter}, ConverterParameter={x:Static view:EShowHand.Left}}" />
+                                <RadioButton Content="Правая рука"
+                                             IsChecked="{Binding ShowHand, Converter={conv:RadioButtonConverter}, ConverterParameter={x:Static view:EShowHand.Right}}" />
+                                <RadioButton Content="Обе руки"
+                                             IsChecked="{Binding ShowHand, Converter={conv:RadioButtonConverter}, ConverterParameter={x:Static view:EShowHand.Both}}" />
+                            </WrapPanel>
+                        </GroupBox>
+                        <GroupBox DockPanel.Dock="Top" Header="Настройки отображения">
+                            <StackPanel>
+                                <Grid HorizontalAlignment="Left" Width="470">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*" />
+                                        <ColumnDefinition Width="*" />
+                                    </Grid.ColumnDefinitions>
+                                    <GroupBox Grid.Column="1" Header="Ось OX">
+                                        <StackPanel>
+                                            <CheckBox Content="Логарифмический масштаб"
+                                                      IsChecked="{Binding PlotSet.AxesOX.LogScale}" />
+                                            <DockPanel>
+                                                <CheckBox Content="Линии сетки" Margin="0"
+                                                          IsChecked="{Binding PlotSet.AxesOX.ShowGrid}" />
+                                                <Button DockPanel.Dock="Right" HorizontalAlignment="Right"
+                                                        Style="{DynamicResource ColorSelect}"
+                                                        Background="{Binding PlotSet.AxesOX.GridColor, Mode=TwoWay, Converter={conv:ColorToBrushConverter}}" />
+                                            </DockPanel>
+                                            <DockPanel IsEnabled="{Binding AutoScale, Converter={conv:BooleanInverse}}">
+                                                <TextBlock Text="Минимум" />
+                                                <TextBox DockPanel.Dock="Right" HorizontalAlignment="Right"
+                                                         Style="{StaticResource SimpleText}"
+                                                         Text="{Binding PlotSet.AxesOX.Minimum, Mode=TwoWay}" />
+                                            </DockPanel>
+                                            <DockPanel IsEnabled="{Binding AutoScale, Converter={conv:BooleanInverse}}">
+                                                <TextBlock Text="Максимум" />
+                                                <TextBox DockPanel.Dock="Right" HorizontalAlignment="Right"
+                                                         Style="{DynamicResource SimpleText}"
+                                                         Text="{Binding PlotSet.AxesOX.Maximum, Mode=TwoWay}" />
+                                            </DockPanel>
+                                        </StackPanel>
+                                    </GroupBox>
+                                    <GroupBox Grid.Column="0" Header="Ось OY">
+                                        <StackPanel>
+                                            <CheckBox Content="Логарифмический масштаб"
+                                                      IsChecked="{Binding PlotSet.AxesOY.LogScale}" />
+                                            <DockPanel>
+                                                <CheckBox Content="Линии сетки" Margin="0"
+                                                          IsChecked="{Binding PlotSet.AxesOY.ShowGrid}" />
+                                                <Button DockPanel.Dock="Right" HorizontalAlignment="Right"
+                                                        Style="{DynamicResource ColorSelect}"
+                                                        Background="{Binding PlotSet.AxesOY.GridColor, Mode=TwoWay, Converter={conv:ColorToBrushConverter}}" />
+                                            </DockPanel>
+                                            <DockPanel IsEnabled="{Binding AutoScale, Converter={conv:BooleanInverse}}">
+                                                <TextBlock Text="Минимум" />
+                                                <TextBox DockPanel.Dock="Right" HorizontalAlignment="Right"
+                                                         Style="{StaticResource SimpleText}"
+                                                         Text="{Binding PlotSet.AxesOY.Minimum, Mode=TwoWay}" />
+                                            </DockPanel>
+                                            <DockPanel IsEnabled="{Binding AutoScale, Converter={conv:BooleanInverse}}">
+                                                <TextBlock Text="Максимум" />
+                                                <TextBox DockPanel.Dock="Right" HorizontalAlignment="Right"
+                                                         Style="{DynamicResource SimpleText}"
+                                                         Text="{Binding PlotSet.AxesOY.Maximum, Mode=TwoWay}" />
+                                            </DockPanel>
+                                        </StackPanel>
+                                    </GroupBox>
+                                </Grid>
+                                <CheckBox Content="Автомасштабирование" IsChecked="{Binding AutoScale}" />
+                                <CheckBox Content="Нормировка по максимуму" IsChecked="{Binding Normalize}" />
+                            </StackPanel>
+                        </GroupBox>
+                        <StackPanel Orientation="Horizontal" DockPanel.Dock="Top">
+                            <Button Content="Перерисовать" Command="{Binding CMDButton}" HorizontalAlignment="Left" />
+                            <Button Content="Экспорт в PDF" Command="{Binding CMDCreatePdf}" HorizontalAlignment="Left"/>
+                            <Button Visibility="Hidden" Content="Сбросить масштаб" Command="{Binding CMDResetScale}"
+                                    HorizontalAlignment="Left" />
+                            <Button Visibility="Hidden" Content="Выровнять масштаб"
+                                    Command="{Binding CMDOptimizeScale}" HorizontalAlignment="Left" />
+                        </StackPanel>
+                        <Grid>
+                            <ListView x:Name="lv" ItemsSource="{Binding MsmsToDraw, Mode=OneWay}"
+                                      d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type dataModel:Msm}}"
+                                      Background="White"
+                                      ScrollViewer.CanContentScroll="False"
+                                      IsSynchronizedWithCurrentItem="True">
+                                <ListView.Resources>
+                                    <Style TargetType="{x:Type GridViewColumnHeader}">
+                                        <Setter Property="Height" Value="0" />
+                                    </Style>
+                                    <Style TargetType="{x:Type ListViewItem}">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type ListViewItem}">
+                                                    <Grid
+                                                        Width="{Binding ActualWidth, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Grid}}, Converter={converters:ValueCorrect}, ConverterParameter='-20'}">
+                                                        <!--<Grid>-->
+                                                        <DockPanel>
+                                                            <TextBlock DockPanel.Dock="Top" FontSize="20"
+                                                                       HorizontalAlignment="Center" FontWeight="Bold"
+                                                                       TextWrapping="Wrap">
+                                                                <TextBlock.Text>
+                                                                    <MultiBinding StringFormat="{}{1} – {0}">
+                                                                        <Binding Path="DataContext.PlotType"
+                                                                                 ElementName="root" />
+                                                                        <Binding Path="Title" />
+                                                                    </MultiBinding>
+                                                                </TextBlock.Text>
+                                                            </TextBlock>
+                                                            <Grid Height="350" Background="White">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="0*" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="*" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <Grid.RowDefinitions>
+                                                                    <RowDefinition Height="Auto"></RowDefinition>
+                                                                    <RowDefinition></RowDefinition>
+                                                                </Grid.RowDefinitions>
+                                                                <TextBlock Visibility="Collapsed" 
+                                                                           Grid.Column="0" Grid.Row="0"
+                                                                           x:Name="leftTag"
+                                                                           Text="{Binding ID, StringFormat='{}left_{0}'}" />
+                                                                <TextBlock Visibility="Collapsed" 
+                                                                           Grid.Column="0" Grid.Row="0"
+                                                                           x:Name="rightTag"
+                                                                           Text="{Binding ID, StringFormat='{}right_{0}'}" />
+                                                                <TextBlock Grid.Column="1" Grid.Row="0"
+                                                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                                            Text="Левая рука" />
+                                                                <TextBlock Grid.Column="2" Grid.Row="0"
+                                                                           HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                                            Text="Правая рука" />
+                                                                <ContentControl Grid.Column="1" Grid.Row="1"
+                                                                                Content="{StaticResource plotEx}"
+                                                                                Visibility="{Binding DataContext.LeftShow, ElementName=root}"
+                                                                                ToolTip="Левая рука"
+                                                                                Tag="{Binding Text, ElementName=leftTag}" />
+                                                                <ContentControl Grid.Column="2" Grid.Row="1"
+                                                                                Content="{StaticResource plotEx}"
+                                                                                Visibility="{Binding DataContext.RightShow, ElementName=root}"
+                                                                                ToolTip="Правая рука"
+                                                                                Tag="{Binding Text, ElementName=rightTag}" />
+                                                            </Grid>
+                                                        </DockPanel>
+                                                    </Grid>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Style>
+                                </ListView.Resources>
+                            </ListView>
+                            <Border Background="Transparent"  Loaded="PlotsPanel_OnLoaded"/>
+                        </Grid>
+                    </DockPanel>
+                </ScrollViewer>
+            </TabItem>
+        </TabControl>
+    </Grid>
+</Window>

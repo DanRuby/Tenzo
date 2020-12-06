@@ -1,0 +1,60 @@
+﻿<Window x:Class="TenzoActualGUI.View.SlideCreator"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:viewModel="clr-namespace:TenzoActualGUI.ViewModel"
+
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type viewModel:SlideCreatorVM}}"
+        
+        
+        Closing="Window_OnClosing"
+        
+        Title="Конструткор слайдов" Height="409" Width="610">
+
+    <DockPanel>
+        <ListBox ItemsSource="{Binding Slides, Mode=OneWay}" Width="200" SelectionMode="Extended" SelectedItem="{Binding Path=SelectedSlide, Mode=TwoWay}" SelectedIndex="{Binding Path=SelectedSlideIndex, Mode=OneWay}">
+            <i:Interaction.Triggers>
+                <i:EventTrigger EventName="SelectionChanged">
+                    <i:InvokeCommandAction Command="{Binding CMDImageClick}" CommandParameter="{Binding SelectedItem, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}"/>
+                </i:EventTrigger>
+            </i:Interaction.Triggers>
+            <ListBox.ItemTemplate>
+                <DataTemplate>
+                    <Border Margin="0,0,-15,0" Padding="0,0,15,0" MinWidth="{Binding ActualWidth, Mode=OneWay, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListBox}}}" >
+                        <DockPanel>
+                            <Grid DockPanel.Dock="Right" HorizontalAlignment="Right" >
+                                <Image Source="{Binding Path=ImageSmall}" Width="30" Height="22"/>
+                                <Border BorderThickness ="2" BorderBrush="White"/>
+                                <Border BorderThickness ="2" BorderBrush="LightSlateGray" CornerRadius="3"/>
+                            </Grid>
+                            <TextBlock Margin="0,0,20,0" MaxWidth="300" VerticalAlignment="Center">
+                                <TextBlock.Text>
+                                    <MultiBinding StringFormat="{}{0}. {1}">
+                                        <Binding Path="Index" />
+                                        <Binding Path="Name" />
+                                    </MultiBinding>
+                                </TextBlock.Text>
+                            </TextBlock>
+                        </DockPanel>
+                    </Border>
+                </DataTemplate>
+            </ListBox.ItemTemplate>
+        </ListBox>
+        <StackPanel>
+            <Button Content="AddImage" Command="{Binding Path=CMDAddImage}"/>
+            <Button Content="Remove" Command="{Binding Path=CMDRemoveSlide}"/>
+            <Button Content="Up" Command="{Binding Path=CMDMoveSelected}" CommandParameter="up"/>
+            <Button Content="Down" Command="{Binding Path=CMDMoveSelected}" CommandParameter="down"/>
+            <Button Content="Save" Command="{Binding Path=CMDSavePlayList}"/>
+            <Button Content="Open" Command="{Binding Path=CMDOpenPlayList}"/>
+            <Grid Height="100">
+                <Image Source="{Binding SelectedSlide.ImageSmall}"></Image>
+            </Grid>
+        </StackPanel>
+
+    </DockPanel>
+</Window>

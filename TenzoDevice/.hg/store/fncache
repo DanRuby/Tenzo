@@ -1,0 +1,17 @@
+data/stdafx.cpp.i
+data/ReadMe.txt.i
+data/DeviceInformation.h.i
+data/TenzoDevice.cpp.i
+data/TenzoDevice.rc.i
+data/resource.h.i
+data/targetver.h.i
+data/Device.h.i
+data/Device.cpp.i
+data/.hgignore.i
+data/dllmain.cpp.i
+data/CriticalSectionLock.h.i
+data/DeviceInformation.cpp.i
+data/WinUsbDevice.cpp.i
+data/TenzoDevice.vcxproj.i
+data/stdafx.h.i
+data/WinUsbDevice.h.i

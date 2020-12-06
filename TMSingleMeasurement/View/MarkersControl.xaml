@@ -1,0 +1,43 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:view="clr-namespace:TMSingleMeasurement.View"  
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type={x:Type view:MainControlVM}}"
+    
+        xmlns:converters="clr-namespace:tEngine.MVVM.Converters;assembly=tEngine"
+        x:Class="TMSingleMeasurement.View.MarkersControl"
+        Title="MainWindow" Height="350" Width="525" Closing="Window_Closing">
+    <Window.Resources>
+        <converters:BooleanInverse x:Key="BooleanInverse"/>
+    </Window.Resources>
+    <DockPanel DockPanel.Dock="Top">
+        <StackPanel DockPanel.Dock="Top">
+            <!--<TextBlock Text="{Binding Left, Mode=OneWay, StringFormat=Левая рука: \{0\}}"/>
+            <TextBlock Text="{Binding Right, Mode=OneWay, StringFormat=Правая рука: \{0\}}"/>-->
+        </StackPanel>
+        <StackPanel>
+            <Button Content="Настройки отображения" Command="{Binding CMDMarkersSetShow}"/>
+            <Button Content="Отобразить окно пользователя" Command="{Binding CMDMarkersWindowShow}"/>
+            <Button Content="Подключиться" Command="{Binding CMDStartMeasurement}"/>
+            <Button Content="Отключиться" Command="{Binding CMDStopMeasurement}"/>
+            <DockPanel>
+                <TextBlock Text="Время измерения, с:"/>
+                <TextBox Text="{Binding MsmTime, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding Path=IsStart, Converter={StaticResource BooleanInverse}}"/>
+            </DockPanel>
+            <Grid>
+                <ProgressBar Height="25" Value="{Binding Progress, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Foreground="#FF43C1C1" BorderBrush="{x:Null}" />
+                <TextBlock Text="{Binding CurrentTime}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+            </Grid>
+            <Button Content="Старт" Command="{Binding CMDStart}" />
+            <Button Content="Стоп"  Command="{Binding CMDStop}"/>
+            <TextBlock Text="{Binding MsmCount, StringFormat='{}Значений: {0}'}"/>
+            <TextBlock Text="{Binding Speed, StringFormat='{}Скорость: {0:F2} значений/секунду'}"/>
+            <Button Content="Применить" Command="{Binding CMDAccept}" />
+            <Button Content="Отмена"  Command="{Binding CMDCancel}"/>
+        </StackPanel>
+    </DockPanel>
+</Window>

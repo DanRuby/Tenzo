@@ -1,0 +1,54 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:view="clr-namespace:TenzoMeterGUI.View"
+        xmlns:plotCreator="clr-namespace:tEngine.PlotCreator;assembly=tEngine"
+        xmlns:uc="clr-namespace:tEngine.UControls;assembly=tEngine"
+        xmlns:System="clr-namespace:System;assembly=mscorlib"
+        x:Class="TenzoMeterGUI.View.plottest"
+        Title="plottest" Height="300" Width="649.315">
+    <Window.DataContext>
+        <view:plottestVM/>
+    </Window.DataContext>
+    <DockPanel>
+        <Grid DockPanel.Dock="Top">
+            <TextBlock Text="{Binding Measurements.Count}"/>
+            <Button Command="{Binding CMDButton}" CommandParameter="{Binding ElementName=PlotViewEx}" Content="add"/>
+        </Grid>
+        <TabControl>
+            <TabItem Header="0">
+                <Grid>
+                    <uc:SelectablePlot Data="{Binding Data}"></uc:SelectablePlot>
+                </Grid>
+            </TabItem>
+            <TabItem Header="1">
+                <uc:PlotViewEx ShowPlot="{Binding ShowPlot}" x:Name="PlotViewEx">
+                    <uc:PlotViewEx.PlotView>
+                        <oxy:PlotView Title="Test Plot" IsLegendVisible="True" PlotAreaBorderThickness="10,1,1,1">
+                            <oxy:PlotView.Axes>
+                                <oxy:LinearAxis Position="Left" IsZoomEnabled="True" TitleFontSize="10" IsPanEnabled="True" Title="1234" TitlePosition="100" />
+                                <oxy:LinearAxis Position="Bottom" IsZoomEnabled="True" IsPanEnabled="True" Title="title" />
+                            </oxy:PlotView.Axes>
+                            <oxy:LineSeries ItemsSource="{Binding Measurements}" Visibility="Visible" Title="first"/>
+                        </oxy:PlotView>
+                    </uc:PlotViewEx.PlotView>
+                </uc:PlotViewEx>
+            </TabItem>
+            <TabItem Header="2">
+                <uc:PlotViewEx ShowPlot="{Binding ShowPlot}" x:Name="PlotViewEx2" Loaded="PlotViewEx2_OnLoaded"/>
+            </TabItem>
+            <TabItem Header="2">
+                <oxy:PlotView>
+                    <oxy:PlotView.Axes>
+                        <oxy:LinearAxis AxislineColor="#FFEA1A1A" Position="Left" IsZoomEnabled="True" IsPanEnabled="True" TitleFontSize="20" Title="title" FontSize="0.1" TitleClippingLength="3"/>
+                        <oxy:LinearAxis AxislineColor="#FF0BABCF" Position="Bottom" IsZoomEnabled="True" IsPanEnabled="True"/>
+                    </oxy:PlotView.Axes>
+                    <oxy:LineSeries ItemsSource="{Binding Measurements}"/>
+                </oxy:PlotView>
+            </TabItem>
+        </TabControl>
+    </DockPanel>
+
+</Window>

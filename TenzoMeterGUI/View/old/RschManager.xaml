@@ -1,0 +1,83 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:viewModel="clr-namespace:TenzoMeterGUI.ViewModel"
+        xmlns:old="clr-namespace:TenzoMeterGUI.View.old"
+
+        x:Class="TenzoMeterGUI.View.old.RschManager"
+        Title="RschManager" Height="294" Width="517" Closing="Window_Closing"
+        FontSize="{DynamicResource DefaultFontSize}" Loaded="Window_Loaded">
+
+    <Window.DataContext>
+        <old:RschManagerVM/>
+    </Window.DataContext>
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition />
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid Grid.Row="1" />
+        <ListView Grid.Row="1" ItemsSource="{Binding Rsches}" x:Name="listView" SelectedItem="{Binding SelectedItem, UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}" SelectionMode="Single">
+            <ListView.Resources>
+                <Style x:Key="stc" TargetType="GridViewColumnHeader">
+                    <EventSetter Event="Click" Handler="EventSetter_OnHandler"/>
+                </Style>
+            </ListView.Resources>
+            <ListView.View>
+                <GridView AllowsColumnReorder="False">
+                    <GridView.Columns>
+                        <GridViewColumn Width="{Binding ColumnsWidth[0], UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                            <GridViewColumnHeader Content="№" Style="{DynamicResource stc}"/>
+                            <GridViewColumn.DisplayMemberBinding>
+                                <Binding Path="Index" />
+                            </GridViewColumn.DisplayMemberBinding>
+                        </GridViewColumn>
+                        <GridViewColumn Width="{Binding ColumnsWidth[1], UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                            <GridViewColumnHeader Content="Название" Style="{DynamicResource stc}" />
+                            <GridViewColumn.DisplayMemberBinding>
+                                <Binding Path="Rsch.Title" />
+                            </GridViewColumn.DisplayMemberBinding>
+                        </GridViewColumn>
+                        <GridViewColumn Width="{Binding ColumnsWidth[2], UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                            <GridViewColumnHeader Content="Дата" Style="{DynamicResource stc}" />
+                            <GridViewColumn.DisplayMemberBinding>
+                                <Binding Path="Rsch.CreateTime" StringFormat="dd.MM.yyyy HH:mm:ss"/>
+                            </GridViewColumn.DisplayMemberBinding>
+                        </GridViewColumn>
+                        <GridViewColumn Width="{Binding ColumnsWidth[3], UpdateSourceTrigger=PropertyChanged, Mode=TwoWay}">
+                            <GridViewColumnHeader Content="Измерений" Style="{DynamicResource stc}" />
+                            <GridViewColumn.DisplayMemberBinding>
+                                <Binding Path="Rsch.Msms.Count" />
+                            </GridViewColumn.DisplayMemberBinding>
+                        </GridViewColumn>
+                    </GridView.Columns>
+                </GridView>
+            </ListView.View>
+        </ListView>
+        <StackPanel Grid.Row="2" Orientation="Vertical" HorizontalAlignment="Stretch" >
+            <StackPanel.Resources>
+                <Style x:Key="AcceptButton" TargetType="{x:Type Button}">
+                    <Setter Property="Margin" Value="5,0,0,0" />
+                    <Setter Property="MinWidth" Value="130" />
+                    <Setter Property="Height" Value="30" />
+                </Style>
+            </StackPanel.Resources>
+            <Grid Margin="0,3,0,3">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition />
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <Border DockPanel.Dock="Left" HorizontalAlignment="Stretch" Padding="5,0,20,0">
+                    <TextBlock Text="{Binding SelectedItem.Rsch.Title}" FontSize="{DynamicResource BigFontSize}" VerticalAlignment="Center" HorizontalAlignment="Right"/>
+                </Border>
+                <Button Grid.Column="1" Content="Открыть" Command="{Binding CMDSelect}" Style="{StaticResource AcceptButton}" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+            </Grid>
+            <Border BorderThickness="0,1,0,0" BorderBrush="LightGray"/>
+            <DockPanel Margin="0,3,0,3">
+                <Button Content="Новое исследование" Command="{Binding CMDNewRsch}" Style="{StaticResource AcceptButton}" DockPanel.Dock="Left" HorizontalAlignment="Left"/>
+                <Button Content="Отменить" Command="{Binding CMDCancel}"  Style="{StaticResource AcceptButton}" DockPanel.Dock="Right" HorizontalAlignment="Right"/>
+            </DockPanel>
+        </StackPanel>
+    </Grid>
+</Window>

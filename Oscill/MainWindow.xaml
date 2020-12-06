@@ -1,0 +1,53 @@
+﻿<Window x:Class="Oscill.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:markers="clr-namespace:tEngine.Markers;assembly=tEngine"
+        xmlns:oscill="clr-namespace:Oscill"
+        xmlns:oxy="http://oxyplot.org/wpf"
+        Background="White"
+        Loaded="MainWindow_OnLoaded"
+        Closing="Window_OnClosing"
+        Title="MainWindow" Height="350" Width="525">
+    <!--<Window.DataContext>
+        <oscill:MainWindow></oscill:MainWindow>
+    </Window.DataContext>-->
+    <Grid>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition MinWidth="100"/>
+            <ColumnDefinition Width="Auto"/>
+            <ColumnDefinition Width="2*"/>
+        </Grid.ColumnDefinitions>
+        <Grid Grid.Column="0" HorizontalAlignment="Stretch">
+            <markers:UIMarkers x:Name="MarkersArea"/>
+        </Grid>
+        <GridSplitter Grid.Column="1" Width="6" HorizontalAlignment="Stretch"/>
+        <DockPanel Grid.Column="2">
+            <StackPanel Orientation="Vertical" DockPanel.Dock="Bottom">
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type ButtonBase}" x:Key="bt1">
+                        <Setter Property="HorizontalAlignment" Value="Left"></Setter>
+                        <Setter Property="Width" Value="100"></Setter>
+                        <Setter Property="Height" Value="25"></Setter>
+                        <Setter Property="Margin" Value="0,2,0,0"></Setter>
+                    </Style>
+                </StackPanel.Resources>
+                <Button Content="Настройки" Click="Button_Click" Style="{StaticResource bt1}"/>
+                <ToggleButton Content="Рисовать" Click="ToggleButton_Checked" Style="{StaticResource bt1}"/>
+                <CheckBox Content="Имитация прибора" IsChecked="{Binding DemoMode}"/>
+            </StackPanel>
+            <DockPanel DockPanel.Dock="Bottom">
+                <GroupBox Header="Лог">
+                    <TextBox x:Name="LogBox" MinLines="4" MaxLines="{Binding MinLines, RelativeSource={RelativeSource Self}}" Text="{Binding Path=Log}" TextWrapping="Wrap" ScrollViewer.HorizontalScrollBarVisibility="Disabled" ScrollViewer.VerticalScrollBarVisibility="Auto" AcceptsReturn="True"/>
+                </GroupBox>
+            </DockPanel>
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <oxy:PlotView x:Name="OxyConst" Grid.Row="0" Title="Постоянная составляющая"/>
+                <oxy:PlotView x:Name="OxyTremor" Grid.Row="1" Title="Тремор"/>
+            </Grid>
+        </DockPanel>
+    </Grid>
+</Window>

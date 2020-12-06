@@ -1,0 +1,786 @@
+﻿<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:viewModel="clr-namespace:TenzoActualGUI.ViewModel"
+        xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity"
+    
+        xmlns:oxy="http://oxyplot.org/wpf"
+        xmlns:uControls="clr-namespace:tEngine.UControls;assembly=tEngine"
+        xmlns:converters="clr-namespace:tEngine.MVVM.Converters;assembly=tEngine"
+        xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
+        xmlns:system="clr-namespace:System;assembly=mscorlib"
+        xmlns:helpers="clr-namespace:TenzoActualGUI.Helpers"
+
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type={x:Type viewModel:MsmMasterVM}}"
+    
+        x:Class="TenzoActualGUI.View.MsmMaster"
+    
+        SizeChanged="Window_OnSizeChanged"
+    
+        Closing="Window_OnClosing"
+        Loaded="MsmMaster_OnLoaded"
+        Title="{Binding WindowTitle}"
+        MinHeight="200" MinWidth="300"
+        Height="1147.011" Width="1161.5">
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
+        <converters:BooleanInverse x:Key="BooleanInverse"/>
+        <converters:GradeToBoolean x:Key="GradeToBoolean"/>
+        <Style TargetType="{x:Type Button}" x:Key="bt1">
+            <Setter Property="Width" Value="150" />
+            <Setter Property="Height" Value="26" />
+            <Setter Property="Margin" Value="0,5,0,0"/>
+        </Style>
+
+        <Border x:Key="OxyPanel" x:Shared="False">
+            <oxy:PlotView Title="{Binding ToolTip, RelativeSource={RelativeSource FindAncestor, AncestorType=ContentControl}}" Tag="{Binding Tag, RelativeSource={RelativeSource FindAncestor, AncestorType=ContentControl}}">
+                <oxy:PlotView.Axes>
+                    <oxy:LinearAxis Position="Left" IsAxisVisible="False" IsZoomEnabled="False" IsPanEnabled="False" MinimumPadding="0.05" MaximumPadding="0.05"/>
+                    <oxy:LinearAxis Position="Bottom"/>
+                </oxy:PlotView.Axes>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger>
+                        <i:InvokeCommandAction Command="{Binding DCSlidesResult.CMDOxyLoad}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type oxy:PlotView}}}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="Unloaded">
+                        <i:InvokeCommandAction Command="{Binding DCSlidesResult.CMDOxyUnload}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type oxy:PlotView}}}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </oxy:PlotView>
+        </Border>
+        <Border x:Key="OxyPanelCross" x:Shared="False">
+            <oxy:PlotView Title="{Binding ToolTip, RelativeSource={RelativeSource FindAncestor, AncestorType=ContentControl}}" Tag="{Binding Tag, RelativeSource={RelativeSource FindAncestor, AncestorType=ContentControl}}">
+                <oxy:PlotView.Axes>
+                    <oxy:LinearAxis Position="Left" IsAxisVisible="False" IsZoomEnabled="False" IsPanEnabled="False" PositionAtZeroCrossing="True" TickStyle="Crossing" MinimumPadding="0.05" MaximumPadding="0.05"/>
+                    <oxy:LinearAxis Position="Bottom"/>
+                </oxy:PlotView.Axes>
+                <i:Interaction.Triggers>
+                    <i:EventTrigger>
+                        <i:InvokeCommandAction Command="{Binding DCSlidesResult.CMDOxyLoad}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type oxy:PlotView}}}"/>
+                    </i:EventTrigger>
+                    <i:EventTrigger EventName="Unloaded">
+                        <i:InvokeCommandAction Command="{Binding DCSlidesResult.CMDOxyUnload}" CommandParameter="{Binding RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type oxy:PlotView}}}"/>
+                    </i:EventTrigger>
+                </i:Interaction.Triggers>
+            </oxy:PlotView>
+        </Border>
+    </Window.Resources>
+
+    <Grid>
+        <Grid Panel.ZIndex="1" Visibility="{Binding IsBusyNow, Converter={StaticResource BooleanToVisibilityConverter}}">
+            <Border Background="LightSkyBlue"  Opacity="0.1" />
+            <Border Height="30" Width="30">
+                <uControls:GifImage GifSource="/gif/load1.gif" Stretch="Fill" AutoStart="True"/>
+            </Border>
+        </Grid>
+        <DockPanel>
+            <Menu DockPanel.Dock="Top">
+                <MenuItem Header="Файл">
+                    <MenuItem Header="Новое измерение" Command="{Binding CMDNewMsm}"/>
+                    <Separator />
+                    <MenuItem Header="Открыть" Command="{Binding CMDOpenMsm}"/>
+                    <MenuItem Header="Сохранить" Command="{Binding CMDSaveMsm}"/>
+                    <MenuItem Header="Сохранить как" Command="{Binding CMDSaveMsmAs}"/>
+                    <Separator />
+                    <MenuItem Header="Выход" Command="{Binding CMDExit}"/>
+                </MenuItem>
+                <MenuItem Header="Настройки">
+                    <MenuItem Header="Режим отладки" IsCheckable="True" IsChecked="{Binding IsDebugMode}"/>
+                </MenuItem>
+            </Menu>
+            <DockPanel DockPanel.Dock="Bottom">
+                <DockPanel.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="HorizontalAlignment" Value="Right" />
+                        <Setter Property="Width" Value="100" />
+                        <Setter Property="Height" Value="30" />
+                        <Setter Property="DockPanel.Dock" Value="Right"/>
+                    </Style>
+                </DockPanel.Resources>
+                <DockPanel DockPanel.Dock="Left">
+                    <Button Content="Настройка" Command="{Binding DCMsmGuide.CMDMarkersSettings}" />
+                    <ToggleButton IsChecked="{Binding DCMsmGuide.IsSlidesShow}" Width="100">
+                        <ToggleButton.Resources>
+                            <Style TargetType="{x:Type ToggleButton}">
+                                <Style.Triggers>
+                                    <Trigger Property="IsChecked" Value="False">
+                                        <Setter Property="Content" Value="Показать метки" />
+                                        <Setter Property="Background" Value="#FFDDDDDD" />
+                                    </Trigger>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter Property="Content" Value="Скрыть метки" />
+                                        <Setter Property="Background" Value="LightGreen" />
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ToggleButton.Resources>
+                    </ToggleButton>
+                </DockPanel>
+
+                <!--<CheckBox Content="Отладка" Visibility="{Binding IsDebugConfig, Converter={StaticResource BooleanToVisibilityConverter}}" IsChecked="{Binding IsDebugMode}"/>-->
+
+                <Button Content="Закрыть" Command="{Binding CMDExit}" />
+                <Button Content="Next" IsEnabled="{Binding IsNotLast}" Command="{Binding CMDNextStep}" />
+                <Button Content="Back" IsEnabled="{Binding IsNotFirst}" Command="{Binding CMDPrevStep}" />
+            </DockPanel>
+            <TabControl TabStripPlacement="Top" SelectedIndex="{Binding TabSelect, Mode=TwoWay}">
+                <TabControl.Resources>
+                    <Style TargetType="{x:Type TabItem}">
+                        <Setter Property="Height" Value="30"/>
+                        <Setter Property="Width" Value="150"/>
+                    </Style>
+                </TabControl.Resources>
+                <TabItem Header="Информация">
+                    <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto"  Background="{DynamicResource Color_Back2}">
+                        <Grid Margin="10,0,0,0" >
+                            <Grid.Resources>
+                                <Style TargetType="{x:Type StackPanel}" x:Key="StackPanelStyle">
+                                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                </Style>
+                                <Style TargetType="{x:Type DockPanel}" x:Key="DockPanelStyle">
+                                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                </Style>
+                                <Style TargetType="{x:Type Grid}">
+                                    <Setter Property="Margin" Value="0,0,5,0" />
+                                </Style>
+                                <Style TargetType="{x:Type TextBox}" x:Key="TextBoxStyle" BasedOn="{StaticResource {x:Type TextBox}}">
+                                    <Setter Property="HorizontalAlignment" Value="Stretch" />
+                                    <Setter Property="Width" Value="Auto"></Setter>
+                                </Style>
+                            </Grid.Resources>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="*"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid Grid.Column="0">
+                                <StackPanel Orientation="Vertical">
+                                    <StackPanel Style="{DynamicResource StackPanelStyle}">
+                                        <TextBlock Text="Название: "/>
+                                        <TextBox Text="{Binding DCInfo.Title, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                         Style="{DynamicResource TextBoxStyle}"/>
+                                    </StackPanel>
+                                    <StackPanel Style="{DynamicResource StackPanelStyle}">
+                                        <TextBlock Text="Испытуемый: "/>
+                                        <TextBox Text="{Binding DCInfo.FIO, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                         Style="{DynamicResource TextBoxStyle}"/>
+                                    </StackPanel>
+                                    <StackPanel Style="{DynamicResource StackPanelStyle}">
+                                        <TextBlock Text="Тематика: "/>
+                                        <TextBox Text="{Binding DCInfo.Theme, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" 
+                                         Style="{DynamicResource TextBoxStyle}"/>
+                                    </StackPanel>
+                                    <DockPanel Style="{DynamicResource DockPanelStyle}" Margin="0,5">
+                                        <TextBlock Text="Дата проведения: " VerticalAlignment="Center"/>
+                                        <DatePicker Text="{Binding DCInfo.CreateDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="300" HorizontalAlignment="Left" />
+                                    </DockPanel>
+                                    <TextBlock Text="{Binding DCSlides.Slides.Count, StringFormat='{}Картинок в наборе: {0}'}" VerticalAlignment="Center"/>
+                                    <TextBlock Text="{Binding DCMsmGuide.Msm.PlayList.SecondsToSlide, StringFormat='{}Время измерения одной картинки: {0:F2} секунд'}" VerticalAlignment="Center"/>
+                                </StackPanel>
+                            </Grid>
+                            <Grid Grid.Column="1">
+                                <StackPanel Style="{DynamicResource StackPanelStyle}">
+                                    <TextBlock Text="Комментарий:" DockPanel.Dock="Top"/>
+                                    <TextBox  MaxLines="7" MinHeight="150" VerticalContentAlignment="Top" 
+                                             TextWrapping="Wrap" AcceptsReturn="True" Text="{Binding DCInfo.Comment, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"
+                                         Style="{DynamicResource TextBoxStyle}" Height="Auto" />
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </ScrollViewer>
+                </TabItem>
+                <TabItem Header="Выбор картинок">
+                    <DockPanel Margin="0,5,0,0">
+                        <DockPanel.Resources>
+                            <system:Double x:Key="imgSize">70</system:Double>
+                            <system:Double x:Key="blockWidth">100</system:Double>
+                            <system:Double x:Key="blockHeight">100</system:Double>
+                            <Style TargetType="{x:Type Button}" x:Key="bt1">
+                                <Setter Property="Height" Value="30" />
+                                <Setter Property="Width" Value="130" />
+                                <Setter Property="Margin" Value="10,5,10,0"/>
+
+                            </Style>
+                        </DockPanel.Resources>
+                        <DockPanel DockPanel.Dock="Top">
+                            <Grid>
+                                <StackPanel HorizontalAlignment="Center" VerticalAlignment="Top">
+                                    <Button Content="Добавить" Command="{Binding DCSlides.CMDAddImage}" Style="{DynamicResource bt1}"/>
+                                    <Button Content="Удалить" Command="{Binding DCSlides.CMDRemoveSlide}" Style="{DynamicResource bt1}"/>
+                                    <TextBlock HorizontalAlignment="Center" Margin="0,10,0,0">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="Всего картинок: {0} &#xA;Важных/обычных: {1}/{2}">
+                                                <Binding Path="DCSlides.Slides.Count" />
+                                                <Binding Path="DCSlides.SlidesEssential.Count" />
+                                                <Binding Path="DCSlides.SlidesInessential.Count" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </StackPanel>
+                            </Grid>
+                            <Grid DockPanel.Dock="Right">
+                                <StackPanel>
+                                    <Button Content="Перемешать" Style="{DynamicResource bt1}" Command="{Binding DCSlides.CMDMixSlides}"/>
+                                    <Grid>
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="*"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Button Grid.Column="0" Content="&lt;-" Style="{DynamicResource bt1}" Width="Auto" Margin="10,5,3,0"
+                                                Command="{Binding DCSlides.CMDMoveSelected}" CommandParameter="left"/>
+                                        <Button Grid.Column="1" Content="-&gt;" Style="{DynamicResource bt1}" Width="Auto" Margin="3,5,10,0"
+                                                Command="{Binding DCSlides.CMDMoveSelected}" CommandParameter="right"/>
+                                    </Grid>
+                                </StackPanel>
+                            </Grid>
+                            <ListBox Height="130" VerticalContentAlignment="Center" ItemsSource="{Binding DCSlides.Slides, Mode=OneWay}" SelectedItem="{Binding DCSlides.SelectedSlide}" SelectedIndex="{Binding DCSlides.SelectedSlideIndex, Mode=OneWay}">
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseDoubleClick">
+                                        <i:InvokeCommandAction Command="{Binding DCSlides.CMDToggleGrade}"/>
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                                <ListBox.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel IsItemsHost="True" />
+                                    </ItemsPanelTemplate>
+                                </ListBox.ItemsPanel>
+                                <ListBox.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Width="{DynamicResource blockWidth}" Height="{DynamicResource blockHeight}" Style="{DynamicResource mainBd}">
+                                            <Border.Resources>
+                                                <Style TargetType="{x:Type Border}" x:Key="mainBd">
+                                                    <Setter Property="BorderThickness" Value="1" />
+                                                    <Setter Property="CornerRadius" Value="3"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding Grade, Converter={StaticResource GradeToBoolean}}" Value="False">
+                                                            <Setter Property="Background" Value="White" />
+                                                            <Setter Property="BorderBrush" Value="White" />
+                                                        </DataTrigger>
+                                                        <DataTrigger Binding="{Binding Grade, Converter={StaticResource GradeToBoolean}}" Value="True">
+                                                            <Setter Property="Background" Value="#FFDFCF" />
+                                                            <Setter Property="BorderBrush" Value="Red" />
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </Border.Resources>
+                                            <DockPanel  ToolTip="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Center">
+                                                <Grid DockPanel.Dock="Top" HorizontalAlignment="Center">
+                                                    <Image Source="{Binding ImageSmall}" Width="{DynamicResource imgSize}" Height="{DynamicResource imgSize}"/>
+                                                    <Border BorderThickness ="2" BorderBrush="{Binding Background, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type Border}}}"/>
+                                                    <Border BorderThickness ="2" BorderBrush="LightSlateGray" CornerRadius="3"/>
+                                                </Grid>
+                                                <TextBlock MaxWidth="{DynamicResource blockWidth}" HorizontalAlignment="Center" Padding="5,0" Margin="5,0">
+                                                    <TextBlock.Text>
+                                                        <MultiBinding StringFormat="{}{0}. {1}">
+                                                            <Binding Path="Index" />
+                                                            <Binding Path="Name" />
+                                                        </MultiBinding>
+                                                    </TextBlock.Text>
+                                                </TextBlock>
+                                            </DockPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ListBox.ItemTemplate>
+                            </ListBox>
+                        </DockPanel>
+                        <Grid>
+                            <Grid.Resources>
+                                <GridView AllowsColumnReorder="False" x:Key="shortImage" x:Shared="False">
+                                    <GridViewColumn DisplayMemberBinding="{Binding Index}" uControls:GridViewSort.PropertyName="Index">
+                                        <GridViewColumnHeader Content="№" />
+                                    </GridViewColumn>
+                                    <GridViewColumn Width="Auto"  uControls:GridViewSort.PropertyName="Name">
+                                        <GridViewColumn.CellTemplate>
+                                            <DataTemplate>
+                                                <Border >
+                                                    <DockPanel>
+                                                        <Grid DockPanel.Dock="Left" HorizontalAlignment="Center" >
+                                                            <Image Source="{Binding ImageSmall}" Width="40" Height="40"/>
+                                                            <Border BorderThickness ="2" BorderBrush="White"/>
+                                                            <Border BorderThickness ="2" BorderBrush="LightSlateGray" CornerRadius="3"/>
+                                                        </Grid>
+                                                        <TextBlock MaxWidth="300" Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,0,0,0" />
+                                                    </DockPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </GridViewColumn.CellTemplate>
+                                        <GridViewColumnHeader Content="Картинка"/>
+                                    </GridViewColumn>
+                                </GridView>
+                            </Grid.Resources>
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="50*"/>
+                                <ColumnDefinition Width="25*"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="25*"/>
+                            </Grid.ColumnDefinitions>
+                            <DockPanel Grid.Column="0" HorizontalAlignment="Stretch" Margin="3,16">
+                                <DockPanel.Resources>
+                                    <Style TargetType="{x:Type ToggleButton}">
+                                        <Setter Property="Template">
+                                            <Setter.Value>
+                                                <ControlTemplate TargetType="{x:Type ButtonBase}">
+                                                    <Border x:Name="border" BorderBrush="{TemplateBinding BorderBrush}" BorderThickness="{TemplateBinding BorderThickness}" Background="{TemplateBinding Background}" SnapsToDevicePixels="True">
+                                                        <ContentPresenter x:Name="contentPresenter" ContentTemplate="{TemplateBinding ContentTemplate}" Content="{TemplateBinding Content}" ContentStringFormat="{TemplateBinding ContentStringFormat}" Focusable="False" HorizontalAlignment="{TemplateBinding HorizontalContentAlignment}" Margin="{TemplateBinding Padding}" RecognizesAccessKey="True" SnapsToDevicePixels="{TemplateBinding SnapsToDevicePixels}" VerticalAlignment="{TemplateBinding VerticalContentAlignment}"/>
+                                                    </Border>
+                                                    <ControlTemplate.Triggers>
+                                                        <Trigger Property="IsEnabled" Value="False">
+                                                            <Setter Property="Background" TargetName="border" Value="#FFF4F4F4"/>
+                                                            <Setter Property="BorderBrush" TargetName="border" Value="#FFADB2B5"/>
+                                                            <Setter Property="TextElement.Foreground" TargetName="contentPresenter" Value="#FF838383"/>
+                                                        </Trigger>
+                                                    </ControlTemplate.Triggers>
+                                                </ControlTemplate>
+                                            </Setter.Value>
+                                        </Setter>
+                                        <Style.Triggers>
+                                            <Trigger Property="IsChecked" Value="False">
+                                                <Setter Property="Content" Value="Обычная" />
+                                                <Setter Property="Background" Value="LightGreen" />
+                                            </Trigger>
+                                            <Trigger Property="IsChecked" Value="True">
+                                                <Setter Property="Background" Value="LightSalmon" />
+                                                <Setter Property="Content" Value="Важная" />
+                                            </Trigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </DockPanel.Resources>
+                                <DockPanel DockPanel.Dock="Bottom" >
+                                    <StackPanel Height="30" Orientation="Horizontal">
+                                        <TextBlock Text="Пометить как важную:" VerticalAlignment="Center" Margin="5,0,5,0"/>
+                                        <ToggleButton IsChecked="{Binding DCSlides.IsImportant}" Width="100" />
+                                    </StackPanel>
+                                </DockPanel>
+                                <Border BorderThickness="1" BorderBrush="Blue" CornerRadius="5" Padding="3">
+                                    <Image Source="{Binding DCSlides.SelectedSlide.ImageBig}" />
+                                </Border>
+                            </DockPanel>
+                            <GroupBox Grid.Column="1" Header="Обычные картинки">
+                                <ListView ItemsSource="{Binding DCSlides.SlidesInessential}" SelectedItem="{Binding DCSlides.SelectedSlideInessential, Mode=TwoWay}" View="{StaticResource shortImage}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseDoubleClick">
+                                            <i:InvokeCommandAction Command="{Binding DCSlides.CMDToggleGrade}"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="GotMouseCapture">
+                                            <i:InvokeCommandAction Command="{Binding DCSlides.CMDSetSelect}" CommandParameter="Inessential"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </ListView>
+                            </GroupBox>
+                            <GroupBox Grid.Column="3" Header="Важные картинки">
+                                <ListView ItemsSource="{Binding DCSlides.SlidesEssential}" SelectedItem="{Binding DCSlides.SelectedSlideEssential, Mode=TwoWay}" View="{StaticResource shortImage}">
+                                    <i:Interaction.Triggers>
+                                        <i:EventTrigger EventName="MouseDoubleClick">
+                                            <i:InvokeCommandAction Command="{Binding DCSlides.CMDToggleGrade}"/>
+                                        </i:EventTrigger>
+                                        <i:EventTrigger EventName="GotMouseCapture">
+                                            <i:InvokeCommandAction Command="{Binding DCSlides.CMDSetSelect}" CommandParameter="Essential"/>
+                                        </i:EventTrigger>
+                                    </i:Interaction.Triggers>
+                                </ListView>
+                            </GroupBox>
+                            <Grid Grid.Column="2">
+                                <StackPanel VerticalAlignment="Center">
+                                    <Button Height="80" Width="20" Command="{Binding DCSlides.CMDToggleGrade}">
+                                        <TextBlock><Run Text="&gt;"/><LineBreak/><Run Text="&lt;"/></TextBlock>
+                                    </Button>
+                                </StackPanel>
+                            </Grid>
+                        </Grid>
+                    </DockPanel>
+                </TabItem>
+                <TabItem Header="Измерение">
+                    <DockPanel>
+                        <Border DockPanel.Dock="Top" Padding="10,0,10,0" Margin="0,5,0,5">
+                            <DockPanel>
+                                <Border Width="150" Height="150" BorderThickness="2" CornerRadius="3" BorderBrush="Blue" DockPanel.Dock="Left" Margin="0,0,5,0">
+                                    <Image Source="{Binding DCMsmGuide.CurrentSlide.ImageMedium}"/>
+                                </Border>
+                                <Grid DockPanel.Dock="Bottom" VerticalAlignment="Bottom">
+                                    <ProgressBar Height="25" Value="{Binding DCMsmGuide.Progress, Mode=OneWay}"/>
+                                    <TextBlock  VerticalAlignment="Center" HorizontalAlignment="Center">
+                                        <TextBlock.Text>
+                                            <MultiBinding StringFormat="{}{0} {1}/{2}">
+                                                <Binding Path="DCMsmGuide.CurrentTime" Mode="OneWay"/>
+                                                <Binding Path="DCMsmGuide.CurrentSlideIndex"  Mode="OneWay"/>
+                                                <Binding Path="DCMsmGuide.SlideCount" Mode="OneWay" />
+                                            </MultiBinding>
+                                        </TextBlock.Text>
+                                    </TextBlock>
+                                </Grid>
+                                <Border Padding="5,10,0,0">
+                                    <DockPanel>
+                                        <StackPanel Margin="0,0,20,0" >
+                                            <StackPanel Orientation="Horizontal" VerticalAlignment="Top" >
+                                                <TextBlock Text="Время на слайд, с: " VerticalAlignment="Center"/>
+                                                <TextBox Text="{Binding DCMsmGuide.SecondsToSlide, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" IsEnabled="{Binding DCMsmGuide.IsPlayList}" Width="40"/>
+
+                                            </StackPanel>
+                                            <StackPanel>
+                                                <Button Content="Начать измерения" Command="{Binding DCMsmGuide.CMDStartMeasurement}" IsEnabled="{Binding DCMsmGuide.IsRun, Converter={StaticResource BooleanInverse}}"
+													Style="{DynamicResource bt1}"
+													HorizontalAlignment="Left"/>
+                                                <Button Content="Прервать измерения" Command="{Binding DCMsmGuide.CMDShowCancel}"
+													Style="{DynamicResource bt1}"
+													HorizontalAlignment="Left"/>
+                                            </StackPanel>
+                                            <Button Content="Обработать измерения" Style="{DynamicResource bt1}" Command="{Binding DCSlidesAnalyser.CMDSpectrumAnalys}" DockPanel.Dock="Top"/>
+                                            <CheckBox Margin="0,3" IsChecked="{Binding DCMsmGuide.IsPauseBeforeStart}" Content="Отложенный запуск" ToolTip='Измерения начнутся через 10 секунд после нажатия кнопки "Начать измерения" '/>
+                                        </StackPanel>
+                                        <StackPanel  Orientation="Vertical">
+                                        </StackPanel>
+                                    </DockPanel>
+                                </Border>
+                            </DockPanel>
+                        </Border>
+
+
+                        <DockPanel>
+                            <ListView ItemsSource="{Binding DCSlidesAnalyser.Slides}"
+								IsSynchronizedWithCurrentItem="True"
+								uControls:GridViewSort.AutoSort="True">
+                                <ListView.View>
+                                    <GridView AllowsColumnReorder="False">
+                                        <GridViewColumn DisplayMemberBinding="{Binding Index}" uControls:GridViewSort.PropertyName="Index">
+                                            <GridViewColumnHeader Content="№"/>
+                                        </GridViewColumn>
+                                        <GridViewColumn  DisplayMemberBinding="{Binding Name}" uControls:GridViewSort.PropertyName="Name">
+                                            <GridViewColumnHeader Content="Название"/>
+                                        </GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding IsBaseReady}" uControls:GridViewSort.PropertyName="IsBaseReady">
+                                            <GridViewColumnHeader Content="Первичный анализ"/>
+                                        </GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding IsSpectrumReady}" uControls:GridViewSort.PropertyName="IsSpectrumReady">
+                                            <GridViewColumnHeader Content="Спектральный анализ"/>
+                                        </GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding Data.Time}" uControls:GridViewSort.PropertyName="Data.Time">
+                                            <GridViewColumnHeader Content="Время"/>
+                                        </GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding Data.Count}" uControls:GridViewSort.PropertyName="Data.Count">
+                                            <GridViewColumnHeader Content="Значений"/>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn DisplayMemberBinding="{Binding RareFactor_Left[0], StringFormat='{}{0:F0}'}" uControls:GridViewSort.PropertyName="RareFactor_Left[0]">
+                                            <GridViewColumnHeader Content="НЛТ" ToolTip="Необычность тремора левой руки"/>
+                                        </GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding RareFactor_Right[0], StringFormat='{}{0:F0}'}" uControls:GridViewSort.PropertyName="RareFactor_Right[0]">
+                                            <GridViewColumnHeader Content="НПТ" ToolTip="Необычность тремора правой руки"/>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn DisplayMemberBinding="{Binding RareFactor_Left[1], StringFormat='{}{0:F0}'}" uControls:GridViewSort.PropertyName="RareFactor_Left[1]">
+                                            <GridViewColumnHeader Content="НЛС" ToolTip="Необычность спектра левой руки"/>
+                                        </GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding RareFactor_Right[1], StringFormat='{}{0:F0}'}" uControls:GridViewSort.PropertyName="RareFactor_Right[1]">
+                                            <GridViewColumnHeader Content="НПС" ToolTip="Необычность спектра правой руки"/>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn DisplayMemberBinding="{Binding RareFactor_Left[2], StringFormat='{}{0:F0}'}" uControls:GridViewSort.PropertyName="RareFactor_Left[2]">
+                                            <GridViewColumnHeader Content="НЛКФ" ToolTip="Необычность автокорреляции левой руки"/>
+                                        </GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding RareFactor_Right[2], StringFormat='{}{0:F0}'}" uControls:GridViewSort.PropertyName="RareFactor_Right[2]">
+                                            <GridViewColumnHeader Content="НПКФ" ToolTip="Необычность автокорреляции правой руки"/>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn DisplayMemberBinding="{Binding RareFactor_Left_Summary, StringFormat='{}{0:F0}'}" uControls:GridViewSort.PropertyName="RareFactor_Left_Summary">
+                                            <GridViewColumnHeader Content="НЛ" ToolTip="Суммарная необычность левой руки"/>
+                                        </GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding RareFactor_Right_Summary, StringFormat='{}{0:F0}'}" uControls:GridViewSort.PropertyName="RareFactor_Right_Summary">
+                                            <GridViewColumnHeader Content="НП" ToolTip="Суммарная необычность правой руки"/>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                            </ListView>
+                        </DockPanel>
+                    </DockPanel>
+                </TabItem>
+                <TabItem Header="Результат">
+                    <Grid>
+                        <Grid.Resources>
+                            <Style TargetType="{x:Type TextBox}" x:Key="slideValue">
+                                <Setter Property="Width" Value="40"/>
+                                <Setter Property="HorizontalContentAlignment" Value="Center"/>
+                            </Style>
+                        </Grid.Resources>
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition MinWidth="100" Width="40*"/>
+                            <ColumnDefinition  Width="Auto"/>
+                            <ColumnDefinition MinWidth="100" Width="60*"/>
+                        </Grid.ColumnDefinitions>
+                        <Grid Grid.Column="0">
+                            <Grid.RowDefinitions>
+                                <RowDefinition />
+                                <RowDefinition Height="Auto"/>
+                                <RowDefinition MinHeight="100"/>
+                            </Grid.RowDefinitions>
+                            <GridSplitter Grid.Row="1" Height="6" HorizontalAlignment="Stretch" VerticalAlignment="Stretch" Background="LightGray" />
+                            <Border Grid.Row="2" BorderThickness="1" BorderBrush="Blue" CornerRadius="5" Padding="3">
+                                <Image Source="{Binding DCSlidesResult.SelectedItem.ImageBig}" />
+                            </Border>
+                            <ListView  ItemsSource="{Binding DCSlidesResult.Slides}" SelectedItem="{Binding DCSlidesResult.SelectedItem}" 
+							            IsSynchronizedWithCurrentItem="True"
+							            uControls:GridViewSort.AutoSort="True" Grid.Row="0"
+                                          >
+                                <ListView.View>
+                                    <GridView AllowsColumnReorder="False">
+                                        <GridViewColumn Width="28">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Border>
+                                                        <CheckBox  HorizontalAlignment="Center" VerticalAlignment="Center" IsChecked="{Binding IsShow}" Command="{Binding DataContext.DCSlidesResult.CMDSetShow, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}" CommandParameter="{Binding RelativeSource={RelativeSource Self}}" Click="CheckBox_Click" />
+                                                    </Border>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                            <GridViewColumnHeader>
+                                                <GridViewColumnHeader.ContentTemplate>
+                                                    <DataTemplate>
+                                                        <Border>
+                                                            <CheckBox HorizontalAlignment="Center" VerticalAlignment="Center" IsThreeState="True" IsChecked="{Binding DataContext.DCSlidesResult.IsShowAll, RelativeSource={RelativeSource FindAncestor, AncestorType={x:Type ListView}}}" />
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </GridViewColumnHeader.ContentTemplate>
+                                            </GridViewColumnHeader>
+                                        </GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding Index}" uControls:GridViewSort.PropertyName="Index">
+                                            <GridViewColumnHeader Content="№" />
+                                        </GridViewColumn>
+                                        <GridViewColumn Width="Auto"  uControls:GridViewSort.PropertyName="Name">
+                                            <GridViewColumn.CellTemplate>
+                                                <DataTemplate>
+                                                    <Border >
+                                                        <DockPanel>
+                                                            <Grid DockPanel.Dock="Left" HorizontalAlignment="Center" >
+                                                                <Image Source="{Binding ImageSmall}" Width="20" Height="20"/>
+                                                                <Border BorderThickness ="2" BorderBrush="White"/>
+                                                                <Border BorderThickness ="2" BorderBrush="LightSlateGray" CornerRadius="3"/>
+                                                            </Grid>
+                                                            <TextBlock MaxWidth="300" Text="{Binding Name}" HorizontalAlignment="Center" VerticalAlignment="Center" Margin="4,0,0,0" />
+                                                        </DockPanel>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </GridViewColumn.CellTemplate>
+                                            <GridViewColumnHeader Content="Картинка"/>
+                                        </GridViewColumn>
+                                        <GridViewColumn Width="Auto" DisplayMemberBinding="{Binding Grade}"  uControls:GridViewSort.PropertyName="Grade">
+                                            <GridViewColumnHeader Content="Важность"/>
+                                        </GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding RareFactor_Left[0], StringFormat='{}{0:F0}'}" uControls:GridViewSort.PropertyName="RareFactor_Left[0]">
+                                            <GridViewColumnHeader Content="НЛТ" ToolTip="Необычность тремора левой руки"/>
+                                        </GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding RareFactor_Right[0], StringFormat='{}{0:F0}'}" uControls:GridViewSort.PropertyName="RareFactor_Right[0]">
+                                            <GridViewColumnHeader Content="НПТ" ToolTip="Необычность тремора правой руки"/>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn DisplayMemberBinding="{Binding RareFactor_Left[1], StringFormat='{}{0:F0}'}" uControls:GridViewSort.PropertyName="RareFactor_Left[1]">
+                                            <GridViewColumnHeader Content="НЛС" ToolTip="Необычность спектра левой руки"/>
+                                        </GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding RareFactor_Right[1], StringFormat='{}{0:F0}'}" uControls:GridViewSort.PropertyName="RareFactor_Right[1]">
+                                            <GridViewColumnHeader Content="НПС" ToolTip="Необычность спектра правой руки"/>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn DisplayMemberBinding="{Binding RareFactor_Left[2], StringFormat='{}{0:F0}'}" uControls:GridViewSort.PropertyName="RareFactor_Left[2]">
+                                            <GridViewColumnHeader Content="НЛКФ" ToolTip="Необычность автокорреляции левой руки"/>
+                                        </GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding RareFactor_Right[2], StringFormat='{}{0:F0}'}" uControls:GridViewSort.PropertyName="RareFactor_Right[2]">
+                                            <GridViewColumnHeader Content="НПКФ" ToolTip="Необычность автокорреляции правой руки"/>
+                                        </GridViewColumn>
+
+                                        <GridViewColumn DisplayMemberBinding="{Binding RareFactor_Left_Summary, StringFormat='{}{0:F0}'}" uControls:GridViewSort.PropertyName="RareFactor_Left_Summary">
+                                            <GridViewColumnHeader Content="НЛ" ToolTip="Суммарная необычность левой руки"/>
+                                        </GridViewColumn>
+                                        <GridViewColumn DisplayMemberBinding="{Binding RareFactor_Right_Summary, StringFormat='{}{0:F0}'}" uControls:GridViewSort.PropertyName="RareFactor_Right_Summary">
+                                            <GridViewColumnHeader Content="НП" ToolTip="Суммарная необычность правой руки"/>
+                                        </GridViewColumn>
+                                    </GridView>
+                                </ListView.View>
+                                <i:Interaction.Triggers>
+                                    <i:EventTrigger EventName="MouseDoubleClick">
+                                        <i:InvokeCommandAction Command="{Binding DCSlidesResult.CMDShowOnlyOne}" />
+                                    </i:EventTrigger>
+                                </i:Interaction.Triggers>
+                            </ListView>
+                        </Grid>
+                        <GridSplitter Grid.Column="1" Width="4" Background="LightGray" HorizontalAlignment="Stretch"/>
+                        <DockPanel Grid.Column="2">
+                            <Grid DockPanel.Dock="Top">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="40*"/>
+                                    <ColumnDefinition Width="60*"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                    <ColumnDefinition Width="Auto"/>
+                                </Grid.ColumnDefinitions>
+                                <DockPanel Grid.Column="0"  Margin="5">
+                                    <TextBlock Text="Детализация: " DockPanel.Dock="Left"/>
+                                    <TextBlock DockPanel.Dock="Right" HorizontalAlignment="Right" Text="%"/>
+                                    <TextBox DockPanel.Dock="Right" HorizontalAlignment="Right" Style="{StaticResource slideValue}" Text="{Binding DCSlidesResult.Resolution, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <Slider Value="{Binding DCSlidesResult.Resolution, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Maximum="100" Minimum="1"/>
+                                </DockPanel>
+                                <DockPanel Grid.Column="1" Margin="5">
+                                    <TextBlock Text="Диапазон частот: " DockPanel.Dock="Left" />
+                                    <TextBlock  DockPanel.Dock="Right" HorizontalAlignment="Right" Text="Гц"/>
+                                    <TextBox  DockPanel.Dock="Right" HorizontalAlignment="Right"  Style="{StaticResource slideValue}" Text="{Binding DCSlidesResult.HzUpper, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                    <TextBlock  DockPanel.Dock="Right" HorizontalAlignment="Right"  Text="-"/>
+                                    <TextBox   DockPanel.Dock="Right" HorizontalAlignment="Right"  Style="{StaticResource slideValue}" Text="{Binding DCSlidesResult.HzLower, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+
+                                    <uControls:RangeSlider Minimum="0" Maximum="500" LowerValue="{Binding DCSlidesResult.HzLower, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" UpperValue="{Binding DCSlidesResult.HzUpper, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                </DockPanel>
+                                <Button Grid.Column="2" Content="Обновить" Width="100" Command="{Binding DCSlidesResult.CMDUpdateGraphFull}"/>
+                                <Button Grid.Column="3" Content="В отдельном окне" Width="100" Command="{Binding DCSlidesResult.CMDOpenResultWindow}"/>
+                            </Grid>
+                            <TabControl Panel.ZIndex="1" SelectedItem="{Binding DCSlidesResult.SelectedTab, Mode=OneWayToSource}" SelectedIndex="{Binding DCSlidesResult.SelectedTabIndex}">
+                                <TabControl.Resources>
+                                    <Style TargetType="{x:Type oxy:PlotView}">
+                                        <Setter Property="Visibility" Value="{Binding DCSlidesResult.IsNotResize, Converter={StaticResource BooleanToVisibilityConverter}}" />
+                                    </Style>
+                                </TabControl.Resources>
+                                <TabItem Header="Обе руки" Tag="all">
+                                    <Grid>
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                            <Grid MinWidth="500" SizeChanged="Window_OnSizeChanged">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="1*" MinHeight="300"/>
+                                                    <RowDefinition Height="1*" MinHeight="300"/>
+                                                    <RowDefinition Height="1*" MinHeight="300"/>
+                                                </Grid.RowDefinitions>
+                                                <ContentControl Grid.Row="0" Content="{StaticResource OxyPanel}" 
+                                                                ToolTip="Тремор"
+                                                                Tag="all_tremor" />
+                                                <ContentControl Grid.Row="1" Content="{StaticResource OxyPanel}" 
+                                                                ToolTip="Спектральная характеристика"
+                                                                Tag="all_spectrum" />
+                                                <ContentControl Grid.Row="2" Content="{StaticResource OxyPanelCross}" 
+                                                                ToolTip="Автокорреляционная функция"
+                                                                Tag="all_corr" />
+                                            </Grid>
+                                        </ScrollViewer>
+                                    </Grid>
+                                </TabItem>
+                                <TabItem Header="Левая рука" Tag="left">
+                                    <Grid>
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                            <Grid MinWidth="500" SizeChanged="Window_OnSizeChanged">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="1*" MinHeight="300"/>
+                                                    <RowDefinition Height="1*" MinHeight="300"/>
+                                                    <RowDefinition Height="1*" MinHeight="300"/>
+                                                </Grid.RowDefinitions>
+                                                <ContentControl Grid.Row="0" Content="{StaticResource OxyPanel}" 
+                                                                ToolTip="Тремор"
+                                                                Tag="left_tremor" />
+                                                <ContentControl Grid.Row="1" Content="{StaticResource OxyPanel}" 
+                                                                ToolTip="Спектральная характеристика"
+                                                                Tag="left_spectrum" />
+                                                <ContentControl Grid.Row="2" Content="{StaticResource OxyPanelCross}" 
+                                                                ToolTip="Автокорреляционная функция"
+                                                                Tag="left_corr" />
+                                            </Grid>
+                                        </ScrollViewer>
+                                    </Grid>
+                                </TabItem>
+                                <TabItem Header="Правая рука" Tag="right">
+                                    <Grid>
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                            <Grid MinWidth="500" SizeChanged="Window_OnSizeChanged">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="1*" MinHeight="300"/>
+                                                    <RowDefinition Height="1*" MinHeight="300"/>
+                                                    <RowDefinition Height="1*" MinHeight="300"/>
+                                                </Grid.RowDefinitions>
+
+                                                <ContentControl Grid.Row="0" Content="{StaticResource OxyPanel}" 
+                                                                ToolTip="Тремор"
+                                                                Tag="right_tremor" />
+                                                <ContentControl Grid.Row="1" Content="{StaticResource OxyPanel}" 
+                                                                ToolTip="Спектральная характеристика"
+                                                                Tag="right_spectrum" />
+                                                <ContentControl Grid.Row="2" Content="{StaticResource OxyPanelCross}" 
+                                                                ToolTip="Автокорреляционная функция"
+                                                                Tag="right_corr" />
+                                            </Grid>
+                                        </ScrollViewer>
+                                    </Grid>
+                                </TabItem>
+                                <TabItem Visibility="{Binding DCSlidesResult.ReadyToShow, Converter={StaticResource BooleanToVisibilityConverter}}" Header="{Binding DCSlidesResult.SlideToShow.Name}" Tag="{Binding DCSlidesResult.SlideToShow.Id}">
+                                    <Grid>
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto">
+                                            <Grid MinWidth="500" SizeChanged="Window_OnSizeChanged">
+                                                <Grid.RowDefinitions>
+                                                    <RowDefinition Height="1*" MinHeight="300"/>
+                                                    <RowDefinition Height="1*" MinHeight="300"/>
+                                                    <RowDefinition Height="1*" MinHeight="300"/>
+                                                </Grid.RowDefinitions>
+                                                <Grid Grid.Row="0" Height="0" Visibility="Collapsed">
+                                                    <TextBlock Visibility="Collapsed" x:Name="tCustom" Text="{Binding DCSlidesResult.SlideToShow.Id, StringFormat='{}{0}_tremor'}" />
+                                                    <TextBlock Visibility="Collapsed" x:Name="sCustom" Text="{Binding DCSlidesResult.SlideToShow.Id, StringFormat='{}{0}_spectrum'}"/>
+                                                    <TextBlock Visibility="Collapsed" x:Name="cCustom" Text="{Binding DCSlidesResult.SlideToShow.Id, StringFormat='{}{0}_corr'}"/>
+                                                </Grid>
+                                                <ContentControl Grid.Row="0" Content="{StaticResource OxyPanel}" 
+                                                                ToolTip="Тремор"
+                                                                Tag="{Binding Text, ElementName=tCustom}" />
+                                                <ContentControl Grid.Row="1" Content="{StaticResource OxyPanel}" 
+                                                                ToolTip="Спектральная характеристика"
+                                                                Tag="{Binding Text, ElementName=sCustom}" />
+                                                <ContentControl Grid.Row="2" Content="{StaticResource OxyPanelCross}" 
+                                                                ToolTip="Автокорреляционная функция"
+                                                                Tag="{Binding Text, ElementName=cCustom}" />
+                                            </Grid>
+                                        </ScrollViewer>
+                                    </Grid>
+                                </TabItem>
+                            </TabControl>
+
+                        </DockPanel>
+
+                        <ScrollViewer  Grid.Column="2"  VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Auto" Visibility="Hidden">
+                            <Grid MinWidth="500" SizeChanged="Window_OnSizeChanged">
+                                <Grid.RowDefinitions>
+                                    <RowDefinition Height="Auto"/>
+                                    <RowDefinition Height="1*"/>
+                                    <RowDefinition Height="1*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Grid.Row="0" >
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Детализация:"/>
+                                        <Slider Margin="20,0,0,0" Width="150" Value="{Binding DCSlidesResult.Resolution, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Maximum="100" Minimum="1"/>
+                                        <TextBox Style="{StaticResource slideValue}" Text="{Binding DCSlidesResult.Resolution, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                        <TextBlock Text="%"/>
+                                    </StackPanel>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="Диапазон частот:"/>
+                                        <uControls:RangeSlider Width="300" Minimum="0" Maximum="500" LowerValue="{Binding DCSlidesResult.HzLower, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" UpperValue="{Binding DCSlidesResult.HzUpper, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
+                                        <TextBox  Style="{StaticResource slideValue}" Text="{Binding DCSlidesResult.HzLower, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                        <TextBlock Text="-"/>
+                                        <TextBox Style="{StaticResource slideValue}" Text="{Binding DCSlidesResult.HzUpper, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                                        <TextBlock Text="Гц"/>
+                                    </StackPanel>
+                                    <Button Content="Сбросить масштабирование" Command="{Binding DCSlidesResult.CMDResetGraphAxes}"/>
+                                    <Button Content="Перерисовать графики" Command="{Binding DCSlidesResult.CMDUpdateGraphFull}"/>
+                                </StackPanel>
+                                <Grid Grid.Row="1" >
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <oxy:PlotView Grid.Column="0" Model="{Binding DCSlidesResult.PMTremor_Left}"/>
+                                    <oxy:PlotView Grid.Column="1" Model="{Binding DCSlidesResult.PMTremor_Right}"/>
+                                </Grid>
+                                <Grid Grid.Row="2">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <DockPanel Grid.Column="0">
+                                        <oxy:PlotView Model="{Binding DCSlidesResult.PMSpectrum_Left}" />
+                                    </DockPanel>
+                                    <oxy:PlotView Grid.Column="1" Model="{Binding DCSlidesResult.PMSpectrum_Right}"/>
+                                </Grid>
+                            </Grid>
+                        </ScrollViewer>
+                    </Grid>
+                </TabItem>
+            </TabControl>
+        </DockPanel>
+    </Grid>
+</Window>

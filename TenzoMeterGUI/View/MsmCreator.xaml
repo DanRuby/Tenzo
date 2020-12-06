@@ -1,0 +1,113 @@
+﻿<Window x:Class="TenzoMeterGUI.View.MsmCreator"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:view="clr-namespace:TenzoMeterGUI.View"
+        xmlns:uc="clr-namespace:tEngine.UControls;assembly=tEngine"
+        xmlns:converters="clr-namespace:tEngine.MVVM.Converters;assembly=tEngine"
+        mc:Ignorable="d"
+        d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type={x:Type view:MsmCreatorVM}}"
+        
+        Closing="Window_OnClosing"
+        Title="Измерение" 
+        MinHeight="350" MinWidth="450"
+        Height="484"
+        Width="550">
+    <Grid>
+        <DockPanel Margin="3">
+            <DockPanel DockPanel.Dock="Bottom" >
+                <StackPanel DockPanel.Dock="Bottom" Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Bottom" Margin="10">
+                    <TextBlock Text="{Binding HandsData}" Visibility="Collapsed"/>
+                    <Button Content="ОК" Command="{Binding CMDAcceptMsm}" IsEnabled="{Binding IsMsmRun, Converter={converters:BooleanInverse}}"/>
+                    <Button Content="Отмена" Command="{Binding CMDCancelMsm}"/>
+                </StackPanel>
+            </DockPanel>
+            <DockPanel DockPanel.Dock="Bottom">
+                <StackPanel DockPanel.Dock="Top" Orientation="Horizontal" Margin="0,10,0,0">
+                    <TextBlock Text="Время измерения, с:" VerticalAlignment="Center" Margin="3,0" />
+                    <uc:NumericUpDown Width="70" Value="{Binding CurrentMsm.MsmTime, Mode=TwoWay}" Minimum="1" Maximum="600"/>
+                    <CheckBox Content="Отложенный запуск" VerticalAlignment="Center" Margin="3,0" IsChecked="{Binding IsPauseBeforeStart}"/>
+                </StackPanel>
+                <DockPanel DockPanel.Dock="Top">
+                    <ToggleButton IsChecked="{Binding IsMsmRun}" Command="{Binding CMDStartMsm}" CommandParameter="{Binding IsChecked, RelativeSource={RelativeSource Self}}">
+                        <ToggleButton.Resources>
+                            <Style TargetType="{x:Type ToggleButton}" BasedOn="{StaticResource {x:Type ToggleButton}}">
+                                <Setter Property="Content">
+                                    <Setter.Value>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Image Source="/TenzoMeterGUI;component/icons/start.ico" Stretch="None" />
+                                            <TextBlock Text="Старт" />
+                                        </StackPanel>
+                                    </Setter.Value>
+                                </Setter>
+                                <Style.Triggers>
+                                    <Trigger Property="IsChecked" Value="True">
+                                        <Setter Property="Content">
+                                            <Setter.Value>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <Image Source="/TenzoMeterGUI;component/icons/stop.ico" Stretch="None" />
+                                                    <TextBlock Text="Стоп" />
+                                                </StackPanel>
+                                            </Setter.Value>
+                                        </Setter>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ToggleButton.Resources>
+                    </ToggleButton>
+                    <Grid Margin="5,0,0,0">
+                        <ProgressBar Height="{StaticResource DefHeight}" Value="{Binding Progress, Mode=OneWay}" 
+                             Foreground="#FF43C1C1" BorderBrush="{x:Null}" Margin="0,3"/>
+                        <TextBlock Text="{Binding CurrentTime}" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                    </Grid>
+                </DockPanel>
+                <StackPanel>
+                    <DockPanel Margin="0,3,0,0">
+                        <CheckBox Content="Сохранение измерения в файл:" VerticalAlignment="Center" IsChecked="{Binding DoPostSave}"/>
+                        <Button HorizontalAlignment="Right" DockPanel.Dock="Right" Content="Обзор" Command="{Binding CMDBrowse}" CommandParameter="save" IsEnabled="{Binding DoPostSave}" />
+                        <TextBox Width="Auto" Margin="3,0,3,0" Text="{Binding SavePath}" IsEnabled="{Binding DoPostSave}" />
+                    </DockPanel>
+                    <DockPanel Margin="0,3,0,0">
+                        <CheckBox Content="Запуск скрипта:" VerticalAlignment="Center" IsChecked="{Binding DoPostScript}" />
+                        <Button HorizontalAlignment="Right" DockPanel.Dock="Right" Content="Обзор" Command="{Binding CMDBrowse}" CommandParameter="script" IsEnabled="{Binding DoPostScript}" />
+                        <TextBox Width="Auto" Margin="3,0,3,0" Text="{Binding ScriptPath}" IsEnabled="{Binding DoPostScript}"/>
+                    </DockPanel>
+                </StackPanel>
+            </DockPanel>
+            <TabControl x:Name="TabControl">
+                <TabItem Header="Главное">
+                    <GroupBox Header="Информация об измерении" Padding="5" MinHeight="150">
+                        <DockPanel>
+                            <DockPanel DockPanel.Dock="Top" >
+                                <TextBlock DockPanel.Dock="Left"  Text="Название:" VerticalAlignment="Center" Margin="3,0"/>
+                                <TextBox Width="Auto" Text="{Binding CurrentMsm.Title, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                            </DockPanel>
+                            <DockPanel >
+                                <Label DockPanel.Dock="Top" Content="Комментарий:" HorizontalAlignment="Left"/>
+                                <TextBox Text="{Binding Path=CurrentMsm.Comment, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"
+                                 VerticalAlignment="Stretch" HorizontalAlignment="Stretch"
+                                 VerticalContentAlignment="Top" HorizontalContentAlignment="Left" VerticalScrollBarVisibility="Auto"
+                                 MinLines="4"
+                                 TextWrapping="Wrap" AcceptsReturn="True"
+                                 Width="Auto" Height="Auto" />
+                            </DockPanel>
+                        </DockPanel>
+                    </GroupBox>
+                </TabItem>
+                <TabItem Header="Выбор диапазона" IsEnabled="{Binding SelectionEnable}">
+                    <Grid>
+                        <uc:SelectablePlot Data="{Binding CurrentMsm.Data}" 
+                                           BeginPoint="{Binding BeginPoint, Mode=TwoWay}"
+                                           EndPoint="{Binding EndPoint, Mode=TwoWay}"
+                                           Maximum="{Binding Maximum, Mode=OneWay}"/>
+                        <StackPanel Background="White" VerticalAlignment="Top">
+                        </StackPanel>
+                    </Grid>
+                </TabItem>
+                
+            </TabControl>
+        </DockPanel>
+    </Grid>
+</Window>

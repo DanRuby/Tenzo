@@ -1,0 +1,16 @@
+﻿<Window x:Class="TenzoMeterGUI.View.Markers"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:markers="clr-namespace:tEngine.Markers;assembly=tEngine"
+        Loaded="Markers_OnLoaded"
+        Closing="Window_OnClosing"
+        Title=""
+        MinWidth="200" MinHeight="300"
+        Height="{Binding MinHeight, RelativeSource={RelativeSource Self}}"
+        Width="{Binding MinWidth, RelativeSource={RelativeSource Self}}" Icon="/TenzoMeterGUI;component/icons/markers.png">
+    <Grid>
+        <ToggleButton x:Name="tgb" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Отладка" Panel.ZIndex="2" Click="ToggleButton_Click"
+                      Visibility="Visible"/>
+        <markers:UIMarkers x:Name="MarkersArea"/>
+    </Grid>
+</Window>

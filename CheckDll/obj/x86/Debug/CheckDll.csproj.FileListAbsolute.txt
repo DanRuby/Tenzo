@@ -1,0 +1,10 @@
+D:\tenzo\bin\Debug\lib\TenzoDevice.dll
+D:\tenzo\bin\Debug\lib\TenzoDevice_d.dll
+D:\tenzo\bin\Debug\CheckDll.exe.config
+D:\tenzo\bin\Debug\CheckDll.exe
+D:\tenzo\bin\Debug\CheckDll.pdb
+D:\tenzo\CheckDll\obj\x86\Debug\CheckDll.csprojAssemblyReference.cache
+D:\tenzo\CheckDll\obj\x86\Debug\CheckDll.csproj.CoreCompileInputs.cache
+D:\tenzo\CheckDll\obj\x86\Debug\CheckDll.csproj.CopyComplete
+D:\tenzo\CheckDll\obj\x86\Debug\CheckDll.exe
+D:\tenzo\CheckDll\obj\x86\Debug\CheckDll.pdb

@@ -1,0 +1,251 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D4F88012-C043-4293-A84A-521ACF5FEA98}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>tEngine</RootNamespace>
+    <AssemblyName>tEngine</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <ExpressionBlendVersion>12.0.60409.0</ExpressionBlendVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <DocumentationFile>
+    </DocumentationFile>
+    <RegisterForComInterop>false</RegisterForComInterop>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
+    <DebugSymbols>true</DebugSymbols>
+    <OutputPath>$(SolutionDir)bin\$(Configuration)\</OutputPath>
+    <DefineConstants>
+    </DefineConstants>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <DebugType>full</DebugType>
+    <PlatformTarget>x86</PlatformTarget>
+    <ErrorReport>prompt</ErrorReport>
+    <CodeAnalysisRuleSet>MinimumRecommendedRules.ruleset</CodeAnalysisRuleSet>
+    <Optimize>true</Optimize>
+    <UseVSHostingProcess>false</UseVSHostingProcess>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AsyncBridge, Version=0.3.1.0, Culture=neutral, PublicKeyToken=b3b1c0202c0d6a87, processorArchitecture=MSIL">
+      <HintPath>..\packages\AsyncBridge.0.3.1\lib\net40-client\AsyncBridge.dll</HintPath>
+    </Reference>
+    <Reference Include="MathNet.Numerics">
+      <HintPath>..\packages\MathNet.Numerics.3.6.0\lib\net40\MathNet.Numerics.dll</HintPath>
+    </Reference>
+    <Reference Include="MigraDoc.DocumentObjectModel-WPF, Version=1.32.3885.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp-MigraDoc-WPF.1.32.2608.0\lib\net20\MigraDoc.DocumentObjectModel-WPF.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MigraDoc.Rendering-WPF, Version=1.32.3885.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp-MigraDoc-WPF.1.32.2608.0\lib\net20\MigraDoc.Rendering-WPF.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="MigraDoc.RtfRendering-WPF, Version=1.32.3885.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp-MigraDoc-WPF.1.32.2608.0\lib\net20\MigraDoc.RtfRendering-WPF.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NCalc">
+      <HintPath>..\packages\ncalc.1.3.8\lib\NCalc.dll</HintPath>
+    </Reference>
+    <Reference Include="Newtonsoft.Json, Version=6.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\packages\Newtonsoft.Json.6.0.8\lib\net40\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot">
+      <HintPath>..\packages\OxyPlot.Core.2014.1.546\lib\portable-net4+sl4+wp71+win8\OxyPlot.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.Wpf">
+      <HintPath>..\packages\OxyPlot.Wpf.2014.1.546\lib\net40\OxyPlot.Wpf.dll</HintPath>
+    </Reference>
+    <Reference Include="OxyPlot.Xps">
+      <HintPath>..\packages\OxyPlot.Wpf.2014.1.546\lib\net40\OxyPlot.Xps.dll</HintPath>
+    </Reference>
+    <Reference Include="PdfSharp-WPF, Version=1.32.2608.0, Culture=neutral, PublicKeyToken=f94615aa0424f9eb, processorArchitecture=MSIL">
+      <HintPath>..\packages\PDFsharp-MigraDoc-WPF.1.32.2608.0\lib\net20\PdfSharp-WPF.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PdfSharp.Charting-WPF">
+      <HintPath>..\packages\PDFsharp-MigraDoc-WPF.1.32.2608.0\lib\net20\PdfSharp.Charting-WPF.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="PresentationFramework" />
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Runtime.Serialization" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xaml" />
+    <Reference Include="System.Xml" />
+    <Reference Include="WindowsBase" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="BConstants.cs" />
+    <Compile Include="Helpers\BytesPacker.cs" />
+    <Compile Include="Helpers\FixedSizedQueue.cs" />
+    <Compile Include="Helpers\LINQExtention.cs" />
+    <Compile Include="Helpers\ImageHelper.cs" />
+    <Compile Include="Helpers\StringExtetion.cs" />
+    <Compile Include="IConstants.cs" />
+    <Compile Include="Markers\Drawer.cs" />
+    <Compile Include="Markers\MArea.cs" />
+    <Compile Include="Markers\Marker.cs" />
+    <Compile Include="Markers\Marker1.cs" />
+    <Compile Include="Markers\Marker2.cs" />
+    <Compile Include="Markers\MarkersSet.xaml.cs">
+      <DependentUpon>MarkersSet.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Markers\UIMarkers.xaml.cs">
+      <DependentUpon>UIMarkers.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="MVVM\Converters\BooleanInverse.cs" />
+    <Compile Include="MVVM\Converters\BooleanToVisibilityConverter.cs" />
+    <Compile Include="MVVM\Converters\ColorToBrushConverter.cs" />
+    <Compile Include="MVVM\Converters\ConverterBase.cs" />
+    <Compile Include="MVVM\Converters\GradeToBoolean.cs" />
+    <Compile Include="MVVM\Converters\PlotModelToBitmap.cs" />
+    <Compile Include="MVVM\Converters\RadioButtonConverter.cs" />
+    <Compile Include="MVVM\Converters\StringCalculate.cs" />
+    <Compile Include="MVVM\TaskCompletionNotifier.cs" />
+    <Compile Include="PlotCreator\PlotModelEx.cs" />
+    <Compile Include="PlotCreator\PlotSettings.xaml.cs">
+      <DependentUpon>PlotSettings.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Recorder\BPacket.cs" />
+    <Compile Include="Recorder\Packet.cs" />
+    <Compile Include="Recorder\TestPacket_old.cs" />
+    <Compile Include="TActual\Constants.cs" />
+    <Compile Include="TActual\DataModel\Msm.cs" />
+    <Compile Include="TMeter\DataModel\Msm.cs" />
+    <Compile Include="TActual\DataModel\PlayList.cs" />
+    <Compile Include="TActual\DataModel\Slide.cs" />
+    <Compile Include="TActual\DataModel\User.cs" />
+    <Compile Include="TMeter\DataModel\User.cs" />
+    <Compile Include="Helpers\FileIO.cs" />
+    <Compile Include="Helpers\IndexedObject.cs" />
+    <Compile Include="Helpers\JSONContractResolver.cs" />
+    <Compile Include="TMeter\DataModel\IData\IRsch.cs" />
+    <Compile Include="TMeter\DataModel\IData\IUser.cs" />
+    <Compile Include="DataModel\Hand.cs" />
+    <Compile Include="DataModel\TData.cs" />
+    <Compile Include="TMeter\DataModel\Rsch.cs" />
+    <Compile Include="TMeter\DataModel\RschUnit\Slide.cs" />
+    <Compile Include="Helpers\AppSettings.cs" />
+    <Compile Include="TMeter\Constants.cs" />
+    <Compile Include="Helpers\Logger.cs" />
+    <Compile Include="Helpers\Serializator.cs" />
+    <Compile Include="TMeter\DataModel\IData\IMsm.cs" />
+    <Compile Include="Helpers\WindowManager.cs" />
+    <Compile Include="MVVM\AsynchronousCommand.cs" />
+    <Compile Include="MVVM\Command.cs" />
+    <Compile Include="MVVM\Observed.cs" />
+    <Compile Include="PlotCreator\PlotExtension.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Helpers\Cloner.cs" />
+    <Compile Include="Recorder\Collector.cs" />
+    <Compile Include="Recorder\Commands.cs" />
+    <Compile Include="Recorder\Device.cs" />
+    <Compile Include="Recorder\Packet_old.cs" />
+    <Compile Include="UControls\GifImage.cs" />
+    <Compile Include="UControls\GridViewSort.cs" />
+    <Compile Include="UControls\NumericUpDown.xaml.cs">
+      <DependentUpon>NumericUpDown.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UControls\PlotViewEx.xaml.cs">
+      <DependentUpon>PlotViewEx.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UControls\RangeSlider.xaml.cs">
+      <DependentUpon>RangeSlider.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UControls\SelectablePlot.xaml.cs">
+      <DependentUpon>SelectablePlot.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="UControls\WaitBagel.xaml.cs">
+      <DependentUpon>WaitBagel.xaml</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+    <None Include="ClassDiagram1.cd" />
+    <None Include="DataModel.cd" />
+    <None Include="packages.config" />
+    <None Include="Recorder.cd" />
+  </ItemGroup>
+  <ItemGroup>
+    <Page Include="Markers\MarkersSet.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="Markers\UIMarkers.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="PlotCreator\PlotSettings.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UControls\NumericUpDown.xaml">
+      <Generator>MSBuild:Compile</Generator>
+      <SubType>Designer</SubType>
+    </Page>
+    <Page Include="UControls\PlotViewEx.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UControls\RangeSlider.xaml" />
+    <Page Include="UControls\SelectablePlot.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+    <Page Include="UControls\WaitBagel.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\reset.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\settings.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <Resource Include="icons\plot_edit.bmp" />
+  </ItemGroup>
+  <ItemGroup>
+    <Content Include="lib\TenzoDevice.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="lib\TenzoDevice_d.dll">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>
+    </PreBuildEvent>
+  </PropertyGroup>
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>

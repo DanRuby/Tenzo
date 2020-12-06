@@ -1,0 +1,101 @@
+diff --git a/Helpers/StringExctetion.cs b/Helpers/StringExctetion.cs
+deleted file mode 100644
+--- a/Helpers/StringExctetion.cs
++++ /dev/null
+@@ -1,27 +0,0 @@
+-﻿using System;
+-using System.Collections.Generic;
+-using System.IO;
+-using System.Linq;
+-using System.Text;
+-
+-namespace tEngine.Helpers {
+-    public static class StringExctetion {
+-        /// <summary>
+-        /// ..\path => ..\path\
+-        /// </summary>
+-        public static string CorrectSlash( this string path ) {
+-            if( string.IsNullOrEmpty( path ) ) return "";
+-            if( !(path.EndsWith( @"\" ) || path.EndsWith( "/" )) )
+-                path += @"\";
+-            return path;
+-        }
+-
+-        public static string CutFileName( this string path ) {
+-            if( string.IsNullOrEmpty( path ) ) return "";
+-            var dinfo = new FileInfo( path ).Directory;
+-            if( dinfo != null )
+-                return dinfo.FullName;
+-            return "";
+-        }
+-    }
+-}
+\ No newline at end of file
+diff --git a/ClassDiagram2.cd b/ClassDiagram2.cd
+deleted file mode 100644
+--- a/ClassDiagram2.cd
++++ /dev/null
+@@ -1,62 +0,0 @@
+-﻿<?xml version="1.0" encoding="utf-8"?>
+-<ClassDiagram MajorVersion="1" MinorVersion="1" MembersFormat="FullSignature">
+-  <Class Name="tEngine.DataModel.TData" Collapsed="true">
+-    <Position X="1.25" Y="4.5" Width="2.25" />
+-    <Compartments>
+-      <Compartment Name="Properties" Collapsed="true" />
+-      <Compartment Name="Methods" Collapsed="true" />
+-    </Compartments>
+-    <AssociationLine Name="mSpectrum" Type="System.Collections.Generic.List&lt;T&gt;">
+-      <MemberNameLabel ManuallyPlaced="true">
+-        <Position X="0.458" Y="0.492" />
+-      </MemberNameLabel>
+-    </AssociationLine>
+-    <AssociationLine Name="mConstant" Type="System.Collections.Generic.List&lt;T&gt;">
+-      <MemberNameLabel ManuallyPlaced="true">
+-        <Position X="0.495" Y="0.753" />
+-      </MemberNameLabel>
+-    </AssociationLine>
+-    <AssociationLine Name="mTremor" Type="System.Collections.Generic.List&lt;T&gt;">
+-      <MemberNameLabel ManuallyPlaced="true">
+-        <Position X="0.589" Y="0.881" />
+-      </MemberNameLabel>
+-    </AssociationLine>
+-    <TypeIdentifier>
+-      <HashCode>gBAARCoAAAQCEIwiAAACAAAQiAAAAAAAgiAgABBAIQA=</HashCode>
+-      <FileName>DataModel\TData.cs</FileName>
+-    </TypeIdentifier>
+-    <ShowAsAssociation>
+-      <Field Name="mTime" />
+-    </ShowAsAssociation>
+-    <ShowAsCollectionAssociation>
+-      <Field Name="mHands" />
+-      <Field Name="mSpectrum" />
+-      <Field Name="mTremor" />
+-      <Field Name="mConstant" />
+-    </ShowAsCollectionAssociation>
+-  </Class>
+-  <Class Name="tEngine.DataModel.Hand" Collapsed="true">
+-    <Position X="1.75" Y="3.25" Width="1.5" />
+-    <TypeIdentifier>
+-      <HashCode>AAAAAAAAAAAAEAAARAAgAAAAAAAAIAAAAAAQAABAAAA=</HashCode>
+-      <FileName>DataModel\Hand.cs</FileName>
+-    </TypeIdentifier>
+-  </Class>
+-  <Class Name="System.Collections.Generic.List&lt;T&gt;" Collapsed="true">
+-    <Position X="5.5" Y="6" Width="1.5" />
+-    <NestedTypes>
+-      <Struct Name="System.Collections.Generic.List&lt;T&gt;.Enumerator" Collapsed="true">
+-        <TypeIdentifier />
+-        <Lollipop Position="0.2" />
+-      </Struct>
+-    </NestedTypes>
+-    <TypeIdentifier />
+-    <Lollipop Orientation="Right" Position="0.1" Collapsed="true" />
+-  </Class>
+-  <Struct Name="System.Double" Collapsed="true">
+-    <Position X="4.5" Y="4.5" Width="1.5" />
+-    <TypeIdentifier />
+-    <Lollipop Orientation="Right" Position="0.1" Collapsed="true" />
+-  </Struct>
+-  <Font Name="Segoe UI" Size="9" />
+-</ClassDiagram>
+\ No newline at end of file

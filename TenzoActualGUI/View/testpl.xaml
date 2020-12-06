@@ -1,0 +1,14 @@
+﻿<Window x:Class="TenzoActualGUI.View.testpl"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:view="clr-namespace:TenzoActualGUI.View"
+
+        Title="testpl" Height="300" Width="300">
+    <Window.DataContext>
+        <view:testplVM></view:testplVM>
+    </Window.DataContext>
+    <Grid>
+        <TextBlock Text="{Binding Check}"></TextBlock>
+        
+    </Grid>
+</Window>

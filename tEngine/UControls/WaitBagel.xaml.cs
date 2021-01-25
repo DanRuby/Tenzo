@@ -14,31 +14,38 @@ using System.Windows.Navigation;
 using System.Windows.Shapes;
 using tEngine.MVVM;
 
-namespace tEngine.UControls {
+namespace tEngine.UControls
+{
     /// <summary>
     /// Interaction logic for WaitBagel.xaml
     /// </summary>
-    public partial class WaitBagel : UserControl {
+    public partial class WaitBagel : UserControl
+    {
         public static readonly DependencyProperty ShowProperty = DependencyProperty.Register(
-            "Show", typeof( bool ), typeof( WaitBagel ), new PropertyMetadata( false , ( obj, args ) => {
-                (obj as WaitBagel).GetBindingExpression( UserControl.VisibilityProperty ).UpdateTarget();
-            }) );
+            "Show", typeof(bool), typeof(WaitBagel), new PropertyMetadata(false, (obj, args) =>
+            {
+                (obj as WaitBagel).GetBindingExpression(UserControl.VisibilityProperty).UpdateTarget();
+            }));
 
-        public bool Show {
-            get { return (bool) GetValue( ShowProperty ); }
-            set { SetValue( ShowProperty, value ); }
+        public bool Show
+        {
+            get { return (bool)GetValue(ShowProperty); }
+            set { SetValue(ShowProperty, value); }
         }
 
-        public Visibility IsShow {
+        public Visibility IsShow
+        {
             get { return Show ? Visibility.Visible : Visibility.Collapsed; }
         }
 
-        public WaitBagel() {
+        public WaitBagel()
+        {
             InitializeComponent();
-            
+
 
             // проверка на design mode
-            if( (LicenseManager.UsageMode == LicenseUsageMode.Designtime) == false ) {
+            if ((LicenseManager.UsageMode == LicenseUsageMode.Designtime) == false)
+            {
                 GifImage.GifSource = @"/gif/load1.gif";
                 GifImage.AutoStart = true;
             }

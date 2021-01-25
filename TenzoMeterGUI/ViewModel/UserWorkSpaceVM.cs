@@ -12,20 +12,19 @@ using System.Windows;
 using System.Windows.Forms;
 using System.Windows.Media;
 using System.Windows.Threading;
-using OxyPlot;
-using OxyPlot.Wpf;
 using tEngine.DataModel;
 using tEngine.Helpers;
 using tEngine.Markers;
 using tEngine.MVVM;
-using tEngine.PlotCreator;
 using tEngine.TMeter.DataModel;
 using tEngine.UControls;
 using TenzoMeterGUI.View;
 using MessageBox = System.Windows.MessageBox;
 
-namespace TenzoMeterGUI.ViewModel {
-    public class UserWorkSpaceVM : Observed<UserWorkSpaceVM> {
+namespace TenzoMeterGUI.ViewModel
+{
+    public class UserWorkSpaceVM : Observed<UserWorkSpaceVM>
+    {
         private const int MINIMUM_POINTS = 100;
         private readonly Guid mNewMsmWindowID = Guid.NewGuid();
         private readonly Guid mResultWindowID = Guid.NewGuid();
@@ -53,9 +52,12 @@ namespace TenzoMeterGUI.ViewModel {
         public Command CMDSpectrumCalc { get; private set; }
         public Command CMDUpdateOxy { get; private set; }
 
-        public ObservableCollection<DataToShow> DataToShowList {
-            get {
-                if( mDataToShowList == null && IsMsm ) {
+        public ObservableCollection<DataToShow> DataToShowList
+        {
+            get
+            {
+                if (mDataToShowList == null && IsMsm)
+                {
                     mDataToShowList = new ObservableCollection<DataToShow>() {
                         new DataToShow( "Минимальное", "Минимальное прилагаемое усилие, без учета тремора",
                             SelectedMsm.Data.Left.Constant.Min, SelectedMsm.Data.Right.Constant.Min ),
@@ -76,79 +78,95 @@ namespace TenzoMeterGUI.ViewModel {
         }
 
         // для отладки
-        public int IndexInList {
-            get { return Msms.IndexOf( SelectedMsm ); }
+        public int IndexInList
+        {
+            get { return Msms.IndexOf(SelectedMsm); }
         }
 
-        public bool IsBusy {
+        public bool IsBusy
+        {
             get { return mIsBusy; }
-            set {
+            set
+            {
                 mIsBusy = value;
-                NotifyPropertyChanged( m => m.IsBusy );
+                NotifyPropertyChanged(m => m.IsBusy);
             }
         }
 
-        public new bool IsDesignMode {
+        public new bool IsDesignMode
+        {
             get { return true; }
         }
 
-        public bool IsMarkersShow {
+        public bool IsMarkersShow
+        {
             get { return Markers.IsWindow; }
         }
 
-        public bool IsMsm {
+        public bool IsMsm
+        {
             get { return SelectedMsm != null; }
         }
 
-        public bool IsNotSaveChanges {
+        public bool IsNotSaveChanges
+        {
             get { return User.IsNotSaveChanges; }
-            set {
+            set
+            {
                 User.IsNotSaveChanges = value;
-                NotifyPropertyChanged( m => m.IsNotSaveChanges );
-                NotifyPropertyChanged( m => m.WindowTitle );
+                NotifyPropertyChanged(m => m.IsNotSaveChanges);
+                NotifyPropertyChanged(m => m.WindowTitle);
             }
         }
 
-        public ObservableCollection<Measurement> Msms {
+        public ObservableCollection<Measurement> Msms
+        {
             get { return User.Msms; }
         }
 
         public bool SelectByIndex { get; set; }
 
-        public Measurement SelectedMsm {
+        public Measurement SelectedMsm
+        {
             get { return mSelectedMsm; }
-            set {
+            set
+            {
                 mSelectedMsm = value;
                 SelectByIndex = false;
                 UpdateSelectedMsm();
 
-                NotifyPropertyChanged( m => m.SelectedMsm );
-                NotifyPropertyChanged( m => m.IsMsm );
+                NotifyPropertyChanged(m => m.SelectedMsm);
+                NotifyPropertyChanged(m => m.IsMsm);
 
-                if( mSelectedMsm != null ) {
+                if (mSelectedMsm != null)
+                {
                     mDataToShowList = null;
-                    NotifyPropertyChanged( m => m.DataToShowList );
+                    NotifyPropertyChanged(m => m.DataToShowList);
                 }
 
-                NotifyPropertyChanged( m => m.IndexInList );
+                NotifyPropertyChanged(m => m.IndexInList);
                 CMDUpdateOxy_Func();
             }
         }
 
-        public int SelectedMsmIndex {
+        public int SelectedMsmIndex
+        {
             get { return mSelectedMsmIndex; }
-            set {
+            set
+            {
                 mSelectedMsmIndex = value;
                 SelectByIndex = true;
                 UpdateSelectedMsm();
             }
         }
 
-        public User User {
+        public User User
+        {
             get { return mUser; }
-            set {
+            set
+            {
                 mUser = value;
-                Debug.Assert( mUser != null );
+                Debug.Assert(mUser != null);
 
 
                 IsNotSaveChanges = false;
@@ -157,136 +175,163 @@ namespace TenzoMeterGUI.ViewModel {
             }
         }
 
-        public string WindowTitle {
-            get { return User.ToString( true ) + (IsNotSaveChanges ? "*" : ""); }
+        public string WindowTitle
+        {
+            get { return User.ToString(true) + (IsNotSaveChanges ? "*" : ""); }
         }
 
-        public UserWorkSpaceVM() {
-            CMDExportCSV = new Command( CMDExportCSV_Func );
-            CMDResultShow = new Command( CMDResultShow_Func );
-            CMDOxyPanelLoaded = new Command( CMDOxyPanelLoaded_Func );
-            CMDCreateTextFile = new Command( CMDCreateTextFile_Func );
-            CMDNewMsm = new Command( CMDNewMsm_Func );
-            CMDEditSelectedMsm = new Command( CMDEditSelectedMsm_Func );
-            CMDResetMsmList = new Command( CMDResetMsmList_Func );
-            CMDRemoveSelectedMsm = new Command( CMDRemoveSelectedMsm_Func );
-            CMDSaveOpenUser = new Command( CMDSaveOpenUser_Func );
-            CMDExit = new Command( CMDExit_Func );
-            CMDShowMarkers = new Command( CMDShowMarkers_Func );
-            CMDShowMarkersSettings = new Command( CMDShowMarkersSettings_Func );
-            CMDFocusChanged = new Command( CMDFocusChanged_Func );
-            CMDSpectrumCalc = new Command( CMDSpectrumCalc_Func );
-            CMDOxyLoad = new Command( CMDOxyLoad_Func );
-            CMDOxyUnload = new Command( CMDOxyUnload_Func );
-            CMDUpdateOxy = new Command( CMDUpdateOxy_Func );
+        public UserWorkSpaceVM()
+        {
+            CMDExportCSV = new Command(CMDExportCSV_Func);
+            CMDResultShow = new Command(CMDResultShow_Func);
+            CMDOxyPanelLoaded = new Command(CMDOxyPanelLoaded_Func);
+            CMDCreateTextFile = new Command(CMDCreateTextFile_Func);
+            CMDNewMsm = new Command(CMDNewMsm_Func);
+            CMDEditSelectedMsm = new Command(CMDEditSelectedMsm_Func);
+            CMDResetMsmList = new Command(CMDResetMsmList_Func);
+            CMDRemoveSelectedMsm = new Command(CMDRemoveSelectedMsm_Func);
+            CMDSaveOpenUser = new Command(CMDSaveOpenUser_Func);
+            CMDExit = new Command(CMDExit_Func);
+            CMDShowMarkers = new Command(CMDShowMarkers_Func);
+            CMDShowMarkersSettings = new Command(CMDShowMarkersSettings_Func);
+            CMDFocusChanged = new Command(CMDFocusChanged_Func);
+            CMDSpectrumCalc = new Command(CMDSpectrumCalc_Func);
+            CMDOxyLoad = new Command(CMDOxyLoad_Func);
+            CMDOxyUnload = new Command(CMDOxyUnload_Func);
+            CMDUpdateOxy = new Command(CMDUpdateOxy_Func);
 
-            if( IsDesignMode ) {
+            if (IsDesignMode)
+            {
                 User = User.GetTestUser();
             }
         }
 
-        public void OpenMsm( Measurement msm ) {
-            if( msm == null ) return;
-            ResetList( msm );
+        public void OpenMsm(Measurement msm)
+        {
+            if (msm == null) return;
+            ResetList(msm);
             IsNotSaveChanges = false;
             //throw new NotImplementedException();
         }
 
-        public void PreClosed() {
+        public void PreClosed()
+        {
             TData.CancelCalc();
         }
 
-        public int R2Pixels( int percent ) {
-            var data = SelectedMsm.Data;
+        public int R2Pixels(int percent)
+        {
+            TData data = SelectedMsm.Data;
 
-            var max = data.Count;
-            var min = (int) (max/10.0 > MINIMUM_POINTS ? MINIMUM_POINTS : max/10.0);
-            var k = (max - min)/(100 - 1);
-            var b = min - k*1.0;
+            int max = data.Count;
+            int min = (int)(max / 10.0 > MINIMUM_POINTS ? MINIMUM_POINTS : max / 10.0);
+            int k = (max - min) / (100 - 1);
+            double b = min - k * 1.0;
 
-            var result = percent*k + b;
-            return (int) result;
+            double result = percent * k + b;
+            return (int)result;
         }
 
-        private void CMDCreateTextFile_Func() {
-            using( var sfd = new SaveFileDialog() ) {
+        private void CMDCreateTextFile_Func()
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
                 sfd.DefaultExt = ".txt";
                 sfd.Filter = "*.txt|*.txt";
                 sfd.InitialDirectory = Directory.GetCurrentDirectory();
                 sfd.FileName = "text_adc";
-                if( sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK ) {
-                    var adc1 = SelectedMsm.Data.GetConst( Hands.Left ).Select( dp => dp.Y ).ToArray();
-                    var adc2 = SelectedMsm.Data.GetTremor( Hands.Left ).Select( dp => dp.Y ).ToArray();
-                    var adc3 = SelectedMsm.Data.GetConst( Hands.Right ).Select( dp => dp.Y ).ToArray();
-                    var adc4 = SelectedMsm.Data.GetTremor( Hands.Right ).Select( dp => dp.Y ).ToArray();
-                    var sb = new StringBuilder();
-                    sb.Append( "ацп1\tацп2\tацп3\tацп4" + Environment.NewLine );
-                    for( int i = 0; i < adc1.Count(); i++ ) {
+                if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    double[] adc1 = SelectedMsm.Data.GetConst(Hands.Left).Select(dp => dp.Y).ToArray();
+                    double[] adc2 = SelectedMsm.Data.GetTremor(Hands.Left).Select(dp => dp.Y).ToArray();
+                    double[] adc3 = SelectedMsm.Data.GetConst(Hands.Right).Select(dp => dp.Y).ToArray();
+                    double[] adc4 = SelectedMsm.Data.GetTremor(Hands.Right).Select(dp => dp.Y).ToArray();
+                    StringBuilder sb = new StringBuilder();
+                    sb.Append("ацп1\tацп2\tацп3\tацп4" + Environment.NewLine);
+                    for (int i = 0; i < adc1.Count(); i++)
+                    {
                         //sb.Append( string.Format( "{0}\t{1}\t{2}\t{3}", adc1[i],adc2[i],adc3[i],adc4[i]) + Environment.NewLine);
-                        sb.Append( adc1[i] + "\t" + adc2[i] + "\t" + adc3[i] + "\t" + adc4[i] + Environment.NewLine );
+                        sb.Append(adc1[i] + "\t" + adc2[i] + "\t" + adc3[i] + "\t" + adc4[i] + Environment.NewLine);
                     }
-                    using( var sw = new StreamWriter( sfd.FileName ) ) {
-                        sw.Write( sb );
+                    using (StreamWriter sw = new StreamWriter(sfd.FileName))
+                    {
+                        sw.Write(sb);
                     }
-                    System.Windows.Forms.MessageBox.Show( "Файл записан!" + Environment.NewLine + sfd.FileName );
+                    System.Windows.Forms.MessageBox.Show("Файл записан!" + Environment.NewLine + sfd.FileName);
                 }
             }
         }
 
-        private void CMDEditSelectedMsm_Func() {
-            DisableBaseButtons( true );
-            var wnd = new MsmCreator();
-            wnd.SetMsm( SelectedMsm );
+        private void CMDEditSelectedMsm_Func()
+        {
+            DisableBaseButtons(true);
+            MsmCreator wnd = new MsmCreator();
+            wnd.SetMsm(SelectedMsm);
             wnd.Closing += MsmCreator_OnClosing;
             wnd.Topmost = true;
             wnd.Show();
         }
 
-        private async void CMDExit_Func() {
-            if( IsNotSaveChanges ) {
-                var answer =
+        private async void CMDExit_Func()
+        {
+            if (IsNotSaveChanges)
+            {
+                MessageBoxResult answer =
                     MessageBox.Show(
-                        string.Format( "Имеются несохраненные изменения в: {0}. Сохранить?", User.UserLong() ),
+                        string.Format("Имеются несохраненные изменения в: {0}. Сохранить?", User.UserLong()),
                         "Предупреждение",
-                        MessageBoxButton.YesNoCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel );
-                if( answer == MessageBoxResult.Yes ) {
+                        MessageBoxButton.YesNoCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
+                if (answer == MessageBoxResult.Yes)
+                {
                     CMDSaveOpenUser_Func();
-                } else if( answer == MessageBoxResult.Cancel ) {
+                }
+                else if (answer == MessageBoxResult.Cancel)
+                {
                     return;
-                } else if( answer == MessageBoxResult.No ) {
+                }
+                else if (answer == MessageBoxResult.No)
+                {
                     IsBusy = true;
-                    await Task.Factory.StartNew( () => { User.Restore(); } );
+                    await Task.Factory.StartNew(() => { User.Restore(); });
                     IsBusy = false;
                 }
             }
-            if( Parent != null )
+            if (Parent != null)
                 Parent.Close();
         }
 
-        private void CMDExportCSV_Func() {
-            using( var sfd = new SaveFileDialog() ) {
+        private void CMDExportCSV_Func()
+        {
+            using (SaveFileDialog sfd = new SaveFileDialog())
+            {
                 sfd.DefaultExt = "*.csv";
                 sfd.Filter = "*.csv|*.csv";
-                if( sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK ) {
-                    try {
-                        SelectedMsm.Msm2CSV( sfd.FileName );
-                        MessageBox.Show( "Измерение записано в файл " + sfd.FileName, "Сообщение", MessageBoxButton.OK );
-                    } catch( Exception  ) {
-                        MessageBox.Show( "Ошибка записи файла", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error );
+                if (sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+                {
+                    try
+                    {
+                        SelectedMsm.Msm2CSV(sfd.FileName);
+                        MessageBox.Show("Измерение записано в файл " + sfd.FileName, "Сообщение", MessageBoxButton.OK);
+                    }
+                    catch (Exception)
+                    {
+                        MessageBox.Show("Ошибка записи файла", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
                     }
                 }
             }
         }
 
-        private void CMDFocusChanged_Func() {
-            NotifyPropertyChanged( m => m.IsMarkersShow );
+        private void CMDFocusChanged_Func()
+        {
+            NotifyPropertyChanged(m => m.IsMarkersShow);
         }
 
-        private void CMDNewMsm_Func() {
-            DisableBaseButtons( true );
+        private void CMDNewMsm_Func()
+        {
+            DisableBaseButtons(true);
 
-            var wnd = WindowManager.GetWindow<MsmCreator>( mNewMsmWindowID ) ??
-                      WindowManager.NewWindow<MsmCreator>( mNewMsmWindowID );
+            MsmCreator wnd = WindowManager.GetWindow<MsmCreator>(mNewMsmWindowID) ??
+                      WindowManager.NewWindow<MsmCreator>(mNewMsmWindowID);
 
 
             wnd.Closing += MsmCreator_OnClosing;
@@ -302,150 +347,184 @@ namespace TenzoMeterGUI.ViewModel {
             //}
         }
 
-        private void CMDOxyLoad_Func( object param ) {
-            if( param is PlotViewEx == false ) return;
-            var pve = (PlotViewEx) param;
-            if( mGraphics.ContainsKey( pve.Tag ) ) {
-                mGraphics.Remove( pve.Tag );
+        private void CMDOxyLoad_Func(object param)
+        {
+            if (param is PlotViewEx == false) return;
+            PlotViewEx pve = (PlotViewEx)param;
+            if (mGraphics.ContainsKey(pve.Tag))
+            {
+                mGraphics.Remove(pve.Tag);
             }
-            mGraphics.Add( pve.Tag, pve );
+            mGraphics.Add(pve.Tag, pve);
         }
 
-        private void CMDOxyPanelLoaded_Func() {
+        private void CMDOxyPanelLoaded_Func()
+        {
             // данная функция необходима только при первой загрузке
             CMDOxyPanelLoaded.CanExecute = false;
             CMDUpdateOxy_Func();
         }
 
-        private void CMDOxyUnload_Func( object param ) {
-            if( param is PlotViewEx == false ) return;
-            var pve = (PlotViewEx) param;
-            if( pve.Tag != null )
-                if( mGraphics.ContainsKey( pve.Tag ) ) {
-                    mGraphics.Remove( pve.Tag );
+        private void CMDOxyUnload_Func(object param)
+        {
+            if (param is PlotViewEx == false) return;
+            PlotViewEx pve = (PlotViewEx)param;
+            if (pve.Tag != null)
+                if (mGraphics.ContainsKey(pve.Tag))
+                {
+                    mGraphics.Remove(pve.Tag);
                 }
         }
 
-        private void CMDRemoveSelectedMsm_Func() {
-            Debug.Assert( SelectedMsm != null );
-            if( IsMsm ) {
-                var answer =
+        private void CMDRemoveSelectedMsm_Func()
+        {
+            Debug.Assert(SelectedMsm != null);
+            if (IsMsm)
+            {
+                MessageBoxResult answer =
                     MessageBox.Show(
                         string.Format(
                             "Измерение \"{0}\" будет удалено вместе со всей измеренной информацией . Удалить измерение?",
-                            SelectedMsm.Title ), "Предупреждение",
-                        MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No );
-                if( answer == MessageBoxResult.Yes ) {
-                    var index = SelectedMsmIndex;
-                    User.RemoveMsm( SelectedMsm );
-                    ResetList( index );
+                            SelectedMsm.Title), "Предупреждение",
+                        MessageBoxButton.YesNo, MessageBoxImage.Warning, MessageBoxResult.No);
+                if (answer == MessageBoxResult.Yes)
+                {
+                    int index = SelectedMsmIndex;
+                    User.RemoveMsm(SelectedMsm);
+                    ResetList(index);
                     IsNotSaveChanges = true;
                 }
             }
         }
 
-        private void CMDResetMsmList_Func() {
-            ResetList( SelectedMsm );
+        private void CMDResetMsmList_Func()
+        {
+            ResetList(SelectedMsm);
         }
 
-        private void CMDResultShow_Func() {
-            var wnd = WindowManager.GetWindow<ResultWindow>( mResultWindowID );
-            if( wnd == null ) {
-                wnd = WindowManager.NewWindow<ResultWindow>( mResultWindowID );
-                wnd.SetMsmCollection( User.Msms );
+        private void CMDResultShow_Func()
+        {
+            ResultWindow wnd = WindowManager.GetWindow<ResultWindow>(mResultWindowID);
+            if (wnd == null)
+            {
+                wnd = WindowManager.NewWindow<ResultWindow>(mResultWindowID);
+                wnd.SetMsmCollection(User.Msms);
             }
             wnd.Show();
         }
 
-        private void CMDSaveOpenUser_Func() {
+        private void CMDSaveOpenUser_Func()
+        {
             User.SaveDefaultPath();
             IsNotSaveChanges = false;
         }
 
-        private void CMDShowMarkers_Func() {
-            if( !Markers.IsWindow ) {
-                var wnd = Markers.GetWindow();
-                wnd.Closed += ( sender, args ) => { NotifyPropertyChanged( m => m.IsMarkersShow ); };
+        private void CMDShowMarkers_Func()
+        {
+            if (!Markers.IsWindow)
+            {
+                Markers wnd = Markers.GetWindow();
+                wnd.Closed += (sender, args) => { NotifyPropertyChanged(m => m.IsMarkersShow); };
                 wnd.Show();
-            } else {
+            }
+            else
+            {
                 Markers.CloseWindow();
             }
         }
 
-        private void CMDShowMarkersSettings_Func() {
-            var ms = new MarkersSet();
-            if( ms.ShowDialog() == true ) {
-                var needClose = !Markers.IsWindow;
+        private void CMDShowMarkersSettings_Func()
+        {
+            MarkersSet ms = new MarkersSet();
+            if (ms.ShowDialog() == true)
+            {
+                bool needClose = !Markers.IsWindow;
 
-                var wnd = Markers.GetWindow();
+                Markers wnd = Markers.GetWindow();
                 wnd.UpdateSettings();
                 wnd.ReDraw();
-                if( needClose ) wnd.FreeWindow();
+                if (needClose) wnd.FreeWindow();
             }
         }
 
-        private void CMDSpectrumCalc_Func() {
-            var first = User.Msms.First( msm => SelectedMsm.ID.Equals( msm.ID ) );
-            if( first == null ) return;
+        private void CMDSpectrumCalc_Func()
+        {
+            Measurement first = User.Msms.First(msm => SelectedMsm.ID.Equals(msm.ID));
+            if (first == null) return;
             IsBusy = true;
-            first.Data.SpectrumAnalys( null, ( data, b ) => {
-                Parent.Dispatcher.BeginInvoke( DispatcherPriority.Normal, new Action( () => {
+            first.Data.SpectrumAnalys(null, (data, b) =>
+            {
+                Parent.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+                {
                     //MessageBox.Show( "Анализ завершен!" );
-                    ResetList( first );
+                    ResetList(first);
                     CMDUpdateOxy_Func();
                     IsBusy = false;
                     IsNotSaveChanges = true;
-                } ) );
-            }, true );
+                }));
+            }, true);
             TData.StartCalc();
         }
 
-        private Task CMDSpectrumCalc_Func_Async() {
-            var first = User.Msms.First( msm => SelectedMsm.ID.Equals( msm.ID ) );
-            if( first == null ) return null;
+        private Task CMDSpectrumCalc_Func_Async()
+        {
+            Measurement first = User.Msms.First(msm => SelectedMsm.ID.Equals(msm.ID));
+            if (first == null) return null;
             IsBusy = true;
-            var task = Task.Factory.StartNew( () => {
-                var exit = false;
-                first.Data.SpectrumAnalys( null, ( data, b ) => { exit = true; }, true );
+            Task task = Task.Factory.StartNew(() =>
+            {
+                bool exit = false;
+                first.Data.SpectrumAnalys(null, (data, b) => { exit = true; }, true);
                 TData.StartCalc();
-                while( exit == false ) {
-                    Thread.Sleep( 10 );
+                while (exit == false)
+                {
+                    Thread.Sleep(10);
                 }
-                Parent.Dispatcher.BeginInvoke( DispatcherPriority.Normal, new Action( () => {
-                    ResetList( first );
+                Parent.Dispatcher.BeginInvoke(DispatcherPriority.Normal, new Action(() =>
+                {
+                    ResetList(first);
                     CMDUpdateOxy_Func();
                     IsBusy = false;
-                } ) );
-            } );
+                }));
+            });
 
             return task;
         }
 
-        private void CMDUpdateOxy_Func() {
-            var list = mGraphics.Select( kv => kv.Value ).ToList();
-            foreach( var value in list ) {
-                OxyDraw( value );
+        private void CMDUpdateOxy_Func()
+        {
+            List<PlotViewEx> list = mGraphics.Select(kv => kv.Value).ToList();
+            foreach (PlotViewEx value in list)
+            {
+                OxyDraw(value);
             }
         }
 
-        private void DisableBaseButtons( bool b ) {
+        private void DisableBaseButtons(bool b)
+        {
             CMDNewMsm.CanExecute = !b;
             CMDEditSelectedMsm.CanExecute = !b;
             CMDRemoveSelectedMsm.CanExecute = !b;
             CMDExit.CanExecute = !b;
         }
 
-        private async void MsmCreator_OnClosing( object sender, CancelEventArgs cancelEventArgs ) {
+        private async void MsmCreator_OnClosing(object sender, CancelEventArgs cancelEventArgs)
+        {
             IsBusy = true;
-            var wnd = sender as MsmCreator;
-            if( wnd.NotDialogButResult == true ) {
-                if( wnd.Result != null ) {
-                    if( SelectedMsm != null && SelectedMsm.ID.Equals( wnd.Result.ID ) ) {
-                        Cloner.CopyAllFields( SelectedMsm, wnd.Result );
-                        Cloner.CopyAllProperties( SelectedMsm, wnd.Result );
-                        SelectedMsm.SetData( wnd.Result.Data );
-                    } else {
-                        User.AddMsm( wnd.Result );
+            MsmCreator wnd = sender as MsmCreator;
+            if (wnd.NotDialogButResult == true)
+            {
+                if (wnd.Result != null)
+                {
+                    if (SelectedMsm != null && SelectedMsm.ID.Equals(wnd.Result.ID))
+                    {
+                        Cloner.CopyAllFields(SelectedMsm, wnd.Result);
+                        Cloner.CopyAllProperties(SelectedMsm, wnd.Result);
+                        SelectedMsm.SetData(wnd.Result.Data);
+                    }
+                    else
+                    {
+                        User.AddMsm(wnd.Result);
                     }
                     IsNotSaveChanges = true;
                     SelectedMsm = wnd.Result;
@@ -455,89 +534,108 @@ namespace TenzoMeterGUI.ViewModel {
                     wnd.PostScript();
                 }
             }
-            DisableBaseButtons( false );
+            DisableBaseButtons(false);
             IsBusy = false;
         }
 
-        private async void OxyDraw( PlotViewEx pve ) {
-            var command = pve.Tag as string;
-            if( command == null ) return;
+        private async void OxyDraw(PlotViewEx pve)
+        {
+            string command = pve.Tag as string;
+            if (command == null) return;
 
-            await Task.Factory.StartNew( () => {
+            await Task.Factory.StartNew(() =>
+            {
                 pve.Clear();
 
-                var data = (SelectedMsm != null) ? SelectedMsm.Data : new TData();
+                TData data = (SelectedMsm != null) ? SelectedMsm.Data : new TData();
 
-                if( command.Equals( "all_tremor" ) ) {
-                    var thickness = 2;
+                if (command.Equals("all_tremor"))
+                {
+                    int thickness = 2;
                     Color? color = null;
-                    pve.AddLineSeries( data.GetTremor( Hands.Left ).GetPartPercent( 100 ), color: color,
-                        thickness: thickness );
-                    pve.AddLineSeries( data.GetTremor( Hands.Right ).GetPartPercent( 100 ), color: color,
-                        thickness: thickness );
-                } else if( command.Equals( "all_const" ) ) {
-                    var thickness = 2;
-                    Color? color = null;
-                    pve.AddLineSeries( data.GetConst( Hands.Left ).GetPartPercent( 100 ), color: color,
-                        thickness: thickness );
-                    pve.AddLineSeries( data.GetConst( Hands.Right ).GetPartPercent( 100 ), color: color,
-                        thickness: thickness );
-                } else if( command.Equals( "all_spectrum" ) ) {
-                    var thickness = 2;
-                    Color? color = null;
-                    pve.AddLineSeries( data.GetSpectrum( Hands.Left ).GetPartPercent( 100 ), color: color,
-                        thickness: thickness );
-                    pve.AddLineSeries( data.GetSpectrum( Hands.Right ).GetPartPercent( 100 ), color: color,
-                        thickness: thickness );
-                } else if( command.Equals( "all_corr" ) ) {
-                    var thickness = 2;
-                    Color? color = null;
-                    pve.AddLineSeries( data.GetCorrelation( Hands.Left ).GetPartPercent( 100 ), color: color,
-                        thickness: thickness );
-                    pve.AddLineSeries( data.GetCorrelation( Hands.Right ).GetPartPercent( 100 ), color: color,
-                        thickness: thickness );
+                    pve.AddLineSeries(data.GetTremor(Hands.Left).GetPartPercent(100), color: color,
+                        thickness: thickness);
+                    pve.AddLineSeries(data.GetTremor(Hands.Right).GetPartPercent(100), color: color,
+                        thickness: thickness);
                 }
-            } );
+                else if (command.Equals("all_const"))
+                {
+                    int thickness = 2;
+                    Color? color = null;
+                    pve.AddLineSeries(data.GetConst(Hands.Left).GetPartPercent(100), color: color,
+                        thickness: thickness);
+                    pve.AddLineSeries(data.GetConst(Hands.Right).GetPartPercent(100), color: color,
+                        thickness: thickness);
+                }
+                else if (command.Equals("all_spectrum"))
+                {
+                    int thickness = 2;
+                    Color? color = null;
+                    pve.AddLineSeries(data.GetSpectrum(Hands.Left).GetPartPercent(100), color: color,
+                        thickness: thickness);
+                    pve.AddLineSeries(data.GetSpectrum(Hands.Right).GetPartPercent(100), color: color,
+                        thickness: thickness);
+                }
+                else if (command.Equals("all_corr"))
+                {
+                    int thickness = 2;
+                    Color? color = null;
+                    pve.AddLineSeries(data.GetCorrelation(Hands.Left).GetPartPercent(100), color: color,
+                        thickness: thickness);
+                    pve.AddLineSeries(data.GetCorrelation(Hands.Right).GetPartPercent(100), color: color,
+                        thickness: thickness);
+                }
+            });
             pve.ReDraw();
         }
 
-        private void ResetList( int selectIndex = 0 ) {
+        private void ResetList(int selectIndex = 0)
+        {
             UpdateAllProperties();
 
-            var toSelect = selectIndex;
-            if( selectIndex >= Msms.Count ) {
+            int toSelect = selectIndex;
+            if (selectIndex >= Msms.Count)
+            {
                 toSelect = (Msms.Count - 1);
             }
             SelectedMsmIndex = toSelect;
         }
 
-        private void ResetList( Measurement selectItem = null ) {
+        private void ResetList(Measurement selectItem = null)
+        {
             UpdateAllProperties();
 
-            if( selectItem == null ) {
+            if (selectItem == null)
+            {
                 SelectedMsm = Msms.FirstOrDefault();
-            } else {
-                SelectedMsm = Msms.FirstOrDefault( msm => msm.ID.Equals( selectItem.ID ) );
+            }
+            else
+            {
+                SelectedMsm = Msms.FirstOrDefault(msm => msm.ID.Equals(selectItem.ID));
             }
         }
 
-        private async void UpdateSelectedMsm() {
+        private async void UpdateSelectedMsm()
+        {
             IsBusy = true;
-            await Task<object>.Factory.StartNew( () => {
-                NotifyPropertyChanged( m => m.SelectByIndex );
-                NotifyPropertyChanged( m => m.SelectedMsmIndex );
+            await Task<object>.Factory.StartNew(() =>
+            {
+                NotifyPropertyChanged(m => m.SelectByIndex);
+                NotifyPropertyChanged(m => m.SelectedMsmIndex);
                 return null;
-            } );
+            });
             IsBusy = false;
         }
 
-        public class DataToShow {
+        public class DataToShow
+        {
             public string Title { get; set; }
             public string ToolTip { get; set; }
             public double V1 { get; set; }
             public double V2 { get; set; }
 
-            public DataToShow( string title, string toolTip, double v1, double v2 ) {
+            public DataToShow(string title, string toolTip, double v1, double v2)
+            {
                 Title = title;
                 ToolTip = toolTip;
                 V1 = v1;

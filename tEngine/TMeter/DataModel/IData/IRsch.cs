@@ -2,8 +2,10 @@ using System;
 using System.Collections.Generic;
 using tEngine.DataModel;
 
-namespace tEngine.TMeter.DataModel.IData {
-    public interface IRsch<T> {
+namespace tEngine.TMeter.DataModel.IData
+{
+    public interface IRsch<T>
+    {
         /// <summary>
         /// Комментарий врача, описание
         /// </summary>
@@ -44,13 +46,13 @@ namespace tEngine.TMeter.DataModel.IData {
         /// </summary>
         /// <param name="user"></param>
         /// <param name="msmId"></param>
-        void AddMsm( User user, Guid msmId );
+        void AddMsm(User user, Guid msmId);
 
         /// <summary>
         /// Получить одно измерение
         /// </summary>
         /// <returns></returns>
-        Measurement GetMsm( Guid msmId );
+        Measurement GetMsm(Guid msmId);
 
         /// <summary>
         /// Количество измерений
@@ -81,19 +83,19 @@ namespace tEngine.TMeter.DataModel.IData {
         /// </summary>
         /// <param name="filePath"></param>
         /// <returns></returns>
-        bool Open( string filePath, out T rsch );
+        bool Open(string filePath, out T rsch);
 
         /// <summary>
         /// Удалить измерение из набора
         /// </summary>
         /// <param name="msmId"></param>
-        void RemoveMsm( Guid msmId );
+        void RemoveMsm(Guid msmId);
 
         /// <summary>
         /// Удалить измерение из набора
         /// </summary>
         /// <param name="msm"></param>
-        void RemoveMsm( Measurement msm );
+        void RemoveMsm(Measurement msm);
 
         /// <summary>
         /// Сохранить в файл по умолчанию
@@ -104,6 +106,6 @@ namespace tEngine.TMeter.DataModel.IData {
         /// Сохранить в новый файл
         /// </summary>
         /// <param name="filePath"></param>
-        bool Save( string filePath );
+        bool Save(string filePath);
     }
 }

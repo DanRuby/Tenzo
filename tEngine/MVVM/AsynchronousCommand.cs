@@ -3,11 +3,13 @@ using System.ComponentModel;
 using System.Threading;
 using System.Windows.Threading;
 
-namespace tEngine.MVVM {
+namespace tEngine.MVVM
+{
     /// <summary>
     ///     The AsynchronousCommand is a Command that runs on a thread from the thread pool.
     /// </summary>
-    public class AsynchronousCommand : Command, INotifyPropertyChanged {
+    public class AsynchronousCommand : Command, INotifyPropertyChanged
+    {
         protected Dispatcher mCallingDispatcher;
 
         /// <summary>
@@ -28,7 +30,8 @@ namespace tEngine.MVVM {
         /// <summary>
         ///     Gets the cancel command.
         /// </summary>
-        public Command CancelCommand {
+        public Command CancelCommand
+        {
             get { return mCancelCommand; }
         }
 
@@ -38,12 +41,15 @@ namespace tEngine.MVVM {
         /// <value>
         ///     <c>true</c> if this instance is cancellation requested; otherwise, <c>false</c>.
         /// </value>
-        public bool IsCancellationRequested {
+        public bool IsCancellationRequested
+        {
             get { return mIsCancellationRequested; }
-            set {
-                if( mIsCancellationRequested != value ) {
+            set
+            {
+                if (mIsCancellationRequested != value)
+                {
                     mIsCancellationRequested = value;
-                    NotifyPropertyChanged( "IsCancellationRequested" );
+                    NotifyPropertyChanged("IsCancellationRequested");
                 }
             }
         }
@@ -54,12 +60,15 @@ namespace tEngine.MVVM {
         /// <value>
         ///     <c>true</c> if this instance is executing; otherwise, <c>false</c>.
         /// </value>
-        public bool IsExecuting {
+        public bool IsExecuting
+        {
             get { return mIsExecuting; }
-            set {
-                if( mIsExecuting != value ) {
+            set
+            {
+                if (mIsExecuting != value)
+                {
                     mIsExecuting = value;
-                    NotifyPropertyChanged( "IsExecuting" );
+                    NotifyPropertyChanged("IsExecuting");
                 }
             }
         }
@@ -69,8 +78,9 @@ namespace tEngine.MVVM {
         /// </summary>
         /// <param name="action">The action.</param>
         /// <param name="canExecute">if set to <c>true</c> the command can execute.</param>
-        public AsynchronousCommand( Action action, bool canExecute = true )
-            : base( action, canExecute ) {
+        public AsynchronousCommand(Action action, bool canExecute = true)
+            : base(action, canExecute)
+        {
             //  Initialise the command.
             Initialise();
         }
@@ -80,8 +90,9 @@ namespace tEngine.MVVM {
         /// </summary>
         /// <param name="parameterizedAction">The parameterized action.</param>
         /// <param name="canExecute">if set to <c>true</c> [can execute].</param>
-        public AsynchronousCommand( Action<object> parameterizedAction, bool canExecute = true )
-            : base( parameterizedAction, canExecute ) {
+        public AsynchronousCommand(Action<object> parameterizedAction, bool canExecute = true)
+            : base(parameterizedAction, canExecute)
+        {
             //  Initialise the command.
             Initialise();
         }
@@ -90,9 +101,10 @@ namespace tEngine.MVVM {
         ///     Cancels the command if requested.
         /// </summary>
         /// <returns>True if the command has been cancelled and we must return.</returns>
-        public bool CancelIfRequested() {
+        public bool CancelIfRequested()
+        {
             //  If we haven't requested cancellation, there's nothing to do.
-            if( IsCancellationRequested == false )
+            if (IsCancellationRequested == false)
                 return false;
 
             //  We're done.
@@ -108,17 +120,18 @@ namespace tEngine.MVVM {
         ///     Executes the command.
         /// </summary>
         /// <param name="param">The param.</param>
-        public override void DoExecute( object param ) {
+        public override void DoExecute(object param)
+        {
             //  If we are already executing, do not continue.
-            if( IsExecuting )
+            if (IsExecuting)
                 return;
 
             //  Invoke the executing command, allowing the command to be cancelled.
-            var args = new CancelCommandEventArgs {Parameter = param, Cancel = false};
-            InvokeExecuting( args );
+            CancelCommandEventArgs args = new CancelCommandEventArgs { Parameter = param, Cancel = false };
+            InvokeExecuting(args);
 
             //  If the event has been cancelled, bail now.
-            if( args.Cancel )
+            if (args.Cancel)
                 return;
 
             //  We are executing.
@@ -128,25 +141,27 @@ namespace tEngine.MVVM {
             mCallingDispatcher = Dispatcher.CurrentDispatcher;
 
             // Run the action on a new thread from the thread pool (this will therefore work in SL and WP7 as well).
-            ThreadPool.QueueUserWorkItem( state => {
+            ThreadPool.QueueUserWorkItem(state =>
+            {
                 //  Invoke the action.
-                InvokeAction( param );
+                InvokeAction(param);
 
                 //  Fire the executed event and set the executing state.
-                ReportProgress( () => {
+                ReportProgress(() =>
+                {
                     //  We are no longer executing.
                     IsExecuting = false;
 
                     //  If we were cancelled, invoke the cancelled event - otherwise invoke executed.
-                    if( IsCancellationRequested )
-                        InvokeCancelled( new CommandEventArgs {Parameter = param} );
+                    if (IsCancellationRequested)
+                        InvokeCancelled(new CommandEventArgs { Parameter = param });
                     else
-                        InvokeExecuted( new CommandEventArgs {Parameter = param} );
+                        InvokeExecuted(new CommandEventArgs { Parameter = param });
 
                     //  We are no longer requesting cancellation.
                     IsCancellationRequested = false;
-                } );
-            } );
+                });
+            });
         }
 
         /// <summary>
@@ -158,12 +173,14 @@ namespace tEngine.MVVM {
         ///     Reports progress on the thread which invoked the command.
         /// </summary>
         /// <param name="action">The action.</param>
-        public void ReportProgress( Action action ) {
-            if( IsExecuting ) {
-                if( mCallingDispatcher.CheckAccess() )
+        public void ReportProgress(Action action)
+        {
+            if (IsExecuting)
+            {
+                if (mCallingDispatcher.CheckAccess())
                     action();
                 else
-                    mCallingDispatcher.BeginInvoke( action );
+                    mCallingDispatcher.BeginInvoke(action);
             }
         }
 
@@ -171,37 +188,41 @@ namespace tEngine.MVVM {
         ///     Invokes the cancelled event.
         /// </summary>
         /// <param name="args">The <see cref="CommandEventArgs" /> instance containing the event data.</param>
-        protected void InvokeCancelled( CommandEventArgs args ) {
-            var cancelled = Cancelled;
+        protected void InvokeCancelled(CommandEventArgs args)
+        {
+            CommandEventHandler cancelled = Cancelled;
 
             //  Call the cancelled event.
-            if( cancelled != null )
-                cancelled( this, args );
+            if (cancelled != null)
+                cancelled(this, args);
         }
 
         /// <summary>
         ///     Initialises this instance.
         /// </summary>
-        private void Initialise() {
+        private void Initialise()
+        {
             //  Construct the cancel command.
-            mCancelCommand = new Command( () => {
+            mCancelCommand = new Command(() =>
+            {
                 //  Set the Is Cancellation Requested flag.
                 IsCancellationRequested = true;
-            }, canExecute: true );
+            }, canExecute: true);
         }
 
         /// <summary>
         ///     Raises the property changed event.
         /// </summary>
         /// <param name="propertyName">Name of the property.</param>
-        private void NotifyPropertyChanged( string propertyName ) {
+        private void NotifyPropertyChanged(string propertyName)
+        {
             //  Store the event handler - in case it changes between
             //  the line to check it and the line to fire it.
-            var propertyChanged = PropertyChanged;
+            PropertyChangedEventHandler propertyChanged = PropertyChanged;
 
             //  If the event has been subscribed to, fire it.
-            if( propertyChanged != null )
-                propertyChanged( this, new PropertyChangedEventArgs( propertyName ) );
+            if (propertyChanged != null)
+                propertyChanged(this, new PropertyChangedEventArgs(propertyName));
         }
     }
 }

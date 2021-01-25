@@ -1,8 +1,10 @@
 using System;
 using System.Collections.Generic;
 
-namespace tEngine.TMeter.DataModel.IData {
-    public interface IUser<T> {
+namespace tEngine.TMeter.DataModel.IData
+{
+    public interface IUser<T>
+    {
         /// <summary>
         /// День рождения
         /// </summary>
@@ -47,21 +49,21 @@ namespace tEngine.TMeter.DataModel.IData {
         /// Добавить измерение
         /// </summary>
         /// <param name="msm"></param>
-        void AddMsm( Measurement msm );
+        void AddMsm(Measurement msm);
 
         /// <summary>
         /// Получить измерение по номеру
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        Measurement GetMsm( int index );
+        Measurement GetMsm(int index);
 
         /// <summary>
         /// Получить измерение по ID
         /// </summary>
         /// <param name="msmId"></param>
         /// <returns></returns>
-        Measurement GetMsm( Guid msmId );
+        Measurement GetMsm(Guid msmId);
 
         /// <summary>
         /// Количество измерений
@@ -79,19 +81,19 @@ namespace tEngine.TMeter.DataModel.IData {
         /// Открыть файл с пользователем
         /// </summary>
         /// <returns></returns>
-        bool Open( string filePath, out T user );
+        bool Open(string filePath, out T user);
 
         /// <summary>
         /// Удаоить измерение
         /// </summary>
         /// <param name="msm"></param>
-        void RemoveMsm( Measurement msm );
+        void RemoveMsm(Measurement msm);
 
         /// <summary>
         /// Удалить измерение
         /// </summary>
         /// <param name="msm"></param>
-        void RemoveMsm( Guid msmId );
+        void RemoveMsm(Guid msmId);
 
         /// <summary>
         /// Сохранить по умочанию
@@ -104,7 +106,7 @@ namespace tEngine.TMeter.DataModel.IData {
         /// </summary>
         /// <param name="filePath">путь к файлу</param>
         /// <returns>успех</returns>
-        bool Save( string filePath );
+        bool Save(string filePath);
 
         /// <summary>
         /// Инициалы

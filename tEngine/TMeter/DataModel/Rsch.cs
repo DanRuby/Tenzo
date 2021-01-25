@@ -13,10 +13,10 @@ namespace tEngine.TMeter.DataModel
     {
         private readonly Func<Rsch, string> mDefaultFilePath = (r) =>
         {
-            var cDirectory = AppSettings.GetValue("LastUserFolder", Constants.AppDataFolder);
+            string cDirectory = AppSettings.GetValue("LastUserFolder", Constants.AppDataFolder);
             if (!cDirectory.EndsWith(@"\") && !cDirectory.EndsWith("/"))
                 cDirectory += @"\";
-            var filepath = cDirectory;
+            string filepath = cDirectory;
             filepath += r.Title + Constants.USER_EXT;
             return filepath;
         };
@@ -67,8 +67,8 @@ namespace tEngine.TMeter.DataModel
 
         public Measurement GetMsm(Guid msmId)
         {
-            var msms = mMsms.Where(msm => msm.ID.Equals(msmId));
-            var enumerable = msms as Measurement[] ?? msms.ToArray();
+            IEnumerable<Measurement> msms = mMsms.Where(msm => msm.ID.Equals(msmId));
+            Measurement[] enumerable = msms as Measurement[] ?? msms.ToArray();
             return enumerable.Any() ? enumerable[0] : null;
         }
 
@@ -78,7 +78,7 @@ namespace tEngine.TMeter.DataModel
 
         public IEnumerable<User> GetUsers()
         {
-            var users = mMsms.Select(msm => msm.GetOwner());
+            IEnumerable<User> users = mMsms.Select(msm => msm.GetOwner());
             users = users.Distinct();
             return users;
         }
@@ -90,7 +90,7 @@ namespace tEngine.TMeter.DataModel
             try
             {
                 string json;
-                var result = FileIO.ReadText(filePath, out json);
+                bool result = FileIO.ReadText(filePath, out json);
                 rsch = JsonConvert.DeserializeObject<Rsch>(json);
                 rsch.FilePath = filePath;
                 return result;
@@ -112,15 +112,15 @@ namespace tEngine.TMeter.DataModel
 
         public bool Save()
         {
-            var filepath = string.IsNullOrEmpty(FilePath) ? mDefaultFilePath(this) : FilePath;
+            string filepath = string.IsNullOrEmpty(FilePath) ? mDefaultFilePath(this) : FilePath;
             return Save(filepath);
         }
 
         public bool Save(string filePath)
         {
             UpdatePaths();
-            var settings = new JsonSerializerSettings() { ContractResolver = new JSONContractResolver() };
-            var json = JsonConvert.SerializeObject(this, settings);
+            JsonSerializerSettings settings = new JsonSerializerSettings() { ContractResolver = new JSONContractResolver() };
+            string json = JsonConvert.SerializeObject(this, settings);
             FileIO.WriteText(filePath, json);
             return true;
         }

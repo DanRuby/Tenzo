@@ -1,3 +1,4 @@
-﻿namespace tEngine.TActual.DataModel {
-    internal class User {}
+﻿namespace tEngine.TActual.DataModel
+{
+    internal class User { }
 }

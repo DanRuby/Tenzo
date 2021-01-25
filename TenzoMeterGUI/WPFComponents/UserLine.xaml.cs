@@ -1,24 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
-using TenzoMeterGUI.ViewModel;
+﻿using System.Windows.Controls;
 
-namespace TenzoMeterGUI.WPFComponents {
+namespace TenzoMeterGUI.WPFComponents
+{
     /// <summary>
     /// Interaction logic for UserLine.xaml
     /// </summary>
-    public partial class UserLine : UserControl {
-        public UserLine() {
+    public partial class UserLine : UserControl
+    {
+        public UserLine()
+        {
             InitializeComponent();
         }
     }

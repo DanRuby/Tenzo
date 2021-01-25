@@ -6,49 +6,59 @@ using System.Windows.Forms;
 using System.Windows.Media.Imaging;
 using Size = System.Windows.Size;
 
-namespace tEngine.Helpers {
-    public static class ImageHelper {
-        public static BitmapImage Array2BI( byte[] array, Size size ) {
-            var image = new BitmapImage();
-            using( var stream = new MemoryStream( array ) ) {
+namespace tEngine.Helpers
+{
+    public static class ImageHelper
+    {
+        public static BitmapImage Array2BI(byte[] array, Size size)
+        {
+            BitmapImage image = new BitmapImage();
+            using (MemoryStream stream = new MemoryStream(array))
+            {
                 image.BeginInit();
                 image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
                 image.CacheOption = BitmapCacheOption.OnLoad;
                 image.UriSource = null;
                 image.StreamSource = stream;
-                image.DecodePixelWidth = (int) size.Width;
-                image.DecodePixelHeight = (int) size.Height;
+                image.DecodePixelWidth = (int)size.Width;
+                image.DecodePixelHeight = (int)size.Height;
                 image.EndInit();
             }
             return image;
         }
 
-        public static BitmapImage Array2BI( byte[] array ) {
-            return Array2BI( array, new Size( 0, 0 ) );
+        public static BitmapImage Array2BI(byte[] array)
+        {
+            return Array2BI(array, new Size(0, 0));
         }
 
-        public static Int32 Array2Int( byte[] array ) {
-            if( BitConverter.IsLittleEndian )
-                Array.Reverse( array, 0, sizeof( Int32 ) );
-            return BitConverter.ToInt32( array, 0 );
+        public static Int32 Array2Int(byte[] array)
+        {
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(array, 0, sizeof(Int32));
+            return BitConverter.ToInt32(array, 0);
         }
 
-        public static byte[] BI2Array( BitmapImage image ) {
+        public static byte[] BI2Array(BitmapImage image)
+        {
             // TODO so loooong
-            var encoder = new PngBitmapEncoder();
-            encoder.Frames.Add( BitmapFrame.Create( image ) );
-            using( var stream = new MemoryStream() ) {
-                encoder.Save( stream );
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(image));
+            using (MemoryStream stream = new MemoryStream())
+            {
+                encoder.Save(stream);
                 return stream.ToArray();
             }
         }
 
-        public static BitmapImage Bitmap2BitmapImage( Bitmap bitmap ) {
-            if( bitmap == null ) return null;
-            using( var ms = new MemoryStream() ) {
-                bitmap.Save( ms, ImageFormat.Png );
+        public static BitmapImage Bitmap2BitmapImage(Bitmap bitmap)
+        {
+            if (bitmap == null) return null;
+            using (MemoryStream ms = new MemoryStream())
+            {
+                bitmap.Save(ms, ImageFormat.Png);
                 ms.Position = 0;
-                var bi = new BitmapImage();
+                BitmapImage bi = new BitmapImage();
                 bi.BeginInit();
                 bi.StreamSource = ms;
                 bi.EndInit();
@@ -57,7 +67,8 @@ namespace tEngine.Helpers {
             }
         }
 
-        public static BitmapImage GetSimilarImage( BitmapImage image, Size size ) {
+        public static BitmapImage GetSimilarImage(BitmapImage image, Size size)
+        {
             // не работает =( можно сделать через BI2Array
             throw new NotImplementedException();
             /*if( image == null ) 
@@ -83,45 +94,54 @@ namespace tEngine.Helpers {
             return bi;*/
         }
 
-        public static byte[] Int2Array( Int32 value ) {
-            var intBytes = BitConverter.GetBytes( value );
-            if( BitConverter.IsLittleEndian )
-                Array.Reverse( intBytes );
+        public static byte[] Int2Array(Int32 value)
+        {
+            byte[] intBytes = BitConverter.GetBytes(value);
+            if (BitConverter.IsLittleEndian)
+                Array.Reverse(intBytes);
             return intBytes;
         }
 
-        public static void Save( this BitmapSource image, string filepath ) {
-            if( image == null ) return;
-            var encoder = new PngBitmapEncoder();
-            encoder.Frames.Add( BitmapFrame.Create( image ) );
-            try {
-                using( var filestream = new FileStream( filepath, FileMode.Create ) )
-                    encoder.Save( filestream );
-            } catch( IOException  ) {
-                MessageBox.Show( "Ошибка создания файла", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        public static void Save(this BitmapSource image, string filepath)
+        {
+            if (image == null) return;
+            PngBitmapEncoder encoder = new PngBitmapEncoder();
+            encoder.Frames.Add(BitmapFrame.Create(image));
+            try
+            {
+                using (FileStream filestream = new FileStream(filepath, FileMode.Create))
+                    encoder.Save(filestream);
+            }
+            catch (IOException)
+            {
+                MessageBox.Show("Ошибка создания файла", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
 
-        public static BitmapImage Uri2BI( Uri uri, Size size ) {
-            var imSize = new BitmapImage( uri );
-            var image = new BitmapImage();
+        public static BitmapImage Uri2BI(Uri uri, Size size)
+        {
+            BitmapImage imSize = new BitmapImage(uri);
+            BitmapImage image = new BitmapImage();
             image.BeginInit();
             image.CreateOptions = BitmapCreateOptions.PreservePixelFormat;
             image.CacheOption = BitmapCacheOption.OnLoad;
             image.UriSource = uri;
 
-            var wOld = imSize.PixelWidth;
-            var hOld = imSize.PixelHeight;
+            int wOld = imSize.PixelWidth;
+            int hOld = imSize.PixelHeight;
 
-            var wNew = (int) size.Width;
-            var hNew = (int) size.Height;
+            int wNew = (int)size.Width;
+            int hNew = (int)size.Height;
 
-            var k = wOld/(double) hOld;
-            if( k <= wNew/(double) hNew ) {
-                wNew = (int) (k*hNew);
-            } else {
-                hNew = (int) (wNew/k);
+            double k = wOld / (double)hOld;
+            if (k <= wNew / (double)hNew)
+            {
+                wNew = (int)(k * hNew);
+            }
+            else
+            {
+                hNew = (int)(wNew / k);
             }
 
             image.DecodePixelWidth = wNew;
@@ -131,8 +151,9 @@ namespace tEngine.Helpers {
             return image;
         }
 
-        public static BitmapImage Uri2BI( Uri uri ) {
-            return Uri2BI( uri, new Size( 0, 0 ) );
+        public static BitmapImage Uri2BI(Uri uri)
+        {
+            return Uri2BI(uri, new Size(0, 0));
         }
     }
 }

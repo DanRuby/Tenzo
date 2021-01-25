@@ -1,8 +1,10 @@
 ﻿using System;
 using tEngine.DataModel;
 
-namespace tEngine.TMeter.DataModel.IData {
-    public interface IMsm {
+namespace tEngine.TMeter.DataModel.IData
+{
+    public interface IMsm
+    {
         /// <summary>
         /// Комментарий врача, описание
         /// </summary>
@@ -43,7 +45,7 @@ namespace tEngine.TMeter.DataModel.IData {
         /// </summary>
         /// <param name="left"></param>
         /// <param name="right"></param>
-        void AddData( Hand left, Hand right );
+        void AddData(Hand left, Hand right);
 
         /// <summary>
         /// Очистка данных
@@ -65,6 +67,6 @@ namespace tEngine.TMeter.DataModel.IData {
         /// <summary>
         /// Установка свзи измерения с пациентом
         /// </summary>
-        void UserAssociated( User owner );
+        void UserAssociated(User owner);
     }
 }

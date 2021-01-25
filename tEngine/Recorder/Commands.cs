@@ -1,9 +1,12 @@
-﻿namespace tEngine.Recorder {
+﻿namespace tEngine.Recorder
+{
     /// <summary>
     /// Д: Набор комманд для обмена с прибором
     /// </summary>
-    public class Commands {
-        public class FromDevice {
+    public class Commands
+    {
+        public class FromDevice
+        {
             /// <summary>
             /// Пришла информация о ацп
             /// </summary>
@@ -15,7 +18,8 @@
             public const byte DATA = 0x01;
         }
 
-        public class ToDevice {
+        public class ToDevice
+        {
             /// <summary>
             /// Установка нового идентификатора измерений (новая картинка)
             /// </summary>

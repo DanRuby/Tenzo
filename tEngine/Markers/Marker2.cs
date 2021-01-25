@@ -1,19 +1,25 @@
 ﻿using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
-namespace tEngine.Markers {
-    public class Marker2 : Marker {
-        public Color Color {
+namespace tEngine.Markers
+{
+    public class Marker2 : Marker
+    {
+        public Color Color
+        {
             get { return mColor; }
-            set {
+            set
+            {
                 mColor = value;
                 UpdateSource();
             }
         }
 
-        public int Height {
+        public int Height
+        {
             get { return mHeight; }
-            set {
+            set
+            {
                 mHeight = value;
                 UpdateSource();
             }
@@ -21,27 +27,31 @@ namespace tEngine.Markers {
 
         public int? Hole { get; set; }
 
-        public int Width {
+        public int Width
+        {
             get { return mWidth; }
-            set {
+            set
+            {
                 mWidth = value;
                 UpdateSource();
             }
         }
 
-        public Marker2() {
+        public Marker2()
+        {
             Color = Colors.Red;
             Width = 40;
             Height = 6;
         }
 
-        public new void Draw( WriteableBitmap bitmap, int yPos ) {
-            var delta = Hole ?? mHeight;
-            var y1 = yPos - (delta + mHeight)/2.0;
-            var y2 = yPos + (delta + mHeight)/2.0;
+        public new void Draw(WriteableBitmap bitmap, int yPos)
+        {
+            int delta = Hole ?? mHeight;
+            double y1 = yPos - (delta + mHeight) / 2.0;
+            double y2 = yPos + (delta + mHeight) / 2.0;
 
-            base.Draw( bitmap, (int) y1 );
-            base.Draw( bitmap, (int) y2 );
+            base.Draw(bitmap, (int)y1);
+            base.Draw(bitmap, (int)y2);
         }
     }
 }

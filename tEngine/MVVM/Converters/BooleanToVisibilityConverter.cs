@@ -4,16 +4,20 @@ using System.Windows;
 
 namespace tEngine.MVVM.Converters
 {
-    public class BooleanToVisibilityConverter : ConverterBase<BooleanToVisibilityConverter> {
-        public BooleanToVisibilityConverter() {}
+    public class BooleanToVisibilityConverter : ConverterBase<BooleanToVisibilityConverter>
+    {
+        public BooleanToVisibilityConverter() { }
 
-        public override object Convert( object value, Type targetType, object parameter, CultureInfo culture ) {
-            var bl = (value as bool?);
-            var param = parameter as string;
-            if( param != null && param.ToLower().Equals( "inverse" ) ) {
+        public override object Convert(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            bool? bl = (value as bool?);
+            string param = parameter as string;
+            if (param != null && param.ToLower().Equals("inverse"))
+            {
                 bl = (bl == null || bl == false);
             }
-            switch( bl ) {
+            switch (bl)
+            {
                 case null:
                     return Visibility.Collapsed;
                 case true:
@@ -24,10 +28,12 @@ namespace tEngine.MVVM.Converters
             return Visibility.Visible;
         }
 
-        public override object ConvertBack( object value, Type targetType, object parameter, CultureInfo culture ) {
-            var vb = value as Visibility?;
-            var param = parameter as string;
-            if( param != null && param.ToLower().Equals( "inverse" ) ) {
+        public override object ConvertBack(object value, Type targetType, object parameter, CultureInfo culture)
+        {
+            Visibility? vb = value as Visibility?;
+            string param = parameter as string;
+            if (param != null && param.ToLower().Equals("inverse"))
+            {
                 return vb != Visibility.Visible;
             }
             return vb == Visibility.Visible;

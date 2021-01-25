@@ -6,18 +6,19 @@ namespace tEngine.MVVM
     /// <summary>
     /// The CancelCommandEvent delegate.
     /// </summary>
-    public delegate void CancelCommandEventHandler( object sender, CancelCommandEventArgs args );
+    public delegate void CancelCommandEventHandler(object sender, CancelCommandEventArgs args);
 
     /// <summary>
     /// The CommandEventHandler delegate.
     /// </summary>
-    public delegate void CommandEventHandler( object sender, CommandEventArgs args );
+    public delegate void CommandEventHandler(object sender, CommandEventArgs args);
 
     /// <summary>
     /// CancelCommandEventArgs - just like above but allows the event to
     /// be cancelled.
     /// </summary>
-    public class CancelCommandEventArgs : CommandEventArgs {
+    public class CancelCommandEventArgs : CommandEventArgs
+    {
         /// <summary>
         /// Gets or sets a value indicating whether this <see cref="CancelCommandEventArgs"/> command should be cancelled.
         /// </summary>
@@ -28,7 +29,8 @@ namespace tEngine.MVVM
     /// <summary>
     /// The ViewModelCommand class - an ICommand that can fire a function.
     /// </summary>
-    public class Command : ICommand {
+    public class Command : ICommand
+    {
         /// <summary>
         /// The action (or parameterized action) that will be called when the command is invoked.
         /// </summary>
@@ -47,14 +49,17 @@ namespace tEngine.MVVM
         /// <value>
         /// 	<c>true</c> if this instance can execute; otherwise, <c>false</c>.
         /// </value>
-        public bool CanExecute {
+        public bool CanExecute
+        {
             get { return mCanExecute; }
-            set {
-                if( mCanExecute != value ) {
+            set
+            {
+                if (mCanExecute != value)
+                {
                     mCanExecute = value;
                     EventHandler canExecuteChanged = CanExecuteChanged;
-                    if( canExecuteChanged != null )
-                        canExecuteChanged( this, EventArgs.Empty );
+                    if (canExecuteChanged != null)
+                        canExecuteChanged(this, EventArgs.Empty);
                 }
             }
         }
@@ -64,7 +69,8 @@ namespace tEngine.MVVM
         /// </summary>
         /// <param name="action">The action.</param>
         /// <param name="canExecute">if set to <c>true</c> [can execute].</param>
-        public Command( Action action, bool canExecute = true ) {
+        public Command(Action action, bool canExecute = true)
+        {
             //  Set the action.
             this.mAction = action;
             this.mCanExecute = canExecute;
@@ -75,7 +81,8 @@ namespace tEngine.MVVM
         /// </summary>
         /// <param name="parameterizedAction">The parameterized action.</param>
         /// <param name="canExecute">if set to <c>true</c> [can execute].</param>
-        public Command( Action<object> parameterizedAction, bool canExecute = true ) {
+        public Command(Action<object> parameterizedAction, bool canExecute = true)
+        {
             //  Set the action.
             this.mParameterizedAction = parameterizedAction;
             this.mCanExecute = canExecute;
@@ -90,20 +97,21 @@ namespace tEngine.MVVM
         /// Executes the command.
         /// </summary>
         /// <param name="param">The param.</param>
-        public virtual void DoExecute( object param ) {
+        public virtual void DoExecute(object param)
+        {
             //  Invoke the executing command, allowing the command to be cancelled.
-            CancelCommandEventArgs args = new CancelCommandEventArgs() {Parameter = param, Cancel = false};
-            InvokeExecuting( args );
+            CancelCommandEventArgs args = new CancelCommandEventArgs() { Parameter = param, Cancel = false };
+            InvokeExecuting(args);
 
             //  If the event has been cancelled, bail now.
-            if( args.Cancel )
+            if (args.Cancel)
                 return;
 
             //  Call the action or the parameterized action, whichever has been set.
-            InvokeAction( param );
+            InvokeAction(param);
 
             //  Call the executed function.
-            InvokeExecuted( new CommandEventArgs() {Parameter = param} );
+            InvokeExecuted(new CommandEventArgs() { Parameter = param });
         }
 
         /// <summary>
@@ -116,29 +124,32 @@ namespace tEngine.MVVM
         /// </summary>
         public event CancelCommandEventHandler Executing;
 
-        protected void InvokeAction( object param ) {
+        protected void InvokeAction(object param)
+        {
             Action theAction = mAction;
             Action<object> theParameterizedAction = mParameterizedAction;
-            if( theAction != null )
+            if (theAction != null)
                 theAction();
-            else if( theParameterizedAction != null )
-                theParameterizedAction( param );
+            else if (theParameterizedAction != null)
+                theParameterizedAction(param);
         }
 
-        protected void InvokeExecuted( CommandEventArgs args ) {
+        protected void InvokeExecuted(CommandEventArgs args)
+        {
             CommandEventHandler executed = Executed;
 
             //  Call the executed event.
-            if( executed != null )
-                executed( this, args );
+            if (executed != null)
+                executed(this, args);
         }
 
-        protected void InvokeExecuting( CancelCommandEventArgs args ) {
+        protected void InvokeExecuting(CancelCommandEventArgs args)
+        {
             CancelCommandEventHandler executing = Executing;
 
             //  Call the executed event.
-            if( executing != null )
-                executing( this, args );
+            if (executing != null)
+                executing(this, args);
         }
 
         #region ICommand Members
@@ -150,7 +161,8 @@ namespace tEngine.MVVM
         /// <returns>
         /// true if this command can be executed; otherwise, false.
         /// </returns>
-        bool ICommand.CanExecute( object parameter ) {
+        bool ICommand.CanExecute(object parameter)
+        {
             return mCanExecute;
         }
 
@@ -158,8 +170,9 @@ namespace tEngine.MVVM
         /// Defines the method to be called when the command is invoked.
         /// </summary>
         /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to null.</param>
-        void ICommand.Execute( object parameter ) {
-            this.DoExecute( parameter );
+        void ICommand.Execute(object parameter)
+        {
+            this.DoExecute(parameter);
         }
 
         #endregion ICommand Members
@@ -168,7 +181,8 @@ namespace tEngine.MVVM
     /// <summary>
     /// CommandEventArgs - simply holds the command parameter.
     /// </summary>
-    public class CommandEventArgs : EventArgs {
+    public class CommandEventArgs : EventArgs
+    {
         /// <summary>
         /// Gets or sets the parameter.
         /// </summary>

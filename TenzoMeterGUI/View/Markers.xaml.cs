@@ -10,11 +10,13 @@ using tEngine.Helpers;
 using tEngine.Recorder;
 using tEngine.TMeter;
 
-namespace TenzoMeterGUI.View {
+namespace TenzoMeterGUI.View
+{
     /// <summary>
     /// Interaction logic for Markers.xaml
     /// </summary>
-    public partial class Markers : Window {
+    public partial class Markers : Window
+    {
         private const int INTEGRATE_COUNT = 15;
         private static Device mDevice;
         private static Markers mWindow;
@@ -23,77 +25,94 @@ namespace TenzoMeterGUI.View {
         private Queue<int> mRight = new Queue<int>();
         private DispatcherTimer mTimerDraw;
 
-        public static bool IsWindow {
+        public static bool IsWindow
+        {
             get { return mWindow != null; }
         }
 
-        public int LeftHand {
-            get {
-                lock( mLock ) {
-                    if( mLeft.Count == 0 )
+        public int LeftHand
+        {
+            get
+            {
+                lock (mLock)
+                {
+                    if (mLeft.Count == 0)
                         return 0;
-                    return (int) mLeft.Average();
+                    return (int)mLeft.Average();
                 }
             }
-            private set {
-                lock( mLock ) {
-                    mLeft.Enqueue( value );
-                    if( mLeft.Count > INTEGRATE_COUNT )
+            private set
+            {
+                lock (mLock)
+                {
+                    mLeft.Enqueue(value);
+                    if (mLeft.Count > INTEGRATE_COUNT)
                         mLeft.Dequeue();
                 }
             }
         }
 
-        public int RightHand {
-            get {
-                lock( mLock ) {
-                    if( mRight.Count == 0 )
+        public int RightHand
+        {
+            get
+            {
+                lock (mLock)
+                {
+                    if (mRight.Count == 0)
                         return 0;
-                    return (int) mRight.Average();
+                    return (int)mRight.Average();
                 }
             }
-            private set {
-                lock( mLock ) {
-                    mRight.Enqueue( value );
-                    if( mRight.Count > INTEGRATE_COUNT )
+            private set
+            {
+                lock (mLock)
+                {
+                    mRight.Enqueue(value);
+                    if (mRight.Count > INTEGRATE_COUNT)
                         mRight.Dequeue();
                 }
             }
         }
 
-        public static void CloseWindow() {
-            if ( mWindow != null)
-                ((Window) mWindow).Close();
+        public static void CloseWindow()
+        {
+            if (mWindow != null)
+                mWindow.Close();
         }
 
-        public void FreeWindow() {
+        public void FreeWindow()
+        {
             mWindow = null;
         }
-        public static Markers GetWindow() {
-            if( !IsWindow ) {
+        public static Markers GetWindow()
+        {
+            if (!IsWindow)
+            {
                 mWindow = new Markers();
             }
             return mWindow;
         }
 
-        public void UpdateSettings() {
+        public void UpdateSettings()
+        {
             MarkersArea.UpdateArea();
         }
 
-        internal Markers() {
-            mDevice = Device.GetDevice( Constants.DEVICE_ID );
+        internal Markers()
+        {
+            mDevice = Device.GetDevice(Constants.DEVICE_ID);
             mDevice.Stop();
 
             InitializeComponent();
             tgb.IsChecked = mDevice.DemoMode;
 
-            WindowManager.UpdateWindowPos( this.GetType().Name, this );
+            WindowManager.UpdateWindowPos(this.GetType().Name, this);
             mTimerDraw = new DispatcherTimer();
             mTimerDraw.Tick += TimerDrawOnTick;
-            mTimerDraw.Interval = new TimeSpan( 0, 0, 0, 0, 1000/25 );
+            mTimerDraw.Interval = new TimeSpan(0, 0, 0, 0, 1000 / 25);
             mTimerDraw.Start();
 
-            mDevice.AddListener( HandCallBack );
+            mDevice.AddListener(HandCallBack);
         }
 
         /// <summary>
@@ -102,35 +121,42 @@ namespace TenzoMeterGUI.View {
         /// <param name="requestID"></param>
         /// <param name="hand1"></param>
         /// <param name="hand2"></param>
-        private void HandCallBack( ushort requestID, Hand hand1, Hand hand2 ) {
-            LeftHand = (int) hand1.Const.Average( s => s );
-            RightHand = (int) hand2.Const.Average( s => s );
+        private void HandCallBack(ushort requestID, Hand hand1, Hand hand2)
+        {
+            LeftHand = (int)hand1.Const.Average(s => s);
+            RightHand = (int)hand2.Const.Average(s => s);
             return;
         }
 
-        private void TimerDrawOnTick( object sender, EventArgs eventArgs ) {
-            MarkersArea.DrawPart( LeftHand, RightHand );
+        private void TimerDrawOnTick(object sender, EventArgs eventArgs)
+        {
+            MarkersArea.DrawPart(LeftHand, RightHand);
         }
 
-        public void ReDraw() {
-            MarkersArea.DrawPart( LeftHand, RightHand );
+        public void ReDraw()
+        {
+            MarkersArea.DrawPart(LeftHand, RightHand);
         }
 
-        private void Window_OnClosing( object sender, CancelEventArgs e ) {
-            mDevice.RemoveListener( HandCallBack );
+        private void Window_OnClosing(object sender, CancelEventArgs e)
+        {
+            mDevice.RemoveListener(HandCallBack);
             mDevice.Stop();
             mTimerDraw.Stop();
             mWindow = null;
-            WindowManager.SaveWindowPos( this.GetType().Name, this );
+            WindowManager.SaveWindowPos(this.GetType().Name, this);
         }
 
-        private void Markers_OnLoaded( object sender, RoutedEventArgs e ) {
+        private void Markers_OnLoaded(object sender, RoutedEventArgs e)
+        {
             mDevice.Start();
         }
 
-        private void ToggleButton_Click( object sender, RoutedEventArgs e ) {
-            var cb = (sender as ToggleButton);
-            if( cb == null ) return;
+        private void ToggleButton_Click(object sender, RoutedEventArgs e)
+        {
+            ToggleButton cb = (sender as ToggleButton);
+            if (cb == null)
+                return;
             mDevice.DemoMode = cb.IsChecked == true;
         }
     }

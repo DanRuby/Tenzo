@@ -20,20 +20,24 @@ using tEngine.Helpers;
 using tEngine.MVVM;
 using UIElement = System.Windows.UIElement;
 
-namespace tEngine.PlotCreator {
-    public enum EAxesStyle {
+namespace tEngine.PlotCreator
+{
+    public enum EAxesStyle
+    {
         Boxed,
         Cross,
         None
     }
 
-    public enum ETitlePos {
+    public enum ETitlePos
+    {
         Top,
         Bottom
     }
 
     [DataContract]
-    public class PlotSet {
+    public class PlotSet
+    {
         [DataMember]
         public double AxesFontSize { get; set; }
 
@@ -61,41 +65,46 @@ namespace tEngine.PlotCreator {
         [DataMember]
         public ETitlePos TitlePos { get; set; }
 
-        public PlotSet() {
-            Init( null );
+        public PlotSet()
+        {
+            Init(null);
         }
 
-        public PlotSet( PlotModelEx pm ) {
-            Init( pm );
+        public PlotSet(PlotModelEx pm)
+        {
+            Init(pm);
         }
 
-        public void CopyScale( PlotModel pm ) {
-            var axes1 = pm.Axes.Count > 0 ? pm.Axes[0] : null;
-            var axes2 = pm.Axes.Count > 1 ? pm.Axes[1] : null;
-            Debug.Assert( axes1 != null && axes2 != null );
+        public void CopyScale(PlotModel pm)
+        {
+            Axis axes1 = pm.Axes.Count > 0 ? pm.Axes[0] : null;
+            Axis axes2 = pm.Axes.Count > 1 ? pm.Axes[1] : null;
+            Debug.Assert(axes1 != null && axes2 != null);
 
-            CopyScale( AxesOY, axes1 );
-            CopyScale( AxesOX, axes2 );
+            CopyScale(AxesOY, axes1);
+            CopyScale(AxesOX, axes2);
         }
 
-        public void CopyScale( PlotAxes dest, Axis source ) {
+        public void CopyScale(PlotAxes dest, Axis source)
+        {
             dest.Minimum = source.ActualMinimum;
             dest.Maximum = source.ActualMaximum;
         }
 
-        public void LoadFromModel( PlotModelEx pm ) {
+        public void LoadFromModel(PlotModelEx pm)
+        {
             BackColor = pm.Background.GetColorMedia();
             Title = pm.Title;
-            TitleFontSize = (int) pm.TitleFontSize; // todo проверить размеры шрифтов
+            TitleFontSize = (int)pm.TitleFontSize; // todo проверить размеры шрифтов
             ShowTitle = true;
             //TitlePos = 
 
-            var axes1 = pm.Axes.Count > 0 ? pm.Axes[0] : null;
-            var axes2 = pm.Axes.Count > 1 ? pm.Axes[1] : null;
-            if( axes1 == null || axes2 == null ) return;
-            Debug.Assert( axes1 != null && axes2 != null );
+            Axis axes1 = pm.Axes.Count > 0 ? pm.Axes[0] : null;
+            Axis axes2 = pm.Axes.Count > 1 ? pm.Axes[1] : null;
+            if (axes1 == null || axes2 == null) return;
+            Debug.Assert(axes1 != null && axes2 != null);
 
-            if( (axes1.IsAxisVisible || axes2.IsAxisVisible) == false )
+            if ((axes1.IsAxisVisible || axes2.IsAxisVisible) == false)
                 AxesStyle = EAxesStyle.None;
             else
                 AxesStyle = (axes1.PositionAtZeroCrossing || axes2.PositionAtZeroCrossing)
@@ -103,15 +112,16 @@ namespace tEngine.PlotCreator {
                     : EAxesStyle.Boxed;
 
 
-            AxesFontSize = (int) axes1.FontSize;
+            AxesFontSize = (int)axes1.FontSize;
 
-            Cloner.CopyAllProperties( AxesOY, axes1 );
-            Cloner.CopyAllProperties( AxesOX, axes2 );
-            CopyScale( AxesOY, axes1 );
-            CopyScale( AxesOX, axes2 );
+            Cloner.CopyAllProperties(AxesOY, axes1);
+            Cloner.CopyAllProperties(AxesOX, axes2);
+            CopyScale(AxesOY, axes1);
+            CopyScale(AxesOX, axes2);
         }
 
-        public void SetDefault() {
+        public void SetDefault()
+        {
             AxesOX.SetDefault();
             AxesOY.SetDefault();
             AxesStyle = EAxesStyle.Boxed;
@@ -123,25 +133,31 @@ namespace tEngine.PlotCreator {
             AxesFontSize = 12; // проверить 
         }
 
-        private void Init( PlotModelEx pm ) {
+        private void Init(PlotModelEx pm)
+        {
             AxesOX = new PlotAxes();
             AxesOY = new PlotAxes();
-            if( pm == null ) {
+            if (pm == null)
+            {
                 SetDefault();
-            } else {
-                LoadFromModel( pm );
+            }
+            else
+            {
+                LoadFromModel(pm);
             }
         }
 
         #region Byte <=> Object
 
-        public byte[] ToByteArray() {
-            return BytesPacker.JSONObj( this );
+        public byte[] ToByteArray()
+        {
+            return BytesPacker.JSONObj(this);
         }
 
-        public bool LoadFromArray( byte[] array ) {
-            var obj = BytesPacker.LoadJSONObj<PlotSet>( array );
-            Cloner.CopyAllProperties( this, obj );
+        public bool LoadFromArray(byte[] array)
+        {
+            PlotSet obj = BytesPacker.LoadJSONObj<PlotSet>(array);
+            Cloner.CopyAllProperties(this, obj);
             return true;
         }
 
@@ -149,7 +165,8 @@ namespace tEngine.PlotCreator {
     }
 
     [DataContract]
-    public class PlotAxes {
+    public class PlotAxes
+    {
         [DataMember]
         public bool AutoGrid { get; set; }
 
@@ -210,11 +227,13 @@ namespace tEngine.PlotCreator {
         [DataMember]
         public string Title { get; set; }
 
-        public PlotAxes() {
+        public PlotAxes()
+        {
             SetDefault();
         }
 
-        public void SetDefault() {
+        public void SetDefault()
+        {
             LogScale = false;
             ShowGrid = false;
             GridColor = Colors.LightGray;
@@ -237,59 +256,74 @@ namespace tEngine.PlotCreator {
     /// <summary>
     /// Interaction logic for PlotSettings.xaml
     /// </summary>
-    public partial class PlotSettings : Window {
+    public partial class PlotSettings : Window
+    {
         private PlotSettingsVM mDataContext;
 
-        public Action<PlotSet> AcceptSettingsAction {
+        public Action<PlotSet> AcceptSettingsAction
+        {
             get { return mDataContext.AcceptSettingsAction; }
             set { mDataContext.AcceptSettingsAction = value; }
         }
 
-        public PlotSet PlotSet {
+        public PlotSet PlotSet
+        {
             get { return mDataContext.PlotSet; }
             set { mDataContext.PlotSet = value; }
         }
 
-        public PlotSettings() {
+        public PlotSettings()
+        {
             InitializeComponent();
-            WindowManager.UpdateWindowPos( this.GetType().Name, this );
-            mDataContext = new PlotSettingsVM() {Parent = this};
+            WindowManager.UpdateWindowPos(this.GetType().Name, this);
+            mDataContext = new PlotSettingsVM() { Parent = this };
             DataContext = mDataContext;
         }
 
-        public void SetModel( PlotModelEx plotModel ) {
-            Debug.Assert( plotModel != null );
+        public void SetModel(PlotModelEx plotModel)
+        {
+            Debug.Assert(plotModel != null);
             mDataContext.PlotModel = plotModel;
             mDataContext.UpdateAllProperties();
         }
 
-        private void ColorSelect_OnClick( object sender, RoutedEventArgs e ) {
-            mDataContext.CMDColorSelect.DoExecute( (sender as Button) );
+        private void ColorSelect_OnClick(object sender, RoutedEventArgs e)
+        {
+            mDataContext.CMDColorSelect.DoExecute((sender as Button));
         }
 
-        private void SimpleTextBox_OnKeyDown( object sender, KeyEventArgs e ) {
-            if( e.Key == Key.Enter ) {
-                var element = sender as UIElement;
-                if( element != null ) {
-                    element.MoveFocus( new TraversalRequest( FocusNavigationDirection.Next ) );
+        private void SimpleTextBox_OnKeyDown(object sender, KeyEventArgs e)
+        {
+            if (e.Key == Key.Enter)
+            {
+                UIElement element = sender as UIElement;
+                if (element != null)
+                {
+                    element.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
                 }
             }
         }
 
-        private void Window_OnClosing( object sender, CancelEventArgs e ) {
-            if( mDataContext != null ) {
-                try {
+        private void Window_OnClosing(object sender, CancelEventArgs e)
+        {
+            if (mDataContext != null)
+            {
+                try
+                {
                     DialogResult = mDataContext.DialogResult;
-                } catch( Exception ex ) {
-                    Debug.Assert( false, ex.Message );
+                }
+                catch (Exception ex)
+                {
+                    Debug.Assert(false, ex.Message);
                 }
             }
-            WindowManager.SaveWindowPos( this.GetType().Name, this );
+            WindowManager.SaveWindowPos(this.GetType().Name, this);
         }
     }
 
 
-    public class PlotSettingsVM : Observed<PlotSettingsVM> {
+    public class PlotSettingsVM : Observed<PlotSettingsVM>
+    {
 
         private PlotModelEx mPlotModel;
         private PlotSet mPlotSet;
@@ -299,60 +333,71 @@ namespace tEngine.PlotCreator {
         public Command CMDColorSelect { get; private set; }
         public Command CMDOkButton { get; private set; }
 
-        public PlotModelEx PlotModel {
+        public PlotModelEx PlotModel
+        {
             get { return mPlotModel; }
-            set {
+            set
+            {
                 mPlotModel = value;
-                PlotSet = new PlotSet( mPlotModel );
-                NotifyPropertyChanged( m => m.PlotModel );
+                PlotSet = new PlotSet(mPlotModel);
+                NotifyPropertyChanged(m => m.PlotModel);
             }
         }
 
-        public PlotSet PlotSet {
+        public PlotSet PlotSet
+        {
             get { return mPlotSet; }
-            set {
+            set
+            {
                 mPlotSet = value;
-                NotifyPropertyChanged( m => m.PlotSet );
+                NotifyPropertyChanged(m => m.PlotSet);
             }
         }
 
-        public PlotSettingsVM() {
-            CMDColorSelect = new Command( CMDColorSelect_Func );
-            CMDOkButton = new Command( CMDOkButton_Func );
-            CMDAcceptButton = new Command( CMDAcceptButton_Func );
-            CMDCancelButton = new Command( CMDCancelButton_Func );
+        public PlotSettingsVM()
+        {
+            CMDColorSelect = new Command(CMDColorSelect_Func);
+            CMDOkButton = new Command(CMDOkButton_Func);
+            CMDAcceptButton = new Command(CMDAcceptButton_Func);
+            CMDCancelButton = new Command(CMDCancelButton_Func);
 
             PlotSet = PlotSet ?? new PlotSet();
 
             UpdateAllProperties();
         }
 
-        private void CMDAcceptButton_Func() {
-            if( AcceptSettingsAction != null )
-                AcceptSettingsAction( PlotSet );
+        private void CMDAcceptButton_Func()
+        {
+            if (AcceptSettingsAction != null)
+                AcceptSettingsAction(PlotSet);
         }
 
-        private void CMDCancelButton_Func() {
-            EndDialog( false );
+        private void CMDCancelButton_Func()
+        {
+            EndDialog(false);
         }
 
         /// <summary>
         /// Принимает саму кнопку
         /// </summary>
         /// <param name="param"></param>
-        private void CMDColorSelect_Func( object param ) {
-            var bt = param as Button;
-            var cd = new System.Windows.Forms.ColorDialog() {
-                Color = ((SolidColorBrush) bt.Background).Color.GetColorDrawing()
+        private void CMDColorSelect_Func(object param)
+        {
+            Button bt = param as Button;
+            System.Windows.Forms.ColorDialog cd = new System.Windows.Forms.ColorDialog()
+            {
+                Color = ((SolidColorBrush)bt.Background).Color.GetColorDrawing()
             };
-            if( cd.ShowDialog() == System.Windows.Forms.DialogResult.OK ) {
-                var newColor = cd.Color.GetColorMedia();
-                bt.Background = new SolidColorBrush( newColor );
+            if (cd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+            {
+                Color newColor = cd.Color.GetColorMedia();
+                bt.Background = new SolidColorBrush(newColor);
             }
         }
 
-        private void CMDOkButton_Func() {
-            EndDialog( true );
+        private void CMDOkButton_Func()
+        {
+            EndDialog(true);
         }
     }
 }

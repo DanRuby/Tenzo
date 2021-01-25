@@ -9,8 +9,10 @@ namespace tEngine.Helpers
     /// <summary>
     /// Д: Класс который сохраняет и загружает настройки проектов
     /// </summary>
-    public class AppSettings {
-        public enum Project {
+    public class AppSettings
+    {
+        public enum Project
+        {
             Empty,
             Meter,
             Actual
@@ -21,70 +23,88 @@ namespace tEngine.Helpers
         private static Dictionary<string, string> Settings = new Dictionary<string, string>();
         private static bool WasOpen = false;
 
-        public static BConstants Constants {
+        public static BConstants Constants
+        {
             get { return mConstants; }
         }
 
-        public static T GetValue<T>( string key, T defValue = default(T) ) {
-            try {
-                if( mConstants == null ) 
+        public static T GetValue<T>(string key, T defValue = default(T))
+        {
+            try
+            {
+                if (mConstants == null)
                     return defValue;
-                if( Settings.ContainsKey( key ) ) {
-                    return JsonConvert.DeserializeObject<T>( Settings[key] );
+                if (Settings.ContainsKey(key))
+                {
+                    return JsonConvert.DeserializeObject<T>(Settings[key]);
                 }
                 return defValue;
-            } catch( Exception ex ) {
-                Debug.Assert( false, ex.Message );
+            }
+            catch (Exception ex)
+            {
+                Debug.Assert(false, ex.Message);
                 return defValue;
             }
         }
 
-        public static void Init( Project project = Project.Empty ) {
-            var tp = ConstantsClass.ContainsKey( project ) ? ConstantsClass[project] : typeof( CommonConstants );
-            mConstants = Activator.CreateInstance( tp ) as BConstants;
+        public static void Init(Project project = Project.Empty)
+        {
+            Type tp = ConstantsClass.ContainsKey(project) ? ConstantsClass[project] : typeof(CommonConstants);
+            mConstants = Activator.CreateInstance(tp) as BConstants;
             Open();
         }
 
-        public static void Open() {
-            if( WasOpen == false ) {
-                try {
+        public static void Open()
+        {
+            if (WasOpen == false)
+            {
+                try
+                {
                     string jsonText;
-                    bool result = FileIO.ReadText( mConstants.AppSettings, out jsonText );
-                    if( result ) {
-                        Settings = JsonConvert.DeserializeObject<Dictionary<string, string>>( jsonText );
-                    } else
+                    bool result = FileIO.ReadText(mConstants.AppSettings, out jsonText);
+                    if (result)
+                    {
+                        Settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonText);
+                    }
+                    else
                         Settings = new Dictionary<string, string>();
-                } catch( Exception  ) {
+                }
+                catch (Exception)
+                {
                     Settings = new Dictionary<string, string>();
                 }
             }
             WasOpen = true;
         }
 
-        public static void RemoveSet( string key ) {
-            if( Settings.ContainsKey( key ) )
-                Settings.Remove( key );
+        public static void RemoveSet(string key)
+        {
+            if (Settings.ContainsKey(key))
+                Settings.Remove(key);
         }
 
-        public static void Save() {
-            if( mConstants == null ) 
+        public static void Save()
+        {
+            if (mConstants == null)
                 return;
-            var settings = new JsonSerializerSettings() {ContractResolver = new JSONContractResolver()};
-            string jsonString = JsonConvert.SerializeObject( Settings, settings );
-            FileIO.WriteText( mConstants.AppSettings, jsonString );
+            JsonSerializerSettings settings = new JsonSerializerSettings() { ContractResolver = new JSONContractResolver() };
+            string jsonString = JsonConvert.SerializeObject(Settings, settings);
+            FileIO.WriteText(mConstants.AppSettings, jsonString);
             WasOpen = false;
         }
 
-        public static void SetValue<T>( string key, T value ) {
-            string jsonString = JsonConvert.SerializeObject( value );
-            if( !Settings.ContainsKey( key ) )
-                Settings.Add( key, "" );
+        public static void SetValue<T>(string key, T value)
+        {
+            string jsonString = JsonConvert.SerializeObject(value);
+            if (!Settings.ContainsKey(key))
+                Settings.Add(key, "");
             Settings[key] = jsonString;
         }
 
-        static AppSettings() {
-            ConstantsClass.Add( Project.Meter, typeof( TMeter.Constants ) );
-            ConstantsClass.Add( Project.Actual, typeof( TActual.Constants ) );
+        static AppSettings()
+        {
+            ConstantsClass.Add(Project.Meter, typeof(TMeter.Constants));
+            ConstantsClass.Add(Project.Actual, typeof(TActual.Constants));
         }
     }
 }

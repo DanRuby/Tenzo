@@ -8,23 +8,28 @@ using tEngine.Helpers;
 
 namespace tEngine.PlotCreator
 {
-    public class PlotModelEx : PlotModel {
+    public class PlotModelEx : PlotModel
+    {
         private Guid mID;
 
-        public PlotModelEx() {
+        public PlotModelEx()
+        {
             Init();
-            InvalidatePlot( true );
+            InvalidatePlot(true);
         }
 
-        private void Init() {
+        private void Init()
+        {
             mID = Guid.NewGuid();
             AcceptModelSettings();
             //var ps = new PlotSet( this );
             //AcceptSettings( ps );
         }
 
-        public PlotModelEx( OxyPlot.Wpf.PlotView pv ) {
-            if( pv != null ) {
+        public PlotModelEx(OxyPlot.Wpf.PlotView pv)
+        {
+            if (pv != null)
+            {
 
                 // определение источника, 
                 // если уже есть модель - она в приоритете
@@ -32,49 +37,60 @@ namespace tEngine.PlotCreator
                 IEnumerable sAxes = pv.Axes;
                 IEnumerable sSeries = pv.Series;
 
-                if( pv.Model != null ) {
+                if (pv.Model != null)
+                {
                     source = pv.Model;
                     sAxes = pv.Model.Axes;
                     sSeries = pv.Model.Series;
                 }
 
 
-                Cloner.CopyAllFields( this, source );
-                Cloner.CopyAllProperties( this, source );
+                Cloner.CopyAllFields(this, source);
+                Cloner.CopyAllProperties(this, source);
 
                 // копирование всех осей
                 Axis nAxis = null;
-                foreach( var axis in sAxes ) {
-                    Debug.Assert( axis != null );
-                    if( axis.GetType().Name.Equals( "LinearAxis" ) ) {
+                foreach (object axis in sAxes)
+                {
+                    Debug.Assert(axis != null);
+                    if (axis.GetType().Name.Equals("LinearAxis"))
+                    {
                         nAxis = new LinearAxis();
-                    } else {
+                    }
+                    else
+                    {
                         throw new NotImplementedException();
                         // добавить if на нужный тип
                     }
-                    Cloner.CopyAllFields( nAxis, axis );
-                    Cloner.CopyAllProperties( nAxis, axis );
-                    Axes.Add( nAxis );
+                    Cloner.CopyAllFields(nAxis, axis);
+                    Cloner.CopyAllProperties(nAxis, axis);
+                    Axes.Add(nAxis);
                 }
 
                 // копирование всех рядов
                 Series nSeries = null;
-                foreach( var series in sSeries ) {
-                    Debug.Assert( series != null );
-                    if( series.GetType().Name.Equals( "LineSeries" ) ) {
+                foreach (object series in sSeries)
+                {
+                    Debug.Assert(series != null);
+                    if (series.GetType().Name.Equals("LineSeries"))
+                    {
                         nSeries = new LineSeries();
-                    } else if( series.GetType().Name.Equals( "AreaSeries" ) ) {
+                    }
+                    else if (series.GetType().Name.Equals("AreaSeries"))
+                    {
                         nSeries = new AreaSeries();
-                    } else{
+                    }
+                    else
+                    {
                         throw new NotImplementedException();
                         // добавить if на нужный тип
                     }
-                    Cloner.CopyAllFields( nSeries, series );
-                    Cloner.CopyAllProperties( nSeries, series );
+                    Cloner.CopyAllFields(nSeries, series);
+                    Cloner.CopyAllProperties(nSeries, series);
 
                     nSeries.IsVisible = true;
 
-                    Series.Add( nSeries );
+                    Series.Add(nSeries);
                 }
 
                 //...
@@ -82,12 +98,13 @@ namespace tEngine.PlotCreator
 
             }
             Init();
-            InvalidatePlot( true );
+            InvalidatePlot(true);
         }
 
         // Применить настройки c текущей модели
-        public void AcceptModelSettings( ) {
-            var ps = new PlotSet( this );
+        public void AcceptModelSettings()
+        {
+            PlotSet ps = new PlotSet(this);
             AcceptSettings(ps);
         }
 
@@ -95,19 +112,22 @@ namespace tEngine.PlotCreator
         /// Применить настройки
         /// </summary>
         /// <param name="ps"></param>
-        public void AcceptSettings( PlotSet ps ) {
-            foreach( var axise in Axes ) {
+        public void AcceptSettings(PlotSet ps)
+        {
+            foreach (Axis axise in Axes)
+            {
                 axise.Minimum = double.NaN;
                 axise.Maximum = double.NaN;
             }
             ResetAllAxes();
 
-            var axes1 = CreateAxis( ps.AxesOY );
-            var axes2 = CreateAxis( ps.AxesOX );
+            Axis axes1 = CreateAxis(ps.AxesOY);
+            Axis axes2 = CreateAxis(ps.AxesOX);
 
             axes1.Position = AxisPosition.Left;
             axes2.Position = AxisPosition.Bottom;
-            switch( ps.AxesStyle ) {
+            switch (ps.AxesStyle)
+            {
                 case EAxesStyle.Boxed:
                     axes1.PositionAtZeroCrossing = false;
                     axes2.PositionAtZeroCrossing = false;
@@ -138,64 +158,78 @@ namespace tEngine.PlotCreator
             // TitlePos = ETitlePos.Top; 
 
             Axes.Clear();
-            Axes.Add( axes1 );
-            Axes.Add( axes2 );
+            Axes.Add(axes1);
+            Axes.Add(axes2);
 
-            if( ps.AxesOY.AutoScale ) {
+            if (ps.AxesOY.AutoScale)
+            {
                 this.AutoScale(axes1);
             }
-            if( ps.AxesOX.AutoScale ) {
+            if (ps.AxesOX.AutoScale)
+            {
                 this.AutoScale(axes2);
             }
 
-            InvalidatePlot( true );
+            InvalidatePlot(true);
         }
 
-        public Guid ID {
+        public Guid ID
+        {
             get { return mID; }
         }
 
-        public void ResetModel() {
+        public void ResetModel()
+        {
             ScaleAxes();
-            InvalidatePlot( true );
+            InvalidatePlot(true);
         }
 
-        public void ScaleAxes() {
+        public void ScaleAxes()
+        {
             ResetAllAxes();
         }
 
-        private Axis CreateAxis( PlotAxes pa ) {
+        private Axis CreateAxis(PlotAxes pa)
+        {
             Axis axes;
-            if( pa.LogScale ) {
+            if (pa.LogScale)
+            {
                 axes = new LogarithmicAxis();
-            } else {
+            }
+            else
+            {
                 axes = new LinearAxis();
             }
-            if( pa.ShowGrid ) {
-                var color = pa.GridColor;
+            if (pa.ShowGrid)
+            {
+                System.Windows.Media.Color color = pa.GridColor;
                 color.A = 200;
                 axes.MajorGridlineColor = color.GetColorOxy();
                 //axes.ExtraGridlines = //min, max -> grid          
-                if( pa.AutoGrid ) {
+                if (pa.AutoGrid)
+                {
                     axes.MajorGridlineStyle = LineStyle.Solid;
                 }
             }
             axes.Title = pa.ShowTitle ? pa.Title : "";
             axes.FontSize = pa.ShowNumbers ? pa.NumbersFontSize : 0.1d;
-            axes.LabelFormatter = d => GetNumber( pa.DecimalCount, pa.ExponentCount, d );
+            axes.LabelFormatter = d => GetNumber(pa.DecimalCount, pa.ExponentCount, d);
             //AutoScale = true;
 
             //DecimalCount = 2;
             //ExponentCount = 3;
-            if( pa.AutoScale ) {
+            if (pa.AutoScale)
+            {
                 this.AutoScale();
                 //this.AutoScale(axes);
-            } else {
+            }
+            else
+            {
                 axes.Minimum = pa.Minimum;
                 axes.Maximum = pa.Maximum;
             }
 
-            Cloner.CopyAllProperties( axes, pa );
+            Cloner.CopyAllProperties(axes, pa);
             return axes;
         }
 
@@ -205,16 +239,18 @@ namespace tEngine.PlotCreator
         /// <param name="dec">Количество знаков после запятой</param>
         /// <param name="exp">После какого порядка рисовать степень</param>
         /// <returns></returns>
-        private string GetNumber( int dec, uint exp, double value ) {
-            var order = GetOrder( value );
-            var E = 0;
-            var str = "{" + string.Format( "0:F{0}", dec ) + "}";
-            if( Math.Abs( order ) > exp ) {
-                E = (int) (Math.Abs( order ) - exp);
-                E *= Math.Sign( order );
-                str = string.Format( "{0}e{2}{1}", str, Math.Abs( E ), E >= 0 ? "+" : "-" );
+        private string GetNumber(int dec, uint exp, double value)
+        {
+            int order = GetOrder(value);
+            int E = 0;
+            string str = "{" + string.Format("0:F{0}", dec) + "}";
+            if (Math.Abs(order) > exp)
+            {
+                E = (int)(Math.Abs(order) - exp);
+                E *= Math.Sign(order);
+                str = string.Format("{0}e{2}{1}", str, Math.Abs(E), E >= 0 ? "+" : "-");
             }
-            str = string.Format( str, value / Math.Pow( 10, E ));
+            str = string.Format(str, value / Math.Pow(10, E));
             return str;
         }
 
@@ -223,15 +259,17 @@ namespace tEngine.PlotCreator
         /// </summary>
         /// <param name="value"></param>
         /// <returns></returns>
-        private int GetOrder( double value ) {
-            if( value == 0 ) return 0;
-            var tmp = Math.Abs( value );
-            var result = 0;
-            while( Math.Log10( tmp ) < 1 ) {
+        private int GetOrder(double value)
+        {
+            if (value == 0) return 0;
+            double tmp = Math.Abs(value);
+            int result = 0;
+            while (Math.Log10(tmp) < 1)
+            {
                 tmp *= 10;
-                result --;
+                result--;
             }
-            return (int) (Math.Log10( tmp )) + result;
+            return (int)(Math.Log10(tmp)) + result;
         }
     }
 }

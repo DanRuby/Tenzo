@@ -1,64 +1,83 @@
 using System;
-using System.Diagnostics;
-using System.Windows.Data;
 using tEngine.MVVM;
 using tEngine.TActual.DataModel;
 
-namespace TenzoActualGUI.ViewModel {
+namespace TenzoActualGUI.ViewModel
+{
     /// <summary>
     /// оперирует объектом Msm
     /// </summary>
-    public class MsmInfoVM : Observed<MsmInfoVM> {
-        public string Comment {
-            get { 
-                return Msm == null ? "" : Msm.Comment; }
-            set {
-                if( Msm == null ) return;
+    public class MsmInfoVM : Observed<MsmInfoVM>
+    {
+        public string Comment
+        {
+            get
+            {
+                return Msm == null ? "" : Msm.Comment;
+            }
+            set
+            {
+                if (Msm == null) return;
                 Msm.Comment = value;
-                NotifyPropertyChanged( m => m.Comment );
+                NotifyPropertyChanged(m => m.Comment);
             }
         }
 
         public Measurement Msm { get; set; }
 
-        public string Title {
-            get {
+        public string Title
+        {
+            get
+            {
                 return Msm == null ? "" : Msm.Title;
             }
-            set {
-                if( Msm == null ) return;
+            set
+            {
+                if (Msm == null) return;
                 Msm.Title = value;
-                NotifyPropertyChanged( m => m.Title );
+                NotifyPropertyChanged(m => m.Title);
             }
         }
 
-        public string FIO {
-            get { 
-                return Msm == null ? "" : Msm.FIO;}
-            set {
-                if( Msm == null ) return;
+        public string FIO
+        {
+            get
+            {
+                return Msm == null ? "" : Msm.FIO;
+            }
+            set
+            {
+                if (Msm == null) return;
                 Msm.FIO = value;
-                NotifyPropertyChanged( m => m.FIO );
+                NotifyPropertyChanged(m => m.FIO);
             }
         }
 
-        public string Theme {
-            get { 
-                return Msm == null ? "" : Msm.Theme;}
-            set {
-                if( Msm == null ) return;
+        public string Theme
+        {
+            get
+            {
+                return Msm == null ? "" : Msm.Theme;
+            }
+            set
+            {
+                if (Msm == null) return;
                 Msm.Theme = value;
-                NotifyPropertyChanged( m => m.Theme );
+                NotifyPropertyChanged(m => m.Theme);
             }
         }
 
-        public DateTime CreateDate {
-            get { 
-                return Msm == null ? DateTime.Now : Msm.CreateTime;}
-            set {
-                if( Msm == null ) return;
+        public DateTime CreateDate
+        {
+            get
+            {
+                return Msm == null ? DateTime.Now : Msm.CreateTime;
+            }
+            set
+            {
+                if (Msm == null) return;
                 Msm.CreateTime = value;
-                NotifyPropertyChanged( m => m.CreateDate );
+                NotifyPropertyChanged(m => m.CreateDate);
             }
         }
     }

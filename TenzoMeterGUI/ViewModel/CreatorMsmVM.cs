@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using tEngine.DataModel;
 using tEngine.MVVM;
 using tEngine.TMeter.DataModel;
 
-namespace TenzoMeterGUI.ViewModel {
-    public class CreatorMsmVM : Observed<CreatorMsmVM> {
+namespace TenzoMeterGUI.ViewModel
+{
+    public class CreatorMsmVM : Observed<CreatorMsmVM>
+    {
         public Action Close;
         public Action<Measurement> FixResult;
         private string mComment;
@@ -15,52 +13,63 @@ namespace TenzoMeterGUI.ViewModel {
         public Command CMDCancel { get; private set; }
         public Command CMDCreate { get; private set; }
 
-        public string Comment {
+        public string Comment
+        {
             get { return mComment; }
-            set {
+            set
+            {
                 mComment = value;
-                NotifyPropertyChanged( m => m.Comment );
+                NotifyPropertyChanged(m => m.Comment);
             }
         }
 
-        public string Title {
+        public string Title
+        {
             get { return mTitle; }
-            set {
+            set
+            {
                 mTitle = value;
-                NotifyPropertyChanged( m => m.Title );
+                NotifyPropertyChanged(m => m.Title);
             }
         }
 
-        public CreatorMsmVM() {
+        public CreatorMsmVM()
+        {
             Init();
         }
 
-        public CreatorMsmVM( string title ) {
-            Init( title );
+        public CreatorMsmVM(string title)
+        {
+            Init(title);
         }
 
-        public void Init( string title = "" ) {
+        public void Init(string title = "")
+        {
             Title = title;
-            CMDCreate = new Command( Create );
-            CMDCancel = new Command( Cancel );
+            CMDCreate = new Command(Create);
+            CMDCancel = new Command(Cancel);
         }
 
-        private void Cancel() {
+        private void Cancel()
+        {
             EndDialog();
         }
 
-        private void Create() {
-            EndDialog( new Measurement() {
+        private void Create()
+        {
+            EndDialog(new Measurement()
+            {
                 Comment = Comment,
                 Title = Title,
                 CreateTime = DateTime.Now
-            } );
+            });
         }
 
-        private void EndDialog( Measurement result = null ) {
-            if( FixResult != null )
-                FixResult( result );
-            if( Close != null )
+        private void EndDialog(Measurement result = null)
+        {
+            if (FixResult != null)
+                FixResult(result);
+            if (Close != null)
                 Close();
         }
     }

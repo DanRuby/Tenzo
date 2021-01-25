@@ -11,47 +11,58 @@ using tEngine.Recorder;
 using tEngine.TMeter.DataModel;
 using TenzoMeterGUI.View;
 
-namespace TMSingleMeasurement.View {
+namespace TMSingleMeasurement.View
+{
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
     // TODO проверка ввода на "только цифры"
     // Выбор диапазона для измерений
-    public partial class MarkersControl : Window {
+    public partial class MarkersControl : Window
+    {
         private MainControlVM mDataContext;
 
-        public Measurement Result {
+        public Measurement Result
+        {
             get { return mDataContext == null ? null : mDataContext.Msm; }
         }
 
-        public MarkersControl() {
+        public MarkersControl()
+        {
             InitializeComponent();
 
-            WindowManager.UpdateWindowPos( this.GetType().Name, this );
-            mDataContext = new MainControlVM() {Parent = this};
+            WindowManager.UpdateWindowPos(this.GetType().Name, this);
+            mDataContext = new MainControlVM() { Parent = this };
             DataContext = mDataContext;
         }
 
-        public void Init( Measurement msm = null ) {
-            mDataContext.SetMsm( msm );
+        public void Init(Measurement msm = null)
+        {
+            mDataContext.SetMsm(msm);
         }
 
-        private void Window_Closing( object sender, System.ComponentModel.CancelEventArgs e ) {
-            if( mDataContext != null ) {
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            if (mDataContext != null)
+            {
                 mDataContext.PreClosed();
-                try {
+                try
+                {
                     DialogResult = mDataContext.DialogResult;
-                } catch {
+                }
+                catch
+                {
                     /*если окно не диалог - вылетит исключение, ну и пусть*/
                 }
             }
-            WindowManager.SaveWindowPos( this.GetType().Name, this );
+            WindowManager.SaveWindowPos(this.GetType().Name, this);
         }
     }
 
-    public class MainControlVM : Observed<MainControlVM> {
+    public class MainControlVM : Observed<MainControlVM>
+    {
         private const int INTEGRATE_COUNT = 25;
-        private Device mDevice = Device.GetDevice( 0 );
+        private Device mDevice = Device.GetDevice(0);
         private bool mIsStart;
         private Queue<int> mLeft = new Queue<int>();
         private object mLock = new object();
@@ -75,106 +86,127 @@ namespace TMSingleMeasurement.View {
         public Command CMDStopMeasurement { get; private set; }
         public string CurrentTime { get; set; }
 
-        public bool IsStart {
+        public bool IsStart
+        {
             get { return mIsStart; }
-            set {
+            set
+            {
                 mIsStart = value;
-                NotifyPropertyChanged( m => m.IsStart );
+                NotifyPropertyChanged(m => m.IsStart);
             }
         }
 
-        public int Left {
-            get {
-                lock( mLock ) {
-                    if( mLeft.Count == 0 )
+        public int Left
+        {
+            get
+            {
+                lock (mLock)
+                {
+                    if (mLeft.Count == 0)
                         return 0;
-                    return (int) mLeft.Average();
+                    return (int)mLeft.Average();
                 }
             }
-            set {
-                lock( mLock ) {
-                    mLeft.Enqueue( value );
-                    if( mLeft.Count > INTEGRATE_COUNT )
+            set
+            {
+                lock (mLock)
+                {
+                    mLeft.Enqueue(value);
+                    if (mLeft.Count > INTEGRATE_COUNT)
                         mLeft.Dequeue();
                 }
-                NotifyPropertyChanged( m => m.Left );
+                NotifyPropertyChanged(m => m.Left);
             }
         }
 
-        public Measurement Msm {
+        public Measurement Msm
+        {
             get { return mMsm; }
-            private set {
+            private set
+            {
                 mMsm = value;
-                MsmTime = (int) Msm.MsmTime;
+                MsmTime = (int)Msm.MsmTime;
             }
         }
 
         public int MsmCount { get; set; }
 
-        public int MsmTime {
+        public int MsmTime
+        {
             get { return mMsmTime; }
-            set {
+            set
+            {
                 mMsmTime = value;
-                NotifyPropertyChanged( m => m.MsmTime );
+                NotifyPropertyChanged(m => m.MsmTime);
             }
         }
 
         public double Progress { get; set; }
 
-        public int Right {
-            get {
-                lock( mLock ) {
-                    if( mRight.Count == 0 )
+        public int Right
+        {
+            get
+            {
+                lock (mLock)
+                {
+                    if (mRight.Count == 0)
                         return 0;
-                    return (int) mRight.Average();
+                    return (int)mRight.Average();
                 }
             }
-            set {
-                lock( mLock ) {
-                    mRight.Enqueue( value );
-                    if( mRight.Count > INTEGRATE_COUNT )
+            set
+            {
+                lock (mLock)
+                {
+                    mRight.Enqueue(value);
+                    if (mRight.Count > INTEGRATE_COUNT)
                         mRight.Dequeue();
                 }
-                NotifyPropertyChanged( m => m.Right );
+                NotifyPropertyChanged(m => m.Right);
             }
         }
 
         public double Speed { get; set; }
 
-        public MainControlVM() {
-            CMDMarkersSetShow = new Command( MarkersSetShow );
-            CMDMarkersWindowShow = new Command( MarkersWindowShow );
-            CMDStartMeasurement = new Command( StartMeasurement );
-            CMDStopMeasurement = new Command( StopMeasurement );
-            CMDStart = new Command( Start );
-            CMDStop = new Command( Stop );
-            CMDCancel = new Command( Cancel );
-            CMDAccept = new Command( Accept );
+        public MainControlVM()
+        {
+            CMDMarkersSetShow = new Command(MarkersSetShow);
+            CMDMarkersWindowShow = new Command(MarkersWindowShow);
+            CMDStartMeasurement = new Command(StartMeasurement);
+            CMDStopMeasurement = new Command(StopMeasurement);
+            CMDStart = new Command(Start);
+            CMDStop = new Command(Stop);
+            CMDCancel = new Command(Cancel);
+            CMDAccept = new Command(Accept);
 
             mDevice.DemoMode = false;
-            mDevice.AddListener( HandCallBack );
+            mDevice.AddListener(HandCallBack);
         }
 
         /// <summary>
         /// Сохранение настроек перед выходом и т.п.
         /// </summary>
-        public void PreClosed() {
+        public void PreClosed()
+        {
             Markers.CloseWindow();
-            mDevice.RemoveListener( HandCallBack );
+            mDevice.RemoveListener(HandCallBack);
             Device.AbortAll();
         }
 
-        public void SetMsm( Measurement msm ) {
-            Msm = new Measurement( msm ?? new Measurement() );
+        public void SetMsm(Measurement msm)
+        {
+            Msm = new Measurement(msm ?? new Measurement());
         }
 
-        private void Accept() {
+        private void Accept()
+        {
             // принимаются только законченные измерения
-            EndDialog( dialogResult: !IsStart );
+            EndDialog(dialogResult: !IsStart);
         }
 
-        private void Cancel() {
-            EndDialog( dialogResult: false );
+        private void Cancel()
+        {
+            EndDialog(dialogResult: false);
         }
 
         /// <summary>
@@ -183,77 +215,89 @@ namespace TMSingleMeasurement.View {
         /// <param name="requestID"></param>
         /// <param name="hand1"></param>
         /// <param name="hand2"></param>
-        private void HandCallBack( ushort requestID, Hand hand1, Hand hand2 ) {
-            Left = (int) hand1.Const.Average( s => s );
-            Right = (int) hand2.Const.Average( s => s );
-            if( IsStart )
-                Msm.AddData( hand1, hand2 );
+        private void HandCallBack(ushort requestID, Hand hand1, Hand hand2)
+        {
+            Left = (int)hand1.Const.Average(s => s);
+            Right = (int)hand2.Const.Average(s => s);
+            if (IsStart)
+                Msm.AddData(hand1, hand2);
         }
 
-        private void MarkersSetShow() {
-            var ms = new MarkersSet();
-            if( ms.ShowDialog() == true ) {
-                if( Markers.IsWindow )
+        private void MarkersSetShow()
+        {
+            MarkersSet ms = new MarkersSet();
+            if (ms.ShowDialog() == true)
+            {
+                if (Markers.IsWindow)
                     Markers.GetWindow().UpdateSettings();
             }
         }
 
-        private void MarkersWindowShow() {
-            var wnd = Markers.GetWindow();
+        private void MarkersWindowShow()
+        {
+            Markers wnd = Markers.GetWindow();
             wnd.Show();
         }
 
-        private void Start() {
-            if( !IsStart ) {
+        private void Start()
+        {
+            if (!IsStart)
+            {
                 Msm.Clear();
                 Msm.CreateTime = DateTime.Now;
                 IsStart = true;
                 StartMeasurement();
                 mTimerProgress = new DispatcherTimer();
                 mTimerProgress.Tick += TimerProgressOnTick;
-                mTimerProgress.Interval = new TimeSpan( 0, 0, 0, 0, 1000/25 );
+                mTimerProgress.Interval = new TimeSpan(0, 0, 0, 0, 1000 / 25);
                 mTimerProgress.Start();
             }
         }
 
-        private void StartMeasurement() {
+        private void StartMeasurement()
+        {
             mDevice.Start();
         }
 
-        private void Stop() {
-            if( IsStart ) {
+        private void Stop()
+        {
+            if (IsStart)
+            {
                 IsStart = false;
-                Msm.MsmTime = (DateTime.Now - Msm.CreateTime).TotalMilliseconds/1000.0;
+                Msm.MsmTime = (DateTime.Now - Msm.CreateTime).TotalMilliseconds / 1000.0;
                 mTimerProgress.Stop();
             }
         }
 
-        private void StopMeasurement() {
+        private void StopMeasurement()
+        {
             mDevice.Stop();
         }
 
-        private void TimerProgressOnTick( object sender, EventArgs e ) {
-            var time = DateTime.Now - Msm.CreateTime;
-            var seconds = time.TotalMilliseconds/1000.0;
-            if( seconds >= MsmTime ) {
+        private void TimerProgressOnTick(object sender, EventArgs e)
+        {
+            TimeSpan time = DateTime.Now - Msm.CreateTime;
+            double seconds = time.TotalMilliseconds / 1000.0;
+            if (seconds >= MsmTime)
+            {
                 Stop();
                 //time = new TimeSpan( 0, 0, (int)seconds );
-                time = new TimeSpan( 0, 0, (int) MsmTime );
+                time = new TimeSpan(0, 0, MsmTime);
             }
 
-            CurrentTime = time.ToString( @"mm\:ss\.ff" );
+            CurrentTime = time.ToString(@"mm\:ss\.ff");
 
-            Progress = (100.0/MsmTime)*seconds;
+            Progress = (100.0 / MsmTime) * seconds;
 
             MsmCount = Msm.DataLength();
-            Speed = MsmCount/seconds;
+            Speed = MsmCount / seconds;
 
-            NotifyPropertyChanged( m => m.Progress );
-            NotifyPropertyChanged( m => m.MsmCount );
-            NotifyPropertyChanged( m => m.Speed );
+            NotifyPropertyChanged(m => m.Progress);
+            NotifyPropertyChanged(m => m.MsmCount);
+            NotifyPropertyChanged(m => m.Speed);
 
 
-            NotifyPropertyChanged( m => m.CurrentTime );
+            NotifyPropertyChanged(m => m.CurrentTime);
         }
     }
 }

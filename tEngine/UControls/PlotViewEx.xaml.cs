@@ -20,20 +20,25 @@ using OxyPlot.Wpf;
 using tEngine.Helpers;
 using tEngine.PlotCreator;
 
-namespace tEngine.UControls {
+namespace tEngine.UControls
+{
     /// <summary>
     /// Interaction logic for PlotViewEx.xaml
     /// </summary>
-    public partial class PlotViewEx : UserControl {
+    public partial class PlotViewEx : UserControl
+    {
         private PlotModelEx mPlotModel;
         private PlotSet mPlotSet;
         private PlotView mPlotView;
         private DispatcherTimer mResizeDrawing = new DispatcherTimer();
 
-        public ImageSource Bitmap {
-            get {
-                if( ImageSource == null ) {
-                    ImageSource = MVVM.Converters.PlotModelToBitmap.GetBitmapFromPM( PlotModel );
+        public ImageSource Bitmap
+        {
+            get
+            {
+                if (ImageSource == null)
+                {
+                    ImageSource = MVVM.Converters.PlotModelToBitmap.GetBitmapFromPM(PlotModel);
                 }
                 return ImageSource;
             }
@@ -41,55 +46,65 @@ namespace tEngine.UControls {
 
         public BitmapSource ImageSource { get; set; }
 
-        public PlotModelEx PlotModel {
+        public PlotModelEx PlotModel
+        {
             get { return mPlotModel; }
             set { mPlotModel = value; }
         }
 
-        public PlotView PlotView {
+        public PlotView PlotView
+        {
             get { return mPlotView; }
-            set {
+            set
+            {
                 mPlotView = value;
 
                 // обновление модели при загрузки контрола
                 root.Loaded += RootOnLoaded;
 
                 PlotContainer.Children.Clear();
-                PlotContainer.Children.Add( mPlotView );
+                PlotContainer.Children.Add(mPlotView);
             }
         }
 
-        public bool ShowPlot {
-            get { return (bool) GetValue( ShowPlotProperty ); }
-            set { SetValue( ShowPlotProperty, value ); }
+        public bool ShowPlot
+        {
+            get { return (bool)GetValue(ShowPlotProperty); }
+            set { SetValue(ShowPlotProperty, value); }
         }
 
         public static readonly DependencyProperty ShowMenuProperty = DependencyProperty.Register(
-            "ShowMenu", typeof( Visibility ), typeof( PlotViewEx ), new PropertyMetadata( Visibility.Visible ) );
+            "ShowMenu", typeof(Visibility), typeof(PlotViewEx), new PropertyMetadata(Visibility.Visible));
 
-        public Visibility ShowMenu {
-            get { return (Visibility) GetValue( ShowMenuProperty ); }
-            set { SetValue( ShowMenuProperty, value ); }
+        public Visibility ShowMenu
+        {
+            get { return (Visibility)GetValue(ShowMenuProperty); }
+            set { SetValue(ShowMenuProperty, value); }
         }
 
-        public string Title {
-            get { return (string) GetValue( TitleProperty ); }
-            set { SetValue( TitleProperty, value ); }
+        public string Title
+        {
+            get { return (string)GetValue(TitleProperty); }
+            set { SetValue(TitleProperty, value); }
         }
 
-        private PlotSet PlotSet {
+        private PlotSet PlotSet
+        {
             get { return mPlotSet; }
-            set {
+            set
+            {
                 mPlotSet = value;
-                if( PlotModel != null ) {
-                    PlotModel.AcceptSettings( mPlotSet );
-                    if( ShowPlot == false )
+                if (PlotModel != null)
+                {
+                    PlotModel.AcceptSettings(mPlotSet);
+                    if (ShowPlot == false)
                         UpdateImage();
                 }
             }
         }
 
-        public PlotViewEx() {
+        public PlotViewEx()
+        {
             InitializeComponent();
 
 
@@ -98,9 +113,10 @@ namespace tEngine.UControls {
 
 
             // перерисовка при ресайзе
-            mResizeDrawing.Interval = new TimeSpan( 0, 0, 0, 0, 4 );
-            mResizeDrawing.Tick += ( sender, args ) => {
-                if( ShowPlot == false )
+            mResizeDrawing.Interval = new TimeSpan(0, 0, 0, 0, 4);
+            mResizeDrawing.Tick += (sender, args) =>
+            {
+                if (ShowPlot == false)
                     UpdateImage();
                 mResizeDrawing.Stop();
             };
@@ -109,10 +125,12 @@ namespace tEngine.UControls {
         }
 
 
-        public void AddLineSeries( IList<DataPoint> data, string title = "", int thickness = 1,
-            Color? color = null ) {
-            if( data == null || data.Count <= 0 ) return;
-            var series = new OxyPlot.Series.LineSeries {
+        public void AddLineSeries(IList<DataPoint> data, string title = "", int thickness = 1,
+            Color? color = null)
+        {
+            if (data == null || data.Count <= 0) return;
+            OxyPlot.Series.LineSeries series = new OxyPlot.Series.LineSeries
+            {
                 Smooth = false,
                 Title = title,
                 StrokeThickness = thickness,
@@ -122,13 +140,15 @@ namespace tEngine.UControls {
                 MarkerStroke = OxyColors.ForestGreen,
                 //MarkerType = MarkerType.Plus
             };
-            series.Points.AddRange( data );
-            if( color != null ) series.Color = color.Value.GetColorOxy();
-            PlotModel.Series.Add( series );
+            series.Points.AddRange(data);
+            if (color != null) series.Color = color.Value.GetColorOxy();
+            PlotModel.Series.Add(series);
         }
 
-        public void Clear() {
-            if( PlotModel != null ) {
+        public void Clear()
+        {
+            if (PlotModel != null)
+            {
                 PlotModel.Series.Clear();
             }
         }
@@ -136,84 +156,97 @@ namespace tEngine.UControls {
         /// <summary>
         /// Установка модели на PlotView
         /// </summary>
-        public void InitModel() {
-            Debug.Assert( PlotView != null );
+        public void InitModel()
+        {
+            Debug.Assert(PlotView != null);
 
             PlotView.Model = null;
 
-            PlotModel = new PlotModelEx( PlotView );
+            PlotModel = new PlotModelEx(PlotView);
             //Title как свойство PlotViewEx
-            if( Title.IsNullOrEmpty() == false ) {
+            if (Title.IsNullOrEmpty() == false)
+            {
                 PlotModel.Title = Title;
             }
 
             PlotView.Model = PlotModel;
         }
 
-        public void ReDraw(bool autoScale = true) {
-            if( PlotModel != null ) {
-                if(autoScale)
+        public void ReDraw(bool autoScale = true)
+        {
+            if (PlotModel != null)
+            {
+                if (autoScale)
                     PlotModel.AutoScale();
-                PlotModel.InvalidatePlot( true );
+                PlotModel.InvalidatePlot(true);
                 UpdateImage();
             }
         }
 
-        public void UpdateImage() {
+        public void UpdateImage()
+        {
             ImageSource = null;
-            Image.GetBindingExpression( Image.SourceProperty ).UpdateTarget();
+            Image.GetBindingExpression(Image.SourceProperty).UpdateTarget();
         }
 
-        private void ButtonReset_OnClick( object sender, RoutedEventArgs e ) {
+        private void ButtonReset_OnClick(object sender, RoutedEventArgs e)
+        {
             PlotModel.ResetModel();
             UpdateImage();
         }
 
-        private void ButtonSettings_OnClick( object sender, RoutedEventArgs e ) {
-            var ps = new PlotSettings();
-            ps.SetModel( PlotModel );
+        private void ButtonSettings_OnClick(object sender, RoutedEventArgs e)
+        {
+            PlotSettings ps = new PlotSettings();
+            ps.SetModel(PlotModel);
             PlotSet.AxesOX.AutoScale = false;
             PlotSet.AxesOY.AutoScale = false;
-            PlotSet.CopyScale( PlotModel );
-            if( Title.IsNullOrEmpty() == false ) {
+            PlotSet.CopyScale(PlotModel);
+            if (Title.IsNullOrEmpty() == false)
+            {
                 PlotSet.Title = Title;
             }
             PlotSet.TitleFontSize = PlotModel.TitleFontSize;
 
             ps.PlotSet = PlotSet;
             ps.AcceptSettingsAction = set => { PlotSet = set; };
-            if( ps.ShowDialog() == true ) {
+            if (ps.ShowDialog() == true)
+            {
                 //accept settings
                 PlotSet = ps.PlotSet;
             }
         }
 
-        private void PlotViewEx_OnSizeChanged( object sender, SizeChangedEventArgs e ) {
+        private void PlotViewEx_OnSizeChanged(object sender, SizeChangedEventArgs e)
+        {
             mResizeDrawing.Stop();
             mResizeDrawing.Start();
         }
 
-        private void RootOnLoaded( object sender, RoutedEventArgs routedEventArgs ) {
+        private void RootOnLoaded(object sender, RoutedEventArgs routedEventArgs)
+        {
             InitModel();
             root.Loaded -= RootOnLoaded;
         }
 
         public static readonly DependencyProperty TitleProperty = DependencyProperty.Register(
-            "Title", typeof( string ), typeof( PlotViewEx ), new PropertyMetadata( default(string), ( obj, args ) => {
-                var pme = (obj as PlotViewEx);
-                var title = args.NewValue as string;
-                if( pme.PlotModel != null )
+            "Title", typeof(string), typeof(PlotViewEx), new PropertyMetadata(default(string), (obj, args) =>
+            {
+                PlotViewEx pme = (obj as PlotViewEx);
+                string title = args.NewValue as string;
+                if (pme.PlotModel != null)
                     pme.PlotModel.Title = title;
-                if( pme.PlotView != null )
+                if (pme.PlotView != null)
                     pme.PlotView.Title = title;
-            } ) );
+            }));
 
-        public static readonly DependencyProperty ShowPlotProperty = DependencyProperty.Register( "ShowPlot",
-            typeof( bool ), typeof( PlotViewEx ),
-            new PropertyMetadata( default(bool),
-                ( obj, args ) => {
-                    if( (bool?) args.NewValue == false )
+        public static readonly DependencyProperty ShowPlotProperty = DependencyProperty.Register("ShowPlot",
+            typeof(bool), typeof(PlotViewEx),
+            new PropertyMetadata(default(bool),
+                (obj, args) =>
+                {
+                    if ((bool?)args.NewValue == false)
                         (obj as PlotViewEx).UpdateImage();
-                } ) );
+                }));
     }
 }

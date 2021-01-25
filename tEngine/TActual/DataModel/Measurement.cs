@@ -8,64 +8,78 @@ using tEngine.Helpers;
 namespace tEngine.TActual.DataModel
 {
     [DataContract]
-    public class Measurement {
+    public class Measurement
+    {
 
         public const string FOLDER_KEY = "LastMsmFolder";
         public PlayList PlayList { get; set; }
         public string FilePath { get; set; }
 
-        public string Comment {
+        public string Comment
+        {
             get { return mComment; }
-            set {
+            set
+            {
                 mComment = value;
-                if( PlayList != null ) 
+                if (PlayList != null)
                     PlayList.IsNotSaveChanges = true;
             }
         }
 
-        public DateTime CreateTime {
+        public DateTime CreateTime
+        {
             get { return mCreateTime; }
-            set {
+            set
+            {
                 mCreateTime = value;
-                if( PlayList != null ) 
+                if (PlayList != null)
                     PlayList.IsNotSaveChanges = true;
             }
         }
 
-        public string FileName {
-            get {
-                if( string.IsNullOrEmpty( FilePath ) == false ) {
-                    FileInfo finfo = new FileInfo( FilePath );
-                    if( finfo.Exists )
-                        return Path.GetFileNameWithoutExtension( finfo.Name );
+        public string FileName
+        {
+            get
+            {
+                if (string.IsNullOrEmpty(FilePath) == false)
+                {
+                    FileInfo finfo = new FileInfo(FilePath);
+                    if (finfo.Exists)
+                        return Path.GetFileNameWithoutExtension(finfo.Name);
                 }
                 return "Новое измерение";
             }
         }
 
-        public string FIO {
+        public string FIO
+        {
             get { return mFio; }
-            set {
+            set
+            {
                 mFio = value;
-                if( PlayList != null ) 
+                if (PlayList != null)
                     PlayList.IsNotSaveChanges = true;
             }
         }
 
-        public string Theme {
+        public string Theme
+        {
             get { return mTheme; }
-            set {
+            set
+            {
                 mTheme = value;
-                if( PlayList != null )
+                if (PlayList != null)
                     PlayList.IsNotSaveChanges = true;
             }
         }
 
-        public string Title {
+        public string Title
+        {
             get { return mTitle; }
-            set {
+            set
+            {
                 mTitle = value;
-                if( PlayList != null ) 
+                if (PlayList != null)
                     PlayList.IsNotSaveChanges = true;
             }
         }
@@ -81,117 +95,135 @@ namespace tEngine.TActual.DataModel
             PlayList = new PlayList(msm.PlayList);
         }
 
-        public Measurement() {
+        public Measurement()
+        {
             CreateTime = DateTime.Now;
             PlayList = new PlayList();
             FilePath = null;
             PlayList.IsNotSaveChanges = false;
         }
 
-        public static Measurement CreateTestMsm( int? maxCount = null ) {
+        public static Measurement CreateTestMsm(int? maxCount = null)
+        {
             // забивате maxCount рисунков из папки рисунков
-            string myPicturesFolder = Environment.GetFolderPath( Environment.SpecialFolder.MyPictures );
-            DirectoryInfo dinfo = new DirectoryInfo( myPicturesFolder + @"\tenzoTest" );
-            if( dinfo.Exists == false )
-                dinfo = new DirectoryInfo( myPicturesFolder.ToString() );
+            string myPicturesFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyPictures);
+            DirectoryInfo dinfo = new DirectoryInfo(myPicturesFolder + @"\tenzoTest");
+            if (dinfo.Exists == false)
+                dinfo = new DirectoryInfo(myPicturesFolder.ToString());
 
-            string[] codecs = ImageCodecInfo.GetImageEncoders().Select( info => info.FilenameExtension ).ToArray();
-            string extensions = string.Join( ";", codecs );
-            var slides = dinfo.EnumerateFiles()
-                .Where( info => extensions.Contains( info.Extension.ToUpper() ) )
-                .Where( ( info, i ) => (i < maxCount) || maxCount == null )
+            string[] codecs = ImageCodecInfo.GetImageEncoders().Select(info => info.FilenameExtension).ToArray();
+            string extensions = string.Join(";", codecs);
+            System.Collections.Generic.IEnumerable<Slide> slides = dinfo.EnumerateFiles()
+                .Where(info => extensions.Contains(info.Extension.ToUpper()))
+                .Where((info, i) => (i < maxCount) || maxCount == null)
                 .Select(
-                    ( info, i ) => {
+                    (info, i) =>
+                    {
                         Slide slide = new Slide();
                         slide.Name = "Картинка №" + (i + 1);
                         slide.Index = i;
-                        slide.UriLoad( new Uri( info.FullName ) );
+                        slide.UriLoad(new Uri(info.FullName));
                         return slide;
-                    } );
+                    });
 
             Measurement msm = new Measurement();
-            msm.PlayList.AddRangeSlide( slides );
+            msm.PlayList.AddRangeSlide(slides);
             return msm;
         }
 
-        public void LoadImage() {
-            foreach( Slide slide in PlayList.Slides ) {
+        public void LoadImage()
+        {
+            foreach (Slide slide in PlayList.Slides)
+            {
                 slide.UriLoad();
             }
         }
 
-        public static bool Open( string filePath, out Measurement msm ) {
-            try {
+        public static bool Open(string filePath, out Measurement msm)
+        {
+            try
+            {
                 byte[] bytes;
-                bool result = FileIO.ReadBytes( filePath, out bytes );
+                bool result = FileIO.ReadBytes(filePath, out bytes);
                 msm = new Measurement();
-                if( result == true ) {
-                    if( msm.LoadFromArray( bytes ) == false )
-                        throw new Exception( "Не удается прочитать файл" );
+                if (result == true)
+                {
+                    if (msm.LoadFromArray(bytes) == false)
+                        throw new Exception("Не удается прочитать файл");
                 }
 
                 //var result = FileIO.ReadText( filePath, out json );
                 //msm = JsonConvert.DeserializeObject<Msm>( json );
 
                 msm.FilePath = filePath;
-                var folder = new FileInfo( msm.FilePath ).Directory;
-                if( folder != null )
-                    AppSettings.SetValue( Measurement.FOLDER_KEY, folder.FullName );
+                DirectoryInfo folder = new FileInfo(msm.FilePath).Directory;
+                if (folder != null)
+                    AppSettings.SetValue(Measurement.FOLDER_KEY, folder.FullName);
 
                 // TODO Проверить как будет грузить не существующий файл
                 msm.LoadImage();
 
                 msm.PlayList.IsNotSaveChanges = false;
                 return result;
-            } catch( Exception  ) {
+            }
+            catch (Exception)
+            {
                 msm = null;
                 return false;
             }
         }
 
-        public bool Save() {
-            var filepath = string.IsNullOrEmpty( FilePath ) ? DefaultPath( this ) : FilePath;
-            return Save( filepath );
+        public bool Save()
+        {
+            string filepath = string.IsNullOrEmpty(FilePath) ? DefaultPath(this) : FilePath;
+            return Save(filepath);
         }
 
-        public bool Save( string filePath ) {
-            try {
+        public bool Save(string filePath)
+        {
+            try
+            {
                 //var settings = new JsonSerializerSettings {ContractResolver = new JSONContractResolver()};
                 //var json = JsonConvert.SerializeObject( this, settings );
                 //FileIO.WriteText( filePath, json );
-                FileIO.WriteBytes( filePath, this.ToByteArray() );
-            } catch( Exception  ) {
-                
+                FileIO.WriteBytes(filePath, this.ToByteArray());
+            }
+            catch (Exception)
+            {
+
             }
             return true;
         }
 
-        private string DefaultPath( Measurement msm ) {
-            var cDirectory = AppSettings.GetValue( Measurement.FOLDER_KEY, Constants.AppDataFolder );
-            var filepath = cDirectory.CorrectSlash();
+        private string DefaultPath(Measurement msm)
+        {
+            string cDirectory = AppSettings.GetValue(Measurement.FOLDER_KEY, Constants.AppDataFolder);
+            string filepath = cDirectory.CorrectSlash();
             filepath += msm.Title + Constants.MSM_EXT;
             return filepath;
         }
 
         #region Byte <=> Object
 
-        public byte[] ToByteArray() {
-            var obj = BytesPacker.JSONObj( this );
-            var playList = PlayList.ToByteArray();
+        public byte[] ToByteArray()
+        {
+            byte[] obj = BytesPacker.JSONObj(this);
+            byte[] playList = PlayList.ToByteArray();
 
-            return BytesPacker.PackBytes( obj, playList );
+            return BytesPacker.PackBytes(obj, playList);
         }
 
-        public bool LoadFromArray( byte[] array ) {
-            var objData = BytesPacker.UnpackBytes( array );
-            if( objData.Length != 2 ) return false;
+        public bool LoadFromArray(byte[] array)
+        {
+            byte[][] objData = BytesPacker.UnpackBytes(array);
+            if (objData.Length != 2) return false;
 
-            var obj = BytesPacker.LoadJSONObj<Measurement>( objData[0] );
+            Measurement obj = BytesPacker.LoadJSONObj<Measurement>(objData[0]);
             this.Comment = obj.Comment;
             this.CreateTime = obj.CreateTime;
             this.Title = obj.Title;
 
-            var pl = PlayList.LoadFromArray( objData[1] );
+            bool pl = PlayList.LoadFromArray(objData[1]);
 
             return pl;
         }

@@ -8,7 +8,8 @@ using tEngine.Helpers;
 
 namespace tEngine.Recorder
 {
-    public enum DeviceStates {
+    public enum DeviceStates
+    {
         DllNotFound,
         DeviceNotFound,
         IncorrectPassword,
@@ -25,8 +26,10 @@ namespace tEngine.Recorder
     /// Start/stop - переход в режим ожидания, по умолчанию запущен
     /// DemoMode - возможность имитировать синус
     /// </summary>
-    public class Device {
-        public enum WorkMode {
+    public class Device
+    {
+        public enum WorkMode
+        {
             Normal,
             AdcCheck
         }
@@ -46,19 +49,24 @@ namespace tEngine.Recorder
         private Task mRunTask;
 
         #region additional public fields
-        public bool DemoMode {
+        public bool DemoMode
+        {
             get { return mDemoMode; }
-            set {
+            set
+            {
                 mDemoMode = value;
-                if( mDemoMode == true )
+                if (mDemoMode == true)
                     DeviceState = DeviceStates.DemoMode;
             }
         }
 
-        public DeviceStates DeviceState {
+        public DeviceStates DeviceState
+        {
             get { return mDeviceState; }
-            private set {
-                lock( mLock ) {
+            private set
+            {
+                lock (mLock)
+                {
                     mDeviceState = value;
                 }
             }
@@ -68,25 +76,28 @@ namespace tEngine.Recorder
         /// <summary>
         /// Удаляет устройство
         /// </summary>
-        public void Abort() {
+        public void Abort()
+        {
             isAbort = true;
             mRunTask.Wait();
             mRunTask.Dispose();
 
             Collector.UnLoad();
 
-            var dv = Devices.ToList().Where( device => device.Value.Equals( this ) );
-            if( dv.Any() ) {
-                var id = dv.ToArray()[0].Key;
-                Devices.Remove( id );
+            var dv = Devices.ToList().Where(device => device.Value.Equals(this));
+            if (dv.Any())
+            {
+                int id = dv.ToArray()[0].Key;
+                Devices.Remove(id);
             }
         }
 
         /// <summary>
         /// Удаляет все устройства
         /// </summary>
-        public static void AbortAll() {
-            while( Devices.Any() )
+        public static void AbortAll()
+        {
+            while (Devices.Any())
                 Devices.First().Value.Abort();
             Devices.Clear();
         }
@@ -96,11 +107,15 @@ namespace tEngine.Recorder
         /// </summary>
         /// <param name="requestId"></param>
         /// <param name="handCallBack"></param>
-        public void AddListener( ushort requestId, Action<ushort, Hand, Hand> handCallBack ) {
-            if( mCallBacks.ContainsKey( requestId ) ) {
+        public void AddListener(ushort requestId, Action<ushort, Hand, Hand> handCallBack)
+        {
+            if (mCallBacks.ContainsKey(requestId))
+            {
                 mCallBacks[requestId] += handCallBack;
-            } else {
-                mCallBacks.Add( requestId, handCallBack );
+            }
+            else
+            {
+                mCallBacks.Add(requestId, handCallBack);
             }
         }
 
@@ -108,175 +123,220 @@ namespace tEngine.Recorder
         /// Добавление слушателя на все пакеты
         /// </summary>
         /// <param name="handCallBack"></param>
-        public void AddListener( Action<ushort, Hand, Hand> handCallBack ) => AddListener(0, handCallBack);
+        public void AddListener(Action<ushort, Hand, Hand> handCallBack) => AddListener(0, handCallBack);
 
         /// <summary>
         /// Создание "усройства" с номером
         /// </summary>
         /// <param name="id"></param>
         /// <returns></returns>
-        public static Device CreateDevice( int id ) {
-            if( Devices.ContainsKey( id ) ) {
+        public static Device CreateDevice(int id)
+        {
+            if (Devices.ContainsKey(id))
+            {
                 return Devices[id];
             }
             Device device = new Device();
-            Devices.Add( id, device );
+            Devices.Add(id, device);
             return device;
         }
 
-        public static Device GetDevice( int id ) {
-            if( Devices.ContainsKey( id ) ) {
+        public static Device GetDevice(int id)
+        {
+            if (Devices.ContainsKey(id))
+            {
                 return Devices[id];
             }
-            return CreateDevice( id );
+            return CreateDevice(id);
         }
 
         public string GetDllName() => Collector.DllName;
-        
-        public bool IsDllLoad() =>Collector.IsDllLoad();
+
+        public bool IsDllLoad() => Collector.IsDllLoad();
 
         /// <summary>
         /// Заявка на изменение ID поступающих измерений
         /// </summary>
         /// <param name="requestID"></param>
         /// <returns></returns>
-        public bool NewRequest( ushort requestID ) {
+        public bool NewRequest(ushort requestID)
+        {
             DeviceState = GetState();
-            if( DeviceState == DeviceStates.DemoMode ) {
+            if (DeviceState == DeviceStates.DemoMode)
+            {
                 Collector.FakeRequestId = requestID;
                 return true;
             }
-            if( DeviceState == DeviceStates.AllRight ) {
+            if (DeviceState == DeviceStates.AllRight)
+            {
                 Packet toDevice = new Packet();
                 toDevice.Command = Commands.ToDevice.NEW_REQUEST;
                 toDevice.RequestId = requestID;
-                byte[] bytes = Packet.Packet2Bytes( toDevice );
-                bool result = Collector.WriteData( bytes );
+                byte[] bytes = Packet.Packet2Bytes(toDevice);
+                bool result = Collector.WriteData(bytes);
                 return result;
-            } else {
+            }
+            else
+            {
                 return false;
             }
         }
 
-        public void RemoveListener( Action<ushort, Hand, Hand> handCallBack ) => RemoveListener( 0, handCallBack );
-        
-        public void RemoveListener( ushort requestId, Action<ushort, Hand, Hand> handCallBack ) {
-            if( mCallBacks.ContainsKey( requestId ) )
+        public void RemoveListener(Action<ushort, Hand, Hand> handCallBack) => RemoveListener(0, handCallBack);
+
+        public void RemoveListener(ushort requestId, Action<ushort, Hand, Hand> handCallBack)
+        {
+            if (mCallBacks.ContainsKey(requestId))
                 mCallBacks[requestId] -= handCallBack;
         }
 
-        public bool SetMode( WorkMode workMode ) {
+        public bool SetMode(WorkMode workMode)
+        {
             DeviceState = GetState();
-            if( DeviceState == DeviceStates.DemoMode ) {
+            if (DeviceState == DeviceStates.DemoMode)
+            {
                 return false;
             }
-            if( DeviceState == DeviceStates.AllRight ) {
+            if (DeviceState == DeviceStates.AllRight)
+            {
                 byte cmd = workMode == WorkMode.AdcCheck ? Commands.ToDevice.SM_ADCCHECK : Commands.ToDevice.SM_NORMAL;
                 Packet toDevice = new Packet();
                 toDevice.Command = cmd;
-                byte[] bytes = Packet.Packet2Bytes( toDevice );
-                bool result = Collector.WriteData( bytes );
+                byte[] bytes = Packet.Packet2Bytes(toDevice);
+                bool result = Collector.WriteData(bytes);
                 return result;
             }
             return false;
         }
 
         public void Start() => isRun = true;
-        
-        public void Stop()=> isRun = false;
+
+        public void Stop() => isRun = false;
 
         /// <summary>
         /// Д:Получает байты от тензометра
         /// </summary>
         /// <returns></returns>
-        internal byte[] GetBytes() {
+        internal byte[] GetBytes()
+        {
             byte[] buffer = new byte[Packet.PACKET_SIZE];
-            if( DemoMode == true ) {
-                Collector.ReadFakeData( ref buffer );
-            } else {
-                Collector.ReadData( ref buffer );
+            if (DemoMode == true)
+            {
+                Collector.ReadFakeData(ref buffer);
+            }
+            else
+            {
+                Collector.ReadData(ref buffer);
             }
             return buffer;
         }
 
-        private Device() {
+        private Device()
+        {
             Counters = new DeviceCounters();
             Collector = new Collector();
             DeviceState = DeviceStates.Undefined;
             DemoMode = false;
             isRun = false;
-            mRunTask = new TaskFactory().StartNew( Run );
+            mRunTask = new TaskFactory().StartNew(Run);
         }
 
-        private bool PacketIsValidAndNotaCopy( Packet packet ) {
-            if( mLastPacketId == null ) {
-                mLastPacketId = (ushort) (packet.PackId - 0x01);
+        private bool PacketIsValidAndNotaCopy(Packet packet)
+        {
+            if (mLastPacketId == null)
+            {
+                mLastPacketId = (ushort)(packet.PackId - 0x01);
             }
             // подходит по команде и имеет информацию
-            if( packet.Command == Commands.FromDevice.DATA && packet.IsValid ) {
-                Counters.FullPack ++;
+            if (packet.Command == Commands.FromDevice.DATA && packet.IsValid)
+            {
+                Counters.FullPack++;
                 Counters.PPS.Increment();
                 // точно новый
-                if( packet.PackId != mLastPacketId ) {
+                if (packet.PackId != mLastPacketId)
+                {
                     // ничего не потеряли?
-                    if( (ushort) (packet.PackId - mLastPacketId) != 1 ) {
-                        Counters.LostPack += (ushort) (packet.PackId - mLastPacketId);
+                    if ((ushort)(packet.PackId - mLastPacketId) != 1)
+                    {
+                        Counters.LostPack += (ushort)(packet.PackId - mLastPacketId);
                     }
                     Counters.ValidPPS.Increment();
                     mLastPacketId = packet.PackId;
                     return true;
-                } else {
+                }
+                else
+                {
                     Counters.RepeatPack++;
                 }
-            } else {
+            }
+            else
+            {
                 Counters.InvalidPack++;
             }
             return false;
         }
 
-        private DeviceStates GetState() {
-            if( DemoMode == true ) {
+        private DeviceStates GetState()
+        {
+            if (DemoMode == true)
+            {
                 return DeviceStates.DemoMode;
             }
-            if( Collector.IsDllConnect() == false ) {
+            if (Collector.IsDllConnect() == false)
+            {
                 return DeviceStates.DllNotFound;
             }
-            if( Collector.IsDeviceConnect() == false ) {
+            if (Collector.IsDeviceConnect() == false)
+            {
                 Collector.InitUsb();
                 return DeviceStates.DeviceNotFound;
             }
             return DeviceStates.AllRight;
         }
 
-        private void Run() {
-            while( true ) {
-                if( isAbort == true ) {
+        private void Run()
+        {
+            while (true)
+            {
+                if (isAbort == true)
+                {
                     break;
                 }
                 DeviceState = GetState();
-                if( isRun == true ) {
-                    if( DeviceState == DeviceStates.AllRight || DeviceState == DeviceStates.DemoMode ) {
+                if (isRun == true)
+                {
+                    if (DeviceState == DeviceStates.AllRight || DeviceState == DeviceStates.DemoMode)
+                    {
                         Counters.Connections = 0;
-                        Counters.TotalPack ++;
+                        Counters.TotalPack++;
                         byte[] bytes = GetBytes();
-                        Packet packet = Packet.Bytes2Packet( bytes );
+                        Packet packet = Packet.Bytes2Packet(bytes);
                         //Д: с учетом закоменченных строк у меня ощущение что это все не нужно
                         //достаточно проверки пакета
-                        if( packet.Command == Commands.FromDevice.DATA ) {
-                            if( PacketIsValidAndNotaCopy( packet ) ) {
-                                SendPacket( packet );
+                        if (packet.Command == Commands.FromDevice.DATA)
+                        {
+                            if (PacketIsValidAndNotaCopy(packet))
+                            {
+                                SendPacket(packet);
                             }
-                        } else if( packet.Command == Commands.FromDevice.ADCCHECK ) {
+                        }
+                        else if (packet.Command == Commands.FromDevice.ADCCHECK)
+                        {
                             //if( AdcTestCallBack != null )
                             //    AdcTestCallBack( pack.DataReadyM2, pack.ADCDataM2 );
-                        } else {
-                            Counters.InvalidPack ++;
                         }
-                    } else {
-                        Counters.Connections ++;
-                        Thread.Sleep( 200 );
+                        else
+                        {
+                            Counters.InvalidPack++;
+                        }
                     }
-                } else Thread.Sleep( 200 );
+                    else
+                    {
+                        Counters.Connections++;
+                        Thread.Sleep(200);
+                    }
+                }
+                else Thread.Sleep(200);
             }
             return;
         }
@@ -285,16 +345,21 @@ namespace tEngine.Recorder
         /// Отправляем обе руки каждому слушателю
         /// </summary>
         /// <param name="pack"></param>
-        private void SendPacket( Packet pack ) {
+        private void SendPacket(Packet pack)
+        {
             ushort id = pack.RequestId;
-            if( id != 0 && mCallBacks.ContainsKey( id ) ) {
-                if( mCallBacks[id] != null ) {
-                    mCallBacks[id]( id, pack.Left, pack.Right );
+            if (id != 0 && mCallBacks.ContainsKey(id))
+            {
+                if (mCallBacks[id] != null)
+                {
+                    mCallBacks[id](id, pack.Left, pack.Right);
                 }
             }
-            if( mCallBacks.ContainsKey( 0 ) ) {
-                if( mCallBacks[0] != null ) {
-                    mCallBacks[0]( id, pack.Left, pack.Right );
+            if (mCallBacks.ContainsKey(0))
+            {
+                if (mCallBacks[0] != null)
+                {
+                    mCallBacks[0](id, pack.Left, pack.Right);
                 }
             }
         }
@@ -303,7 +368,8 @@ namespace tEngine.Recorder
     /// <summary>
     /// Счетчики устройства по пакетам
     /// </summary>
-    public class DeviceCounters {
+    public class DeviceCounters
+    {
         /// <summary>
         /// Попытки подключения
         /// </summary>
@@ -344,11 +410,13 @@ namespace tEngine.Recorder
         /// </summary>
         public PerSeconds ValidPPS { get; internal set; }
 
-        public DeviceCounters() {
+        public DeviceCounters()
+        {
             Clear();
         }
 
-        public void Clear() {
+        public void Clear()
+        {
             FullPack = 0;
             InvalidPack = 0;
             LostPack = 0;
@@ -362,40 +430,47 @@ namespace tEngine.Recorder
     /// <summary>
     /// Счетчик пакетов в секунду
     /// </summary>
-    public class PerSeconds {
+    public class PerSeconds
+    {
         private object mLock = new object();
         private FixedSizedQueue<DateTime> mQueue = new FixedSizedQueue<DateTime>();
 
-        public PerSeconds() {
+        public PerSeconds()
+        {
             mQueue.Limit = 2;
-            mQueue.Enqueue( DateTime.Now );
-            mQueue.Enqueue( DateTime.Now );
+            mQueue.Enqueue(DateTime.Now);
+            mQueue.Enqueue(DateTime.Now);
         }
 
         /// <summary>
         /// Величина в секунду
         /// </summary>
         /// <returns></returns>
-        public double GetPs() {
-            lock( mLock ) {
-                var time = (mQueue.Last() - mQueue.First()).TotalMilliseconds;
+        public double GetPs()
+        {
+            lock (mLock)
+            {
+                double time = (mQueue.Last() - mQueue.First()).TotalMilliseconds;
                 // лимит корректируется во времени
-                if( mQueue.Count == mQueue.Limit ) {
-                    if( time < 500 )
-                        mQueue.Limit ++;
-                    if( time > 2000 )
-                        mQueue.Limit --;
+                if (mQueue.Count == mQueue.Limit)
+                {
+                    if (time < 500)
+                        mQueue.Limit++;
+                    if (time > 2000)
+                        mQueue.Limit--;
                 }
-                return (mQueue.Count/time)*1000;
+                return (mQueue.Count / time) * 1000;
             }
         }
 
         /// <summary>
         /// Увеличивает счетчик
         /// </summary>
-        public void Increment() {
-            lock( mLock ) {
-                mQueue.Enqueue( DateTime.Now );
+        public void Increment()
+        {
+            lock (mLock)
+            {
+                mQueue.Enqueue(DateTime.Now);
             }
         }
     }

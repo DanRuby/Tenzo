@@ -1,12 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using tEngine.DataModel;
 
-namespace tEngine.Recorder {
+namespace tEngine.Recorder
+{
     public class Packet {
         public const int ADC_COUNT = 4;
         public const int CYCLES = 7;
@@ -25,9 +24,6 @@ namespace tEngine.Recorder {
             set { Buffer.ControlSum = value; }
         }
 
-        public bool IsValid { get; set; }
-        public Hand Left { get; set; }
-
         public ushort PackId {
             get { return Buffer.PackID; }
             set { Buffer.PackID = value; }
@@ -38,7 +34,10 @@ namespace tEngine.Recorder {
             set { Buffer.RequestID = value; }
         }
 
+        public bool IsValid { get; set; }
+        public Hand Left { get; set; }
         public Hand Right { get; set; }
+
 
         public Packet() {
             Left = new Hand();
@@ -81,7 +80,7 @@ namespace tEngine.Recorder {
             return packet;
         }
 
-        public static byte GetCommand( byte[] buffer ) {
+        public static byte GetCommandFromBytes( byte[] buffer ) {
             Debug.Assert( buffer != null && buffer.Length != 0 );
             return buffer[0];
         }
@@ -89,7 +88,7 @@ namespace tEngine.Recorder {
         public byte GetControlSum() {
             var sum = (byte) 0x00;
             for( int i = 0; i < DATA_SIZE; i++ ) {
-                sum ^= this.Buffer.Data[i];
+                sum ^= Buffer.Data[i];
             }
             return sum;
         }

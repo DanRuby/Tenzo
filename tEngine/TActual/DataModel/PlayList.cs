@@ -5,11 +5,10 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using Newtonsoft.Json;
-using tEngine.DataModel;
 using tEngine.Helpers;
-using tEngine.TMeter.DataModel;
 
-namespace tEngine.TActual.DataModel {
+namespace tEngine.TActual.DataModel
+{
     [DataContract]
     public class PlayList {
         public enum MoveDirection {
@@ -37,11 +36,11 @@ namespace tEngine.TActual.DataModel {
             var list = new List<Slide>();
             list.AddRange( playList.Slides.Select( slide => new Slide( slide ) ) );
 
-            this.Slides = new ReadOnlyCollection<Slide>( list );
-            this.ID = playList.ID;
-            this.CreateTime = playList.CreateTime;
-            this.SecondsToSlide = playList.SecondsToSlide;
-            this.Title = playList.Title;
+            Slides = new ReadOnlyCollection<Slide>( list );
+            ID = playList.ID;
+            CreateTime = playList.CreateTime;
+            SecondsToSlide = playList.SecondsToSlide;
+            Title = playList.Title;
         }
 
         public PlayList() {
@@ -103,7 +102,7 @@ namespace tEngine.TActual.DataModel {
 
                 playList.IsNotSaveChanges = false;
                 return result;
-            } catch( Exception ex ) {
+            } catch( Exception  ) {
                 playList = new PlayList();
                 return false;
             }
@@ -213,8 +212,7 @@ namespace tEngine.TActual.DataModel {
 
                     IsNotSaveChanges = false;
                 }
-            } catch( Exception ex ) {
-                ex = ex;
+            } catch( Exception  ) {
             }
             return true;
         }

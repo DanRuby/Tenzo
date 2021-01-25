@@ -34,7 +34,7 @@ namespace TenzoMeterGUI.View {
             DataContext = mDataContext;
         }
 
-        public void SetPrintData( User user, List<Msm> msms, List<ResultWindowVM.PlotSetResult> settings ) {
+        public void SetPrintData( User user, List<Measurement> msms, List<ResultWindowVM.PlotSetResult> settings ) {
             mDataContext.SetPrintData( user, msms, settings );
         }
 
@@ -56,7 +56,7 @@ namespace TenzoMeterGUI.View {
 
     public class PdfSaveVM : Observed<PdfSaveVM> {
         private string mFileName;
-        private List<Msm> mMsms;
+        private List<Measurement> mMsms;
         private List<ResultWindowVM.PlotSetResult> mSettings;
         private User mUser;
         public Command CMDBrowse { get; private set; }
@@ -101,7 +101,7 @@ namespace TenzoMeterGUI.View {
             }
         }
 
-        public Document GenerateDataToPrint( User user, List<Msm> msms, List<ResultWindowVM.PlotSetResult> settings ) {
+        public Document GenerateDataToPrint( User user, List<Measurement> msms, List<ResultWindowVM.PlotSetResult> settings ) {
             if ( msms.IsNullOrEmpty() ) return null;
 
             var doc = new Document();
@@ -162,7 +162,7 @@ namespace TenzoMeterGUI.View {
             return doc;
         }
 
-        public void SetPrintData( User user, List<Msm> msms, List<ResultWindowVM.PlotSetResult> settings ) {
+        public void SetPrintData( User user, List<Measurement> msms, List<ResultWindowVM.PlotSetResult> settings ) {
             mUser = user;
             mMsms = msms;
             mSettings = settings;

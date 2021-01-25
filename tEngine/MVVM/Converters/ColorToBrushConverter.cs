@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows.Data;
 using System.Windows.Media;
 
-namespace tEngine.MVVM.Converters {
+namespace tEngine.MVVM.Converters
+{
     public class ColorToBrushConverter : ConverterBase<ColorToBrushConverter> {
         public override object Convert( object value, Type targetType, object parameter, CultureInfo culture ) {
             var color = value as Color? ?? Colors.White;

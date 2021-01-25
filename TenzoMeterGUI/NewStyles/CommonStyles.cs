@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Input;
 
-namespace TenzoMeterGUI.NewStyles {
+namespace TenzoMeterGUI.NewStyles
+{
     partial class CommonStyles : ResourceDictionary {
         public CommonStyles() {
             InitializeComponent();

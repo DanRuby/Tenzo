@@ -17,7 +17,7 @@ using tEngine.TActual.DataModel;
 using tEngine.TMeter.DataModel;
 using TenzoMeterGUI.ViewModel;
 using TMSingleMeasurement.View;
-using Msm = tEngine.TMeter.DataModel.Msm;
+using Measurement = tEngine.TMeter.DataModel.Measurement;
 
 namespace TenzoMeterGUI.View {
     /// <summary>
@@ -37,7 +37,7 @@ namespace TenzoMeterGUI.View {
             DataContext = mDataContext;
         }
 
-        public void OpenMsm( Msm msm ) {
+        public void OpenMsm( Measurement msm ) {
             mDataContext.OpenMsm( msm );
         }
 
@@ -49,7 +49,7 @@ namespace TenzoMeterGUI.View {
             mDataContext.User = user;
             return;
             // полное копирование User
-            mDataContext.User = new User(user);
+            //mDataContext.User = new User(user);
         }
 
         public void UpdateAllProperties() {

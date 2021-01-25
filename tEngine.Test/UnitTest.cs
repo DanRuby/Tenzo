@@ -111,7 +111,7 @@ namespace tEngine.Test {
 
         [TestMethod]
         public void TestMsmCreate() {
-            var result = Msm.GetTestMsm();
+            var result = Measurement.GetTestMsm();
         }
 
         [TestMethod]

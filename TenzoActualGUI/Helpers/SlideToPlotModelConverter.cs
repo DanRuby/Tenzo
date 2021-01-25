@@ -1,25 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Data;
 using System.Windows.Media;
 using OxyPlot;
 using OxyPlot.Wpf;
 using tEngine.DataModel;
 using tEngine.Helpers;
-using tEngine.MVVM;
 using tEngine.MVVM.Converters;
 using tEngine.PlotCreator;
 using tEngine.TActual.DataModel;
 using TenzoActualGUI.View;
 using Series = OxyPlot.Series.Series;
 
-namespace TenzoActualGUI.Helpers {
-    internal class SlideToPlotModelConverter : ConverterBaseM<SlideToPlotModelConverter> {
+namespace TenzoActualGUI.Helpers
+{
+    internal class SlideToPlotModelConverter : ConverterBaseMulti<SlideToPlotModelConverter> {
         public override object Convert( object[] values, Type targetType, object parameter, CultureInfo culture ) {
             if( values.Any( value => value == null ) ) {
                 return Binding.DoNothing;
@@ -103,7 +100,7 @@ namespace TenzoActualGUI.Helpers {
                     Resolution = (double) values[5];
                     HzLower = (double) values[6];
                     HzUpper = (double) values[7];
-                } catch( Exception ex ) {
+                } catch( Exception  ) {
                     //if( new Observed<object>().IsDesignMode == false )
                     //    Debug.Assert( ex == null, ex.ToString() );
                     throw new Exception();

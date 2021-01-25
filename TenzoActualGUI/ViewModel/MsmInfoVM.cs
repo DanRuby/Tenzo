@@ -19,7 +19,7 @@ namespace TenzoActualGUI.ViewModel {
             }
         }
 
-        public Msm Msm { get; set; }
+        public Measurement Msm { get; set; }
 
         public string Title {
             get {

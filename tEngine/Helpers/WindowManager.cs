@@ -1,19 +1,19 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
 using System.Windows.Threading;
 
-namespace tEngine.Helpers {
+namespace tEngine.Helpers
+{
     public class WindowManager {
-        //private static List<Window> mWindows = new List<Window>();
+        
         private static Dictionary<Guid, Window> mWindows = new Dictionary<Guid, Window>(); 
 
         public static void CloseAll() {
-            var wnds = mWindows.ToArray();
-            foreach( var item in wnds ) {
+            var windows = mWindows.ToArray();
+            foreach( var item in windows ) {
                 var window = item.Value;
                 if(window != null)
                 Task.Factory.StartNew(
@@ -36,6 +36,13 @@ namespace tEngine.Helpers {
             return NewWindow<T>(new Guid(id, 0,0, new byte[8]));
         }
 
+        public static T NewWindow<T>(Guid id) where T : Window, new() {
+            T result = new T();
+            result.Closed += ( sender, args ) => mWindows.Remove( id );
+            mWindows.Add( id, result );
+            return result;
+        }
+
         public static T GetWindow<T>( int id ) where T : Window {
             var guid = new Guid( id, 0, 0, new byte[8] );
             return mWindows.ContainsKey( guid ) ? (T)mWindows[guid] : null;
@@ -44,17 +51,11 @@ namespace tEngine.Helpers {
             return mWindows.ContainsKey( id ) ? (T)mWindows[id] : null;
         }
 
-        public static T NewWindow<T>(Guid id) where T : Window, new() {
-            var result = new T();
-            // при закрытии окна оно удалиться из коллекции
-            result.Closed += ( sender, args ) => mWindows.Remove( id );
-            mWindows.Add( id, result );
-            return result;
-        }
 
         public static void SaveWindowPos( string key, Window wnd ) {
             var wndCount = mWindows.Count( w => w.GetType().Name.Equals( key ) );
-            if( wndCount > 1 ) return; // если такое же окно еще будет закрыто
+            if( wndCount > 1 )
+                return; // если такое же окно еще будет закрыто
             var ws = wnd.WindowState;
             if( ws == WindowState.Normal ) {
                 var rect = new Rect( (uint) wnd.Left, (uint) wnd.Top, (uint) wnd.ActualWidth, (uint) wnd.ActualHeight );

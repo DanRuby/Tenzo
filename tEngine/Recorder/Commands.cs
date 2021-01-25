@@ -1,4 +1,7 @@
 ﻿namespace tEngine.Recorder {
+    /// <summary>
+    /// Д: Набор комманд для обмена с прибором
+    /// </summary>
     public class Commands {
         public class FromDevice {
             /// <summary>

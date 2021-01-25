@@ -7,7 +7,7 @@ using System.Windows.Data;
 using tEngine.MVVM.Converters;
 
 namespace TenzoMeterGUI.Converters {
-    public class ListIndexer : ConverterBaseM<ListIndexer> {
+    public class ListIndexer : ConverterBaseMulti<ListIndexer> {
         public override object Convert( object[] values, Type targetType, object parameter, CultureInfo culture ) {
             if( (values[1] as bool?) == true ) {
                 if( targetType == typeof( int ) ) {

@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Windows.Media;
 using OxyPlot;
 using OxyPlot.Axes;
@@ -14,7 +11,8 @@ using LineSeries = OxyPlot.Series.LineSeries;
 using RectangleAnnotation = OxyPlot.Annotations.RectangleAnnotation;
 using Series = OxyPlot.Series.Series;
 
-namespace tEngine.PlotCreator {
+namespace tEngine.PlotCreator
+{
     public static class PlotExtension {
         private static string mSelectionTag = "SelectionMode";
 
@@ -192,7 +190,7 @@ namespace tEngine.PlotCreator {
                     axis.Maximum = maxY;
                 }
                 axis.Reset();
-            } catch( Exception ex ) {
+            } catch( Exception  ) {
                 return;
             }
         }

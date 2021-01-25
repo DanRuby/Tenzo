@@ -1,17 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.CompilerServices;
-using System.Runtime.InteropServices;
 using System.Threading;
 using System.Threading.Tasks;
 using tEngine.DataModel;
 using tEngine.Helpers;
 
-namespace tEngine.Recorder {
+namespace tEngine.Recorder
+{
     public enum DeviceStates {
-        DllNotFind,
-        DeviceNotFind,
+        DllNotFound,
+        DeviceNotFound,
         IncorrectPassword,
         InvalidData,
         DemoMode,
@@ -31,24 +30,22 @@ namespace tEngine.Recorder {
             Normal,
             AdcCheck
         }
-
-        private static Dictionary<int, Device> Devices = new Dictionary<int, Device>();
         public Action<bool[], short[]> AdcTestCallBack;
-        private Collector Collector;
-        private bool isAbort = false;
-        private bool isRun;
-
-        private Dictionary<ushort, Action<ushort, Hand, Hand>> mCallBacks =
-            new Dictionary<ushort, Action<ushort, Hand, Hand>>();
-
-        private bool mDemoMode;
-        private DeviceStates mDeviceState;
-        private ushort? mLastId = null;
-        private Packet mLastPacket = null;
-        private object mLock = new object();
-        private Task mRunTask;
         public DeviceCounters Counters { get; set; }
 
+        private static Dictionary<int, Device> Devices = new Dictionary<int, Device>();
+        private bool isAbort = false;
+        private bool isRun;
+        private bool mDemoMode;
+
+        private Collector Collector;
+        private Dictionary<ushort, Action<ushort, Hand, Hand>> mCallBacks = new Dictionary<ushort, Action<ushort, Hand, Hand>>();
+        private DeviceStates mDeviceState;
+        private ushort? mLastPacketId = null;
+        private object mLock = new object();
+        private Task mRunTask;
+
+        #region additional public fields
         public bool DemoMode {
             get { return mDemoMode; }
             set {
@@ -66,6 +63,7 @@ namespace tEngine.Recorder {
                 }
             }
         }
+        #endregion
 
         /// <summary>
         /// Удаляет устройство
@@ -110,9 +108,7 @@ namespace tEngine.Recorder {
         /// Добавление слушателя на все пакеты
         /// </summary>
         /// <param name="handCallBack"></param>
-        public void AddListener( Action<ushort, Hand, Hand> handCallBack ) {
-            AddListener( 0, handCallBack );
-        }
+        public void AddListener( Action<ushort, Hand, Hand> handCallBack ) => AddListener(0, handCallBack);
 
         /// <summary>
         /// Создание "усройства" с номером
@@ -123,7 +119,7 @@ namespace tEngine.Recorder {
             if( Devices.ContainsKey( id ) ) {
                 return Devices[id];
             }
-            var device = new Device();
+            Device device = new Device();
             Devices.Add( id, device );
             return device;
         }
@@ -135,13 +131,9 @@ namespace tEngine.Recorder {
             return CreateDevice( id );
         }
 
-        public string GetDllName() {
-            return Collector.DllName;
-        }
-
-        public bool IsDllLoad() {
-            return Collector.IsDllLoad();
-        }
+        public string GetDllName() => Collector.DllName;
+        
+        public bool IsDllLoad() =>Collector.IsDllLoad();
 
         /// <summary>
         /// Заявка на изменение ID поступающих измерений
@@ -155,21 +147,19 @@ namespace tEngine.Recorder {
                 return true;
             }
             if( DeviceState == DeviceStates.AllRight ) {
-                var toDevice = new Packet();
+                Packet toDevice = new Packet();
                 toDevice.Command = Commands.ToDevice.NEW_REQUEST;
                 toDevice.RequestId = requestID;
-                var bytes = Packet.Packet2Bytes( toDevice );
-                var result = Collector.WriteData( bytes );
+                byte[] bytes = Packet.Packet2Bytes( toDevice );
+                bool result = Collector.WriteData( bytes );
                 return result;
             } else {
                 return false;
             }
         }
 
-        public void RemoveListener( Action<ushort, Hand, Hand> handCallBack ) {
-            RemoveListener( 0, handCallBack );
-        }
-
+        public void RemoveListener( Action<ushort, Hand, Hand> handCallBack ) => RemoveListener( 0, handCallBack );
+        
         public void RemoveListener( ushort requestId, Action<ushort, Hand, Hand> handCallBack ) {
             if( mCallBacks.ContainsKey( requestId ) )
                 mCallBacks[requestId] -= handCallBack;
@@ -181,26 +171,26 @@ namespace tEngine.Recorder {
                 return false;
             }
             if( DeviceState == DeviceStates.AllRight ) {
-                var cmd = workMode == WorkMode.AdcCheck ? Commands.ToDevice.SM_ADCCHECK : Commands.ToDevice.SM_NORMAL;
-                var toDevice = new Packet();
+                byte cmd = workMode == WorkMode.AdcCheck ? Commands.ToDevice.SM_ADCCHECK : Commands.ToDevice.SM_NORMAL;
+                Packet toDevice = new Packet();
                 toDevice.Command = cmd;
-                var bytes = Packet.Packet2Bytes( toDevice );
-                var result = Collector.WriteData( bytes );
+                byte[] bytes = Packet.Packet2Bytes( toDevice );
+                bool result = Collector.WriteData( bytes );
                 return result;
             }
             return false;
         }
 
-        public void Start() {
-            isRun = true;
-        }
+        public void Start() => isRun = true;
+        
+        public void Stop()=> isRun = false;
 
-        public void Stop() {
-            isRun = false;
-        }
-
+        /// <summary>
+        /// Д:Получает байты от тензометра
+        /// </summary>
+        /// <returns></returns>
         internal byte[] GetBytes() {
-            var buffer = new byte[Packet.PACKET_SIZE];
+            byte[] buffer = new byte[Packet.PACKET_SIZE];
             if( DemoMode == true ) {
                 Collector.ReadFakeData( ref buffer );
             } else {
@@ -218,22 +208,22 @@ namespace tEngine.Recorder {
             mRunTask = new TaskFactory().StartNew( Run );
         }
 
-        private bool FilterPack( Packet pack ) {
-            if( mLastId == null ) {
-                mLastId = (ushort) (pack.PackId - 0x01);
+        private bool PacketIsValidAndNotaCopy( Packet packet ) {
+            if( mLastPacketId == null ) {
+                mLastPacketId = (ushort) (packet.PackId - 0x01);
             }
             // подходит по команде и имеет информацию
-            if( pack.Command == Commands.FromDevice.DATA && pack.IsValid ) {
+            if( packet.Command == Commands.FromDevice.DATA && packet.IsValid ) {
                 Counters.FullPack ++;
                 Counters.PPS.Increment();
                 // точно новый
-                if( pack.PackId != mLastId ) {
+                if( packet.PackId != mLastPacketId ) {
                     // ничего не потеряли?
-                    if( (ushort) (pack.PackId - mLastId) != 1 ) {
-                        Counters.LostPack += (ushort) (pack.PackId - mLastId);
+                    if( (ushort) (packet.PackId - mLastPacketId) != 1 ) {
+                        Counters.LostPack += (ushort) (packet.PackId - mLastPacketId);
                     }
                     Counters.ValidPPS.Increment();
-                    mLastId = pack.PackId;
+                    mLastPacketId = packet.PackId;
                     return true;
                 } else {
                     Counters.RepeatPack++;
@@ -249,11 +239,11 @@ namespace tEngine.Recorder {
                 return DeviceStates.DemoMode;
             }
             if( Collector.IsDllConnect() == false ) {
-                return DeviceStates.DllNotFind;
+                return DeviceStates.DllNotFound;
             }
             if( Collector.IsDeviceConnect() == false ) {
                 Collector.InitUsb();
-                return DeviceStates.DeviceNotFind;
+                return DeviceStates.DeviceNotFound;
             }
             return DeviceStates.AllRight;
         }
@@ -268,13 +258,15 @@ namespace tEngine.Recorder {
                     if( DeviceState == DeviceStates.AllRight || DeviceState == DeviceStates.DemoMode ) {
                         Counters.Connections = 0;
                         Counters.TotalPack ++;
-                        var bytes = GetBytes();
-                        var pack = Packet.Bytes2Packet( bytes );
-                        if( pack.Command == Commands.FromDevice.DATA ) {
-                            if( FilterPack( pack ) ) {
-                                SendPacket( pack );
+                        byte[] bytes = GetBytes();
+                        Packet packet = Packet.Bytes2Packet( bytes );
+                        //Д: с учетом закоменченных строк у меня ощущение что это все не нужно
+                        //достаточно проверки пакета
+                        if( packet.Command == Commands.FromDevice.DATA ) {
+                            if( PacketIsValidAndNotaCopy( packet ) ) {
+                                SendPacket( packet );
                             }
-                        } else if( pack.Command == Commands.FromDevice.ADCCHECK ) {
+                        } else if( packet.Command == Commands.FromDevice.ADCCHECK ) {
                             //if( AdcTestCallBack != null )
                             //    AdcTestCallBack( pack.DataReadyM2, pack.ADCDataM2 );
                         } else {
@@ -294,7 +286,7 @@ namespace tEngine.Recorder {
         /// </summary>
         /// <param name="pack"></param>
         private void SendPacket( Packet pack ) {
-            var id = pack.RequestId;
+            ushort id = pack.RequestId;
             if( id != 0 && mCallBacks.ContainsKey( id ) ) {
                 if( mCallBacks[id] != null ) {
                     mCallBacks[id]( id, pack.Left, pack.Right );
@@ -309,8 +301,7 @@ namespace tEngine.Recorder {
     }
 
     /// <summary>
-    /// не уверен что все счетчики задействованы
-    /// todo проверить счетчики
+    /// Счетчики устройства по пакетам
     /// </summary>
     public class DeviceCounters {
         /// <summary>
@@ -358,16 +349,19 @@ namespace tEngine.Recorder {
         }
 
         public void Clear() {
-            TotalPack = 0;
             FullPack = 0;
             InvalidPack = 0;
             LostPack = 0;
-            RepeatPack = 0;
             PPS = new PerSeconds();
+            RepeatPack = 0;
+            TotalPack = 0;
             ValidPPS = new PerSeconds();
         }
     }
 
+    /// <summary>
+    /// Счетчик пакетов в секунду
+    /// </summary>
     public class PerSeconds {
         private object mLock = new object();
         private FixedSizedQueue<DateTime> mQueue = new FixedSizedQueue<DateTime>();

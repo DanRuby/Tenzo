@@ -18,7 +18,7 @@ namespace tEngine.Helpers {
                     result = (T) reader.Deserialize( file );
                 }
                 return result;
-            } catch( Exception ex ) {
+            } catch( Exception  ) {
                 return default(T);
             }
         }
@@ -34,7 +34,7 @@ namespace tEngine.Helpers {
                     result = (T) reader.Deserialize( file.BaseStream );
                 }
                 return result;
-            } catch( Exception ex ) {
+            } catch( Exception  ) {
                 return default(T);
             }
         }
@@ -50,7 +50,7 @@ namespace tEngine.Helpers {
                     result = (T) reader.ReadObject( file );
                 }
                 return result;
-            } catch( Exception ex ) {
+            } catch( Exception  ) {
                 return default(T);
             }
         }
@@ -68,7 +68,7 @@ namespace tEngine.Helpers {
                     result = (T) reader.ReadObject( br );
                 }
                 return result;
-            } catch( Exception ex ) {
+            } catch( Exception  ) {
                 return default(T);
             }
         }
@@ -79,7 +79,7 @@ namespace tEngine.Helpers {
                 using( var stringReader = new StringReader( xmlText ) ) {
                     return (T) serializer.Deserialize( stringReader );
                 }
-            } catch( Exception ex ) {
+            } catch( Exception  ) {
                 return default(T);
             }
         }
@@ -94,7 +94,7 @@ namespace tEngine.Helpers {
                     writer.Serialize( file, value );
                 }
                 return true;
-            } catch( Exception ex ) {
+            } catch( Exception  ) {
                 return false;
             }
         }
@@ -109,7 +109,7 @@ namespace tEngine.Helpers {
                     writer.Serialize( file.BaseStream, obj );
                 }
                 return true;
-            } catch( Exception ex ) {
+            } catch( Exception ) {
                 return false;
             }
         }
@@ -124,7 +124,7 @@ namespace tEngine.Helpers {
                     writer.WriteObject( file, value );
                 }
                 return true;
-            } catch( Exception ex ) {
+            } catch( Exception  ) {
                 return false;
             }
         }
@@ -142,7 +142,7 @@ namespace tEngine.Helpers {
                     bw.Flush();
                 }
                 return true;
-            } catch( Exception ex ) {
+            } catch( Exception  ) {
                 return false;
             }
         }
@@ -150,11 +150,12 @@ namespace tEngine.Helpers {
         public static string SerializeToString<T>( T value ) {
             try {
                 var serializer = new XmlSerializer( typeof( T ) );
-                using( var stringwriter = new StringWriter() ) {
-                    serializer.Serialize( stringwriter, value );
+                using (var stringwriter = new StringWriter())
+                {
+                    serializer.Serialize(stringwriter, value);
                     return stringwriter.ToString();
                 }
-            } catch( Exception ex ) {
+            } catch( Exception ) {
                 return null;
             }
         }

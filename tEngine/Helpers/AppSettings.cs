@@ -1,19 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Reflection;
-using System.Runtime.Serialization;
-using System.Text;
 using Newtonsoft.Json;
-using tEngine.DataModel;
-using tEngine.Helpers;
-using tEngine.TMeter;
-using tEngine.TActual;
 
 
-namespace tEngine.Helpers {
+namespace tEngine.Helpers
+{
+    /// <summary>
+    /// Д: Класс который сохраняет и загружает настройки проектов
+    /// </summary>
     public class AppSettings {
         public enum Project {
             Empty,
@@ -32,7 +27,8 @@ namespace tEngine.Helpers {
 
         public static T GetValue<T>( string key, T defValue = default(T) ) {
             try {
-                if( mConstants == null ) return defValue;
+                if( mConstants == null ) 
+                    return defValue;
                 if( Settings.ContainsKey( key ) ) {
                     return JsonConvert.DeserializeObject<T>( Settings[key] );
                 }
@@ -52,13 +48,13 @@ namespace tEngine.Helpers {
         public static void Open() {
             if( WasOpen == false ) {
                 try {
-                    string json;
-                    var result = FileIO.ReadText( mConstants.AppSettings, out json );
+                    string jsonText;
+                    bool result = FileIO.ReadText( mConstants.AppSettings, out jsonText );
                     if( result ) {
-                        Settings = JsonConvert.DeserializeObject<Dictionary<string, string>>( json );
+                        Settings = JsonConvert.DeserializeObject<Dictionary<string, string>>( jsonText );
                     } else
                         Settings = new Dictionary<string, string>();
-                } catch( Exception ex ) {
+                } catch( Exception  ) {
                     Settings = new Dictionary<string, string>();
                 }
             }
@@ -71,18 +67,19 @@ namespace tEngine.Helpers {
         }
 
         public static void Save() {
-            if( mConstants == null ) return;
+            if( mConstants == null ) 
+                return;
             var settings = new JsonSerializerSettings() {ContractResolver = new JSONContractResolver()};
-            var json = JsonConvert.SerializeObject( Settings, settings );
-            FileIO.WriteText( mConstants.AppSettings, json );
+            string jsonString = JsonConvert.SerializeObject( Settings, settings );
+            FileIO.WriteText( mConstants.AppSettings, jsonString );
             WasOpen = false;
         }
 
         public static void SetValue<T>( string key, T value ) {
-            var json = JsonConvert.SerializeObject( value );
+            string jsonString = JsonConvert.SerializeObject( value );
             if( !Settings.ContainsKey( key ) )
                 Settings.Add( key, "" );
-            Settings[key] = json;
+            Settings[key] = jsonString;
         }
 
         static AppSettings() {

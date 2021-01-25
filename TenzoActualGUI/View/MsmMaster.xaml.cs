@@ -41,7 +41,7 @@ namespace TenzoActualGUI.View {
             DataContext = mDataContext;
         }
 
-        public void SetMsm( Msm msm ) {
+        public void SetMsm( Measurement msm ) {
             mDataContext.SetMsm( msm );
         }
 

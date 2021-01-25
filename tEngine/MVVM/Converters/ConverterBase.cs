@@ -1,12 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Globalization;
-using System.Linq;
-using System.Text;
 using System.Windows.Data;
 using System.Windows.Markup;
 
-namespace tEngine.MVVM.Converters {
+namespace tEngine.MVVM.Converters
+{
     public abstract class ConverterBase<T> : MarkupExtension, IValueConverter
         where T : class, new() {
         private static T Converter = null;
@@ -32,7 +30,7 @@ namespace tEngine.MVVM.Converters {
         }
     }
 
-    public abstract class ConverterBaseM<T> : MarkupExtension, IMultiValueConverter
+    public abstract class ConverterBaseMulti<T> : MarkupExtension, IMultiValueConverter
         where T : class, new() {
         private static T Converter = null;
 

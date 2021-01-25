@@ -1,10 +1,12 @@
-﻿using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
+﻿using System.Collections.Concurrent;
 
-namespace tEngine.Helpers {
+namespace tEngine.Helpers
+{
+    /// <summary>
+    /// Очередь фиксированного размера с которой могут работать несколько потоков 
+    /// Используется в классе PerSeconds
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
     public class FixedSizedQueue<T> : ConcurrentQueue<T> {
         public uint Limit { get; set; }
 

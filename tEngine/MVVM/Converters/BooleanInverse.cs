@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Globalization;
-using System.Windows.Data;
 
-namespace tEngine.MVVM.Converters {
+namespace tEngine.MVVM.Converters
+{
     public class BooleanInverse : ConverterBase<BooleanInverse> {
         public BooleanInverse() {}
 

@@ -42,7 +42,6 @@
     <UseVSHostingProcess>false</UseVSHostingProcess>
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="Microsoft.Expression.Drawing" />
     <Reference Include="Microsoft.Expression.Interactions, Version=4.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Windows.Interactivity.WPF.2.0.20525\lib\net40\Microsoft.Expression.Interactions.dll</HintPath>
     </Reference>
@@ -87,12 +86,6 @@
       <DependentUpon>MsmMaster.xaml</DependentUpon>
     </Compile>
     <Compile Include="ViewModel\MsmMasterVM.cs" />
-    <Compile Include="View\old\PlayListRunner.xaml.cs">
-      <DependentUpon>PlayListRunner.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\old\ResultWindow.xaml.cs">
-      <DependentUpon>ResultWindow.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\ResultWindow.xaml.cs">
       <DependentUpon>ResultWindow.xaml</DependentUpon>
     </Compile>
@@ -144,14 +137,6 @@
       <SubType>Designer</SubType>
     </Page>
     <Page Include="View\MsmMaster.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\old\PlayListRunner.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\old\ResultWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

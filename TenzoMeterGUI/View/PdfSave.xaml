@@ -48,7 +48,7 @@
                             <TextBox Width="Auto" Text="{Binding FileName, UpdateSourceTrigger=PropertyChanged}" />
                         </DockPanel>
 
-                        <CheckBox Content="Открыть документ после сохранения" IsChecked="{Binding OpenDoc}" />
+                        <CheckBox Content="Открыть документ после сохранения" IsChecked="{Binding OpenDoc}" Width="480" />
                     </StackPanel>
                 </DockPanel>
             </Border>

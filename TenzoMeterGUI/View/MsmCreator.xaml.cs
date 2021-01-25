@@ -32,7 +32,7 @@ namespace TenzoMeterGUI.View {
         private MsmCreatorVM mDataContext;
         public bool? NotDialogButResult { get; set; }
 
-        public Msm Result {
+        public Measurement Result {
             get { return mDataContext == null ? null : mDataContext.CurrentMsm; }
         }
 
@@ -51,7 +51,7 @@ namespace TenzoMeterGUI.View {
             mDataContext.PostScript();
         }
 
-        public void SetMsm( Msm msm ) {
+        public void SetMsm( Measurement msm ) {
             mDataContext.SetMsm( msm );
         }
 
@@ -65,7 +65,7 @@ namespace TenzoMeterGUI.View {
                     mDataContext.TimerProgress.Stop();
                     mDataContext.PreClosed();
                     DialogResult = mDataContext.DialogResult;
-                } catch ( Exception ex ) {
+                } catch ( Exception  ) {
                     //Debug.Assert( false, ex.Message );
                     NotDialogButResult = mDataContext.DialogResult;
                 }
@@ -92,7 +92,7 @@ namespace TenzoMeterGUI.View {
         public Command CMDBrowse { get; private set; }
         public Command CMDCancelMsm { get; private set; }
         public Command CMDStartMsm { get; private set; }
-        public Msm CurrentMsm { get; private set; }
+        public Measurement CurrentMsm { get; private set; }
 
         /// <summary>
         /// Время для вывода на прогрессбар
@@ -178,7 +178,7 @@ namespace TenzoMeterGUI.View {
             DoPostScript = AppSettings.GetValue( "DoPostScript", false );
             ScriptPath = AppSettings.GetValue( "ScriptPath", "" );
 
-            CurrentMsm = new Msm();
+            CurrentMsm = new Measurement();
 
             SelectionEnable = true;
 
@@ -206,8 +206,8 @@ namespace TenzoMeterGUI.View {
             }
         }
 
-        public void SetMsm( Msm msm ) {
-            CurrentMsm = new Msm( msm );
+        public void SetMsm( Measurement msm ) {
+            CurrentMsm = new Measurement( msm );
             //Cloner.CopyAllFields( CurrentMsm, msm );
             //Cloner.CopyAllProperties( CurrentMsm, msm );
             //CurrentMsm.SetData( msm.Data );

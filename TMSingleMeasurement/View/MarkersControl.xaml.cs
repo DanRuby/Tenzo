@@ -19,19 +19,19 @@ namespace TMSingleMeasurement.View {
     public partial class MarkersControl : Window {
         private MainControlVM mDataContext;
 
-        public Msm Result {
+        public Measurement Result {
             get { return mDataContext == null ? null : mDataContext.Msm; }
         }
 
         public MarkersControl() {
-            InitializeComponent();
+           InitializeComponent();
 
             WindowManager.UpdateWindowPos( this.GetType().Name, this );
             mDataContext = new MainControlVM() {Parent = this};
             DataContext = mDataContext;
         }
 
-        public void Init( Msm msm = null ) {
+        public void Init( Measurement msm = null ) {
             mDataContext.SetMsm( msm );
         }
 
@@ -54,7 +54,7 @@ namespace TMSingleMeasurement.View {
         private bool mIsStart;
         private Queue<int> mLeft = new Queue<int>();
         private object mLock = new object();
-        private Msm mMsm;
+        private Measurement mMsm;
         private int mMsmTime;
         private Queue<int> mRight = new Queue<int>();
         private DispatcherTimer mTimerProgress;
@@ -100,7 +100,7 @@ namespace TMSingleMeasurement.View {
             }
         }
 
-        public Msm Msm {
+        public Measurement Msm {
             get { return mMsm; }
             private set {
                 mMsm = value;
@@ -163,8 +163,8 @@ namespace TMSingleMeasurement.View {
             Device.AbortAll();
         }
 
-        public void SetMsm( Msm msm ) {
-            Msm = new Msm( msm ?? new Msm() );
+        public void SetMsm( Measurement msm ) {
+            Msm = new Measurement( msm ?? new Measurement() );
         }
 
         private void Accept() {

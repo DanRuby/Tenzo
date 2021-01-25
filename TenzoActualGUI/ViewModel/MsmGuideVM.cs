@@ -62,7 +62,7 @@ namespace TenzoActualGUI.ViewModel {
             }
         }
 
-        public Msm Msm { get; set; }
+        public Measurement Msm { get; set; }
         public double Progress { get; private set; }
 
         public double SecondsToSlide {

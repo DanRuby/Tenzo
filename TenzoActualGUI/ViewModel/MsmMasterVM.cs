@@ -15,7 +15,7 @@ namespace TenzoActualGUI.ViewModel {
     public class MsmMasterVM : Observed<MsmMasterVM> {
         private MasterState mCurrentState = 0;
         private bool mIsBusyNow = false;
-        private Task<Msm> mTaskOpenFile;
+        private Task<Measurement> mTaskOpenFile;
         public Command CMDExit { get; private set; }
         public Command CMDNewMsm { get; private set; }
         public Command CMDNextStep { get; private set; }
@@ -87,7 +87,7 @@ namespace TenzoActualGUI.ViewModel {
             }
         }
 
-        public Msm Msm { get; set; }
+        public Measurement Msm { get; set; }
 
         public MsmMasterVM() {
             Init( null );
@@ -118,7 +118,7 @@ namespace TenzoActualGUI.ViewModel {
             return true;
         }
 
-        public void SetMsm( Msm msm ) {
+        public void SetMsm( Measurement msm ) {
             Msm = msm;
             DCInfo.Msm = Msm;
             DCSlides.PlayList = Msm.PlayList;
@@ -131,7 +131,7 @@ namespace TenzoActualGUI.ViewModel {
         }
 
         public void TestMode( int? maxCount = null ) {
-            var msm = Msm.CreateTestMsm( maxCount );
+            var msm = Measurement.CreateTestMsm( maxCount );
             SetMsm( msm );
         }
 
@@ -158,9 +158,9 @@ namespace TenzoActualGUI.ViewModel {
             DCSlidesAnalyser = new SlidesAnalyserVM() { Parent = parent };
             DCSlidesResult = new SlidesResultVM() { Parent = parent };
 
-            var msm = new Msm();
+            var msm = new Measurement();
             if ( IsDesignMode ) {
-                msm = Msm.CreateTestMsm( 5 );
+                msm = Measurement.CreateTestMsm( 5 );
             }
             SetMsm( msm );
         }
@@ -174,7 +174,7 @@ namespace TenzoActualGUI.ViewModel {
                 if( result == MessageBoxResult.Cancel )
                     return;
             }
-            var msm = new Msm();
+            var msm = new Measurement();
             SetMsm( msm );
             SelectTab( 0 );
             UpdateAllProperties();
@@ -202,14 +202,14 @@ namespace TenzoActualGUI.ViewModel {
             var ofd = new OpenFileDialog();
             ofd.Filter = string.Format( "*{0}|*{0}", Constants.MSM_EXT );
             ofd.RestoreDirectory = true;
-            var initPath = AppSettings.GetValue( Msm.FOLDER_KEY, Constants.AppDataFolder );
+            var initPath = AppSettings.GetValue( Measurement.FOLDER_KEY, Constants.AppDataFolder );
             ofd.InitialDirectory = initPath + @"\";
             if( ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK ) {
                 IsBusyNow = true;
                 var result = false;
-                Msm msm;
-                mTaskOpenFile = Task<Msm>.Factory.StartNew( () => {
-                    result = Msm.Open( ofd.FileName, out msm );
+                Measurement msm;
+                mTaskOpenFile = Task<Measurement>.Factory.StartNew( () => {
+                    result = Measurement.Open( ofd.FileName, out msm );
                     return msm;
                 } ).ContinueWith( task => {
                     Parent.Dispatcher.BeginInvoke( DispatcherPriority.Normal,
@@ -256,7 +256,7 @@ namespace TenzoActualGUI.ViewModel {
             var sfd = new SaveFileDialog();
             sfd.Filter = string.Format( "*{0}|*{0}", Constants.MSM_EXT );
             sfd.RestoreDirectory = true;
-            var initPath = AppSettings.GetValue( Msm.FOLDER_KEY, Constants.AppDataFolder );
+            var initPath = AppSettings.GetValue( Measurement.FOLDER_KEY, Constants.AppDataFolder );
             sfd.InitialDirectory = initPath + @"\";
             sfd.FileName = Msm.FileName;
             if( sfd.ShowDialog() == System.Windows.Forms.DialogResult.OK ) {

@@ -2,17 +2,8 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using System.Text;
 using System.Windows;
-using System.Windows.Controls;
 using System.Windows.Controls.Primitives;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using System.Windows.Threading;
 using OxyPlot;
 using OxyPlot.Axes;
@@ -21,7 +12,8 @@ using tEngine.DataModel;
 using tEngine.Markers;
 using tEngine.Recorder;
 
-namespace Oscill {
+namespace Oscill
+{
     /// <summary>
     /// Interaction logic for MainWindow.xaml
     /// </summary>
@@ -52,7 +44,6 @@ namespace Oscill {
         private double mDrawPeriod = 1000/5.0;
         private Queue<int> mLeft = new Queue<int>();
         private object mLock = new object();
-        private string mLog;
         private Queue<int> mRight = new Queue<int>();
         private DispatcherTimer mTimerDraw;
         private DispatcherTimer mTimerGraphics;

@@ -31,7 +31,7 @@ namespace TenzoActualGUI.View {
             DataContext = mDataContext;
         }
 
-        public void SetMsm( Msm msm ) {
+        public void SetMsm( Measurement msm ) {
             mDataContext.Msm = msm;
         }
 
@@ -39,7 +39,7 @@ namespace TenzoActualGUI.View {
             if( mDataContext != null ) {
                 try {
                     DialogResult = mDataContext.DialogResult;
-                } catch( Exception ex ) {
+                } catch( Exception  ) {
                     //Debug.Assert( false, ex.Message );
                 }
             }
@@ -63,7 +63,7 @@ namespace TenzoActualGUI.View {
         private double mHzUpper;
         private double mResolution;
         private EShowMode mShowMode;
-        private Msm mMsm;
+        private Measurement mMsm;
         private int mUpdateQueue;
         private bool mIsBusyNow;
         public Command CMDSelectSlide { get; private set; }
@@ -101,7 +101,7 @@ namespace TenzoActualGUI.View {
             get { return HzUpper; }
         }
 
-        public Msm Msm {
+        public Measurement Msm {
             get { return mMsm; }
             set {
                 mMsm = value;
@@ -141,7 +141,7 @@ namespace TenzoActualGUI.View {
             HzUpper = 50;
             Resolution = 10;
             if( IsDesignMode ) {
-                Msm = Msm.CreateTestMsm( 2 );
+                Msm = Measurement.CreateTestMsm( 2 );
             }
         }
 

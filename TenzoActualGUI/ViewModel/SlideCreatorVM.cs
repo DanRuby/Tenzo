@@ -22,7 +22,6 @@ namespace TenzoActualGUI.ViewModel {
         private Slide mSelectedSlide;
         private Slide mSelectedSlideEssential;
         private Slide mSelectedSlideInessential;
-        private ReadOnlyObservableCollection<Slide> mSlides;
         public Command CMDAddImage { get; private set; }
         public Command CMDImageClick { get; private set; }
         public Command CMDMoveSelected { get; private set; }
@@ -227,7 +226,7 @@ namespace TenzoActualGUI.ViewModel {
         }
 
         private void CMDImageClick_Func( object param ) {
-            var i = 0;
+            //var i = 0;
         }
 
         private void CMDMoveSelected_Func( object param ) {

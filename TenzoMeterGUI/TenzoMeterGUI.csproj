@@ -143,23 +143,8 @@
     <Compile Include="View\MarkersControl.xaml.cs">
       <DependentUpon>MarkersControl.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\old\CreatorMsm_old.xaml.cs">
-      <DependentUpon>CreatorMsm_old.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\old\CreatorRsch.xaml.cs">
-      <DependentUpon>CreatorRsch.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\MsmCreator.xaml.cs">
       <DependentUpon>MsmCreator.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\old\RschManager.xaml.cs">
-      <DependentUpon>RschManager.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\old\SpectrumProgress.xaml.cs">
-      <DependentUpon>SpectrumProgress.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\old\StartWindow.xaml.cs">
-      <DependentUpon>StartWindow.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\PdfSave.xaml.cs">
       <DependentUpon>PdfSave.xaml</DependentUpon>
@@ -175,9 +160,6 @@
     </Compile>
     <Compile Include="View\UserInfo.xaml.cs">
       <DependentUpon>UserInfo.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\old\UserWork.xaml.cs">
-      <DependentUpon>UserWork.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\UserWorkSpace.xaml.cs">
       <DependentUpon>UserWorkSpace.xaml</DependentUpon>
@@ -238,27 +220,7 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="View\old\CreatorMsm_old.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\old\CreatorRsch.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="View\MsmCreator.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\old\RschManager.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\old\SpectrumProgress.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\old\StartWindow.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -279,10 +241,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\UserInfo.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\old\UserWork.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

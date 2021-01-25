@@ -32,7 +32,7 @@ namespace TenzoMeterGUI.ViewModel {
         private ObservableCollection<DataToShow> mDataToShowList;
         private Dictionary<object, PlotViewEx> mGraphics = new Dictionary<object, PlotViewEx>();
         private bool mIsBusy = false;
-        private Msm mSelectedMsm;
+        private Measurement mSelectedMsm;
         private int mSelectedMsmIndex;
         private User mUser;
         public Command CMDCreateTextFile { get; private set; }
@@ -109,13 +109,13 @@ namespace TenzoMeterGUI.ViewModel {
             }
         }
 
-        public ObservableCollection<Msm> Msms {
+        public ObservableCollection<Measurement> Msms {
             get { return User.Msms; }
         }
 
         public bool SelectByIndex { get; set; }
 
-        public Msm SelectedMsm {
+        public Measurement SelectedMsm {
             get { return mSelectedMsm; }
             set {
                 mSelectedMsm = value;
@@ -185,7 +185,7 @@ namespace TenzoMeterGUI.ViewModel {
             }
         }
 
-        public void OpenMsm( Msm msm ) {
+        public void OpenMsm( Measurement msm ) {
             if( msm == null ) return;
             ResetList( msm );
             IsNotSaveChanges = false;
@@ -271,7 +271,7 @@ namespace TenzoMeterGUI.ViewModel {
                     try {
                         SelectedMsm.Msm2CSV( sfd.FileName );
                         MessageBox.Show( "Измерение записано в файл " + sfd.FileName, "Сообщение", MessageBoxButton.OK );
-                    } catch( Exception ex ) {
+                    } catch( Exception  ) {
                         MessageBox.Show( "Ошибка записи файла", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error );
                     }
                 }
@@ -511,7 +511,7 @@ namespace TenzoMeterGUI.ViewModel {
             SelectedMsmIndex = toSelect;
         }
 
-        private void ResetList( Msm selectItem = null ) {
+        private void ResetList( Measurement selectItem = null ) {
             UpdateAllProperties();
 
             if( selectItem == null ) {

@@ -22,7 +22,7 @@
         <StackPanel>
             <Button Content="Настройки отображения" Command="{Binding CMDMarkersSetShow}"/>
             <Button Content="Отобразить окно пользователя" Command="{Binding CMDMarkersWindowShow}"/>
-            <Button Content="Подключиться" Command="{Binding CMDStartMeasurement}"/>
+            <!--<Button Content="Подключиться" Command="{Binding CMDStartMeasurement}"/>-->
             <Button Content="Отключиться" Command="{Binding CMDStopMeasurement}"/>
             <DockPanel>
                 <TextBlock Text="Время измерения, с:"/>

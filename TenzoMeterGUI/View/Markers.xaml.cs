@@ -27,7 +27,7 @@ namespace TenzoMeterGUI.View {
             get { return mWindow != null; }
         }
 
-        public int Left {
+        public int LeftHand {
             get {
                 lock( mLock ) {
                     if( mLeft.Count == 0 )
@@ -44,7 +44,7 @@ namespace TenzoMeterGUI.View {
             }
         }
 
-        public int Right {
+        public int RightHand {
             get {
                 lock( mLock ) {
                     if( mRight.Count == 0 )
@@ -103,17 +103,17 @@ namespace TenzoMeterGUI.View {
         /// <param name="hand1"></param>
         /// <param name="hand2"></param>
         private void HandCallBack( ushort requestID, Hand hand1, Hand hand2 ) {
-            Left = (int) hand1.Const.Average( s => s );
-            Right = (int) hand2.Const.Average( s => s );
+            LeftHand = (int) hand1.Const.Average( s => s );
+            RightHand = (int) hand2.Const.Average( s => s );
             return;
         }
 
         private void TimerDrawOnTick( object sender, EventArgs eventArgs ) {
-            MarkersArea.DrawPart( Left, Right );
+            MarkersArea.DrawPart( LeftHand, RightHand );
         }
 
         public void ReDraw() {
-            MarkersArea.DrawPart( Left, Right );
+            MarkersArea.DrawPart( LeftHand, RightHand );
         }
 
         private void Window_OnClosing( object sender, CancelEventArgs e ) {

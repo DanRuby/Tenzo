@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections;
 using System.Diagnostics;
-using System.Linq;
-using System.Windows.Media;
 using OxyPlot;
 using OxyPlot.Axes;
 using OxyPlot.Series;
 using tEngine.Helpers;
 
-namespace tEngine.PlotCreator {
+namespace tEngine.PlotCreator
+{
     public class PlotModelEx : PlotModel {
         private Guid mID;
 

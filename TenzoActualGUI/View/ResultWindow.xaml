@@ -57,7 +57,7 @@
         <Grid Panel.ZIndex="10" Visibility="{Binding IsBusyNow, Converter={StaticResource BooleanToVisibilityConverter}}">
             <Border Background="LightSkyBlue"  Opacity="0.1" />
             <Border Height="30" Width="30">
-                <uControls:GifImage GifSource="/gif/load1.gif" Stretch="Fill" AutoStart="True"/>
+                <uControls:GifImage GifSource="/gif/load1.gif" Stretch="Fill" AutoStart="True" />
             </Border>
         </Grid>
         <DockPanel>

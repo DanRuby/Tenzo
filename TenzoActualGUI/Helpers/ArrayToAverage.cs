@@ -3,11 +3,11 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
-using System.Text;
 using System.Windows.Data;
 using tEngine.MVVM.Converters;
 
-namespace TenzoActualGUI.Helpers {
+namespace TenzoActualGUI.Helpers
+{
     public class ArrayToAverage:ConverterBase<ArrayToAverage> {
         public override object Convert( object value, Type targetType, object parameter, CultureInfo culture ) {
             var canCalc = (value is IEnumerable<double>);

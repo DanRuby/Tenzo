@@ -4,16 +4,18 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Text;
 using System.Threading;
-using tEngine.Helpers;
 
-namespace tEngine.Recorder {
+namespace tEngine.Recorder
+{
+    /// <summary>
+    /// Д: загружет длл и работает с устройством по юсб
+    /// </summary>
     public class Collector {
 #if DEBUG
         private const string DllPostfix = "_d";
 #else        
-        private const string DllPostfix = string.Empty;
+        private const string DllPostfix = "";
 #endif
         public string DllName = "none";
         private IntPtr mDLLFile = IntPtr.Zero;
@@ -24,21 +26,23 @@ namespace tEngine.Recorder {
         private USBWriteData mUSBWriteData = null;
 
         public Collector() {
-            var names = new List<string>() {
+            List<string> names = new List<string>() {
                 $@"TenzoDevice{DllPostfix}.dll",
                 $@"lib\TenzoDevice{DllPostfix}.dll",
             };
-            var dinfo = new DirectoryInfo( Directory.GetCurrentDirectory() );
-            var files_dop = dinfo.GetFiles( "TenzoDevice*.dll" );
+            DirectoryInfo dinfo = new DirectoryInfo( Directory.GetCurrentDirectory() );
+            FileInfo[] files_dop = dinfo.GetFiles( "TenzoDevice*.dll" );
             names.AddRange( files_dop.Select( info => info.FullName ) );
-            foreach( var name in names ) {
+            foreach( string name in names ) {
                 mDLLFile = NativeMethods.LoadLibrary( name );
-                if( mDLLFile == IntPtr.Zero ) continue;
+                if( mDLLFile == IntPtr.Zero ) 
+                    continue;
 
-                var addr = NativeMethods.GetProcAddress( mDLLFile, "DLLIsConnect" );
-                if( addr == IntPtr.Zero ) continue;
+                IntPtr addr = NativeMethods.GetProcAddress( mDLLFile, "DLLIsConnect" );
+                if( addr == IntPtr.Zero ) 
+                    continue;
 
-                var check = (DLLIsConnect) Marshal.GetDelegateForFunctionPointer( addr, typeof( DLLIsConnect ) );
+                DLLIsConnect check = (DLLIsConnect) Marshal.GetDelegateForFunctionPointer( addr, typeof( DLLIsConnect ) );
 
                 if( check() == true ) {
                     DllName = name;
@@ -85,15 +89,14 @@ namespace tEngine.Recorder {
             }
         }
 
-        public bool IsDllLoad() {
-            return mDLLFile != IntPtr.Zero;
-        }
+        public bool IsDllLoad() => mDLLFile != IntPtr.Zero;
 
         public bool ReadData( ref byte[] buffer ) {
             try {
-                if( mUSBReadData == null ) return false;
-                var pBuf = Marshal.AllocHGlobal( 64 );
-                var result = mUSBReadData( pBuf, 64 );
+                if( mUSBReadData == null ) 
+                    return false;
+                IntPtr pBuf = Marshal.AllocHGlobal( 64 );
+                bool result = mUSBReadData( pBuf, 64 );
                 Marshal.Copy( pBuf, buffer, 0, 64 );
                 return result;
             } catch( Exception ex ) {
@@ -110,9 +113,9 @@ namespace tEngine.Recorder {
         public bool WriteData( byte[] buffer ) {
             try {
                 if( mUSBWriteData == null ) return false;
-                var pBuf = Marshal.AllocHGlobal( 64 );
+                IntPtr pBuf = Marshal.AllocHGlobal( 64 );
                 Marshal.Copy( buffer, 0, pBuf, 64 );
-                var result = mUSBWriteData( pBuf, 64 );
+                bool result = mUSBWriteData( pBuf, 64 );
                 return result;
             } catch( Exception ex ) {
                 Debug.Assert( false, ex.Message );
@@ -120,9 +123,13 @@ namespace tEngine.Recorder {
             }
         }
 
+        /// <summary>
+        /// Д: присваивает остальным делегатам адресы из загруженной длл
+        /// </summary>
+        /// <param name="dll"></param>
         private void InitMethods( IntPtr dll ) {
             try {
-                var addr = NativeMethods.GetProcAddress( dll, "DLLIsConnect" );
+                IntPtr addr = NativeMethods.GetProcAddress( dll, "DLLIsConnect" );
                 mDLLIsConnect = (DLLIsConnect) Marshal.GetDelegateForFunctionPointer( addr, typeof( DLLIsConnect ) );
 
                 addr = NativeMethods.GetProcAddress( dll, "USBInit" );
@@ -141,6 +148,9 @@ namespace tEngine.Recorder {
             }
         }
 
+        /// <summary>
+        /// Д: методы ядра для длл и нахождения адреса функции 
+        /// </summary>
         private static class NativeMethods {
             [DllImport( "kernel32.dll" )]
             public static extern bool FreeLibrary( IntPtr hModule );
@@ -167,6 +177,10 @@ namespace tEngine.Recorder {
         [UnmanagedFunctionPointer( CallingConvention.Cdecl )]
         private delegate bool USBWriteData( IntPtr buffer, int size );
 
+        /// <summary>
+        /// Д: как понимаю симуляция синуса для демоверсии
+        /// </summary>
+        
         #region FakeData
 
         private static int FakeFirst = 0;
@@ -178,9 +192,8 @@ namespace tEngine.Recorder {
         }
 
         private static short FakeSin( int param ) {
-            var result = Convert.ToInt16( (Math.Sin( 0.02*param*Math.PI/180.0 ))*20000.0 );
+            short result = Convert.ToInt16( (Math.Sin( 0.02*param*Math.PI/180.0 ))*20000.0 );
             return Math.Abs( result );
-            //return result;
         }
 
         public static bool ReadFakeData( ref byte[] buffer ) {
@@ -197,17 +210,19 @@ namespace tEngine.Recorder {
                 pack.Right.Const.AddRange( adc.Select( s => (short) (s + 2000) ) );
                 pack.Right.Tremor.AddRange( adc.Select( s => (short) ((s + 2000)/10.0) ) );
 
-                 buffer = Packet.Packet2Bytes( pack );
+                buffer = Packet.Packet2Bytes( pack );
 
                 Thread.Sleep( 2 );
                 return true;
-            } catch( Exception ex ) {
+            } catch( Exception  ) {
                 return false;
             }
         }
 
         #endregion FakeData
 
+        //Д: по идее это не нужно
+        
         #region Function From *DLL_NAME*
 
         //[DllImport( DLL_NAME, CallingConvention = CallingConvention.Cdecl )]

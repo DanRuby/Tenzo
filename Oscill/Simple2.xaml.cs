@@ -38,7 +38,7 @@ namespace Oscill {
             if( mDataContext != null ) {
                 try {
                     DialogResult = mDataContext.DialogResult;
-                } catch( Exception ex ) {
+                } catch( Exception  ) {
                     //Debug.Assert( false, ex.Message );
                 }
             }
@@ -124,9 +124,9 @@ namespace Oscill {
             get {
                 if( mDevice.DeviceState == DeviceStates.AllRight )
                     return "Есть связь с устройством";
-                if( mDevice.DeviceState == DeviceStates.DllNotFind )
+                if( mDevice.DeviceState == DeviceStates.DllNotFound )
                     return "Не найдена библиотека TenzoDevice.dll";
-                if( mDevice.DeviceState == DeviceStates.DeviceNotFind )
+                if( mDevice.DeviceState == DeviceStates.DeviceNotFound )
                     return "Устройство не найдено";
                 return mDevice.DeviceState.ToString();
             }

@@ -289,7 +289,7 @@ namespace TenzoActualGUI.ViewModel {
 
         private void CMDOpenResultWindow_Func() {
             var wnd = new ResultWindow();
-            wnd.SetMsm(new Msm(){PlayList = PlayList});
+            wnd.SetMsm(new Measurement(){PlayList = PlayList});
             wnd.ShowDialog();
         }
 

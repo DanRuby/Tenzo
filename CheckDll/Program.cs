@@ -1,11 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Threading;
 using tEngine.Recorder;
 
-namespace CheckDll {
+namespace CheckDll
+{
     class Program {
         static void Main( string[] args ) {
             var d = Device.CreateDevice(123);

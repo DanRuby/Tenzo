@@ -47,7 +47,7 @@ namespace TenzoMeterGUI.View {
             if( mDataContext != null ) {
                 try {
                     DialogResult = mDataContext.DialogResult;
-                } catch( Exception ex ) {
+                } catch( Exception  ) {
                     //Debug.Assert( false, ex.Message );
                 }
             }
@@ -88,7 +88,7 @@ namespace TenzoMeterGUI.View {
                         msg = "Программа работает в демонстрационном режиме";
                         break;
 
-                    case DeviceStates.DllNotFind:
+                    case DeviceStates.DllNotFound:
                         msg = "Не удается найти библиотеку TenzoDevice.dll";
                         break;
                     default:
@@ -99,7 +99,7 @@ namespace TenzoMeterGUI.View {
             }
         }
 
-        public Msm SelectedMsm { get; set; }
+        public Measurement SelectedMsm { get; set; }
 
         public User SelectedUser {
             get { return mSelectedUser; }

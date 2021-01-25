@@ -290,7 +290,7 @@ namespace tEngine.PlotCreator {
 
 
     public class PlotSettingsVM : Observed<PlotSettingsVM> {
-        private Color mBcColor;
+
         private PlotModelEx mPlotModel;
         private PlotSet mPlotSet;
         public Action<PlotSet> AcceptSettingsAction { get; set; }

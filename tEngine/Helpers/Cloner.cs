@@ -6,6 +6,9 @@ using OxyPlot;
 using tEngine.PlotCreator;
 
 namespace tEngine.Helpers {
+    /// <summary>
+    /// Д: копирует все поля или свойсва объекта
+    /// </summary>
     public class Cloner {
         public static object Clone( object something ) {
             var serializer = new XmlSerializer( something.GetType() );

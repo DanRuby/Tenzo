@@ -5,13 +5,13 @@ using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
 using System.Windows;
-using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using Newtonsoft.Json;
 using tEngine.DataModel;
 using tEngine.Helpers;
 
-namespace tEngine.TActual.DataModel {
+namespace tEngine.TActual.DataModel
+{
     [DataContract]
     public class Slide {
         public enum SlideGrade {
@@ -65,9 +65,7 @@ namespace tEngine.TActual.DataModel {
             return bt1;
         }
 
-        public bool UriLoad() {
-            return UriLoad( FileUri );
-        }
+        public bool UriLoad() => UriLoad(FileUri);
 
         public bool UriLoad( Uri uri ) {
             try {

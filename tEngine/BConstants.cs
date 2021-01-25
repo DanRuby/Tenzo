@@ -1,10 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
 
-namespace tEngine {
+namespace tEngine
+{
+    /// <summary>
+    /// Базовый класс констант
+    /// </summary>
     public abstract class BConstants {
         public string AppDataFolder { get; set; }
         public string ApplicationFolder { get; set; }
@@ -23,7 +24,8 @@ namespace tEngine {
                 dinfo.Create();
             }
             dinfo.Attributes = FileAttributes.Directory;
-            if( hidden ) dinfo.Attributes |= FileAttributes.Hidden;
+            if( hidden ) 
+                dinfo.Attributes |= FileAttributes.Hidden;
         }
     }
 

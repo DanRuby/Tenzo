@@ -35,7 +35,7 @@ namespace TenzoMeterGUI.View {
             DataContext = mDataContext;
         }
 
-        public void SetMsmCollection( IList<Msm> msms ) {
+        public void SetMsmCollection( IList<Measurement> msms ) {
             mDataContext.SetMsmCollection( msms );
         }
 
@@ -68,7 +68,7 @@ namespace TenzoMeterGUI.View {
             if( mDataContext != null ) {
                 try {
                     DialogResult = mDataContext.DialogResult;
-                } catch( Exception ex ) {
+                } catch( Exception  ) {
                     // Debug.Assert( false, ex.Message );
                 }
             }
@@ -91,7 +91,7 @@ namespace TenzoMeterGUI.View {
 
     public class ResultWindowVM : Observed<ResultWindowVM> {
         private readonly Dictionary<object, PlotViewEx> mGraphics = new Dictionary<object, PlotViewEx>();
-        private readonly List<Msm> mMsms = new List<Msm>();
+        private readonly List<Measurement> mMsms = new List<Measurement>();
         private readonly bool mNeedReDraw = true;
         private readonly PlotSetResult[] mSettings = new PlotSetResult[Enum.GetNames( typeof( EShowMode ) ).Length];
         private bool mIsBusy;
@@ -232,7 +232,7 @@ namespace TenzoMeterGUI.View {
 
             if( IsDesignMode ) {
                 SetMsmCollection( new[]
-                {Msm.GetTestMsm( title: "тест1" ), Msm.GetTestMsm( title: "тест2" ), Msm.GetTestMsm( title: "тест3" )} );
+                {Measurement.GetTestMsm( title: "тест1" ), Measurement.GetTestMsm( title: "тест2" ), Measurement.GetTestMsm( title: "тест3" )} );
                 mMsms.ForEach( msm => msm.Data.BaseAnalys( null, null ) );
                 TData.StartCalc();
             }
@@ -243,21 +243,19 @@ namespace TenzoMeterGUI.View {
             var user = Msms.First().GetOwner();
 
             var wnd = WindowManager.NewWindow<PdfSave>();
-            wnd.SetPrintData( user, MsmsToDraw.Cast<Msm>().ToList(), mSettings.Select( psr => {
+            wnd.SetPrintData( user, MsmsToDraw.Cast<Measurement>().ToList(), mSettings.Select( psr => {
                 var result = new PlotSetResult(psr);
                 return result;
             } ).ToList() );
             wnd.ShowDialog();
         }
 
-        public void SetMsmCollection( IList<Msm> msms ) {
+        public void SetMsmCollection( IList<Measurement> msms ) {
             mMsms.AddRange( msms );
             NotifyPropertyChanged( m => m.Msms );
         }
 
-        private async void CMDButton_Func() {
-            OxyDraw();
-        }
+        private async void CMDButton_Func() => OxyDraw();
 
         /// <summary>
         ///     Принимает саму кнопку
@@ -402,7 +400,6 @@ namespace TenzoMeterGUI.View {
         private Task ReSetPlots() {
             return Task.Factory.StartNew( () => {
                 if( mGraphics.Count < 1 ) return;
-                var i = 0;
                 foreach( var kv in mGraphics ) {
                     // получение графика(pve), измерения(msm), руки(hand) и информации для отображения(data)
                     var pve = kv.Value;
@@ -410,7 +407,8 @@ namespace TenzoMeterGUI.View {
                     var hand = tag.StartsWith( "left_" ) ? Hands.Left : Hands.Right;
                     var idString = tag.Substring( hand == Hands.Left ? "left_".Length : "right_".Length );
                     Guid id;
-                    Debug.Assert( Guid.TryParse( idString, out id ) );
+                    //Debug.Assert( Guid.TryParse( idString, out id ) );
+                    Guid.TryParse(idString, out id);
                     var msm = Msms.First( m => m.ID.Equals( id ) );
 
                     IList<DataPoint> data = new List<DataPoint>();
@@ -468,11 +466,11 @@ namespace TenzoMeterGUI.View {
             }
         }
 
-        public class MsmIndex : Msm {
+        public class MsmIndex : Measurement {
             public int Index { get; set; }
             public bool IsShow { get; set; }
 
-            public MsmIndex( Msm msm, int index ) {
+            public MsmIndex( Measurement msm, int index ) {
                 Copy( msm );
 
                 Index = index;

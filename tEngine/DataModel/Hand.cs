@@ -5,27 +5,33 @@ using tEngine.Helpers;
 
 namespace tEngine.DataModel {
     /// <summary>
-    /// список значение на каждую руку
+    /// Список значений на каждую руку
     /// </summary>
     [DataContract]
     public class Hand {
-        private const int MaxLength = 50*1024*1024; // 50 мБ
+        private const int MaxLength = 50*1024*1024; // 50 мБ Д: по факту будет хранится 200 МБ инфы потому что шорт= 2 Б и 2 списка
 
         /// <summary>
-        /// точка начала выбранного диапазона
+        /// Точка начала выбранного диапазона
         /// </summary>
         [DataMember]
         public int BeginPoint { get; set; }
 
+        ///<summary>
+        ///Д:Список не треморных значений?
+        ///</summary>
         [DataMember]
         public List<short> Const { get; set; }
 
         /// <summary>
-        /// точка конца выбранного диапазона
+        /// Точка конца выбранного диапазона
         /// </summary>
         [DataMember]
         public int EndPoint { get; set; }
 
+        /// <summary>
+        /// Д: Список треморных значений?
+        /// </summary>
         [DataMember]
         public List<short> Tremor { get; set; }
 
@@ -47,16 +53,16 @@ namespace tEngine.DataModel {
         }
 
         /// <summary>
-        /// Возвращает count последних значений
+        /// Д: Возвращает последние значения начиная с позиции count 
         /// </summary>
         /// <param name="count"></param>
         /// <returns></returns>
         public Hand GetHand( int count ) {
             if( count > Const.Count )
                 count = Const.Count;
-            var first = Const.Count - count;
+            int first = Const.Count - count;
 
-            var result = new Hand();
+            Hand result = new Hand();
             result.Const = Const.GetRange( first, count );
             result.Tremor = Tremor.GetRange( first, count );
 
@@ -70,7 +76,7 @@ namespace tEngine.DataModel {
         }
 
         public bool LoadFromArray( byte[] array ) {
-            var data = BytesPacker.UnpackBytes( array );
+            byte[][] data = BytesPacker.UnpackBytes( array );
             if( data.Length != 2 || data[0].Length != data[1].Length )
                 return false;
             Const = data[0].GetCollectionInt16().ToList();
@@ -78,28 +84,26 @@ namespace tEngine.DataModel {
             return true;
         }
 
-        //TODO заменить на функцию void Add(Hand)
         public static Hand operator +( Hand a, Hand b ) {
             if( a == null )
                 a = new Hand();
             if( b == null )
                 b = new Hand();
-            var result = new Hand();
+            Hand result = new Hand();
             result.Const.AddRange( a.Const );
             result.Const.AddRange( b.Const );
 
             result.Tremor.AddRange( a.Tremor );
             result.Tremor.AddRange( b.Tremor );
 
-            var notFit = result.Const.Count - MaxLength;
+            int notFit = result.Const.Count - MaxLength;
             if( notFit > 0 )
                 result.Const.RemoveRange( 0, notFit );
             result.ResetPoints();
             return result;
         }
 
-        public byte[] ToByteArray() {
-            return BytesPacker.PackBytes( Const.ToByteArray(), Tremor.ToByteArray() );
-        }
+        public byte[] ToByteArray() =>BytesPacker.PackBytes( Const.ToByteArray(), Tremor.ToByteArray() );
+        
     }
 }

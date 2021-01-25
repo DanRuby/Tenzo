@@ -35,7 +35,7 @@ namespace TenzoActualGUI.View {
         private Queue<int> mRight = new Queue<int>();
         private DispatcherTimer mTimerDraw;
 
-        public int Left {
+        public int LeftHand {
             get {
                 lock( mLock ) {
                     if( mLeft.Count == 0 )
@@ -60,7 +60,7 @@ namespace TenzoActualGUI.View {
             }
         }
 
-        public int Right {
+        public int RightHand {
             get {
                 lock( mLock ) {
                     if( mRight.Count == 0 )
@@ -122,13 +122,13 @@ namespace TenzoActualGUI.View {
         }
 
         private void HandCallBack( ushort requestID, Hand hand1, Hand hand2 ) {
-            Left = (int) hand1.Const.Average( s => s );
-            Right = (int) hand2.Const.Average( s => s );
+            LeftHand = (int) hand1.Const.Average( s => s );
+            RightHand = (int) hand2.Const.Average( s => s );
             mDataContext.HandCallBack( requestID, hand1, hand2 );
         }
 
         private void TimerDrawOnTick( object sender, EventArgs eventArgs ) {
-            MarkersArea.DrawPart( Left, Right );
+            MarkersArea.DrawPart( LeftHand, RightHand );
         }
 
 

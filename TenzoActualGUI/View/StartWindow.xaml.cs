@@ -26,8 +26,8 @@ namespace TenzoActualGUI.View {
                 WindowManager.UpdateWindowPos( this.GetType().Name, this );
                 mDataContext = new StartWindowVM() {Parent = this};
                 DataContext = mDataContext;
-            } catch( Exception ex ) {
-                ex = ex;
+            } catch( Exception  ) {
+                //ex = ex;
             }
         }
 
@@ -67,7 +67,7 @@ namespace TenzoActualGUI.View {
                 var wnd = new MsmMaster();
 
                 if( create ) {
-                    var msm = new Msm();
+                    var msm = new Measurement();
                     msm.PlayList.IsNotSaveChanges = false;
                     wnd.SetMsm( msm );
                 } else {
@@ -82,13 +82,15 @@ namespace TenzoActualGUI.View {
         }
 
         private void OneMsmTest() {
-            PlayList playList = null;
-            if( Parent != null ) Parent.Hide();
+            //PlayList playList = null;
+            if( Parent != null )
+                Parent.Hide();
 
             var wnd = new MsmMaster();
             (wnd.DataContext as MsmMasterVM).TestMode();
             wnd.ShowDialog();
-            if( Parent != null ) Parent.Show();
+            if( Parent != null )
+                Parent.Show();
         }
 
         private void SlideCreatorShow( object param ) {

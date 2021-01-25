@@ -23,7 +23,7 @@ namespace tEngine.UControls {
     /// Interaction logic for SelectablePlot.xaml
     /// </summary>
     public partial class SelectablePlot : UserControl {
-        private bool mFirstInit = true;
+
         private bool mNeedInvalidate = false;
 
         public int BeginPoint {

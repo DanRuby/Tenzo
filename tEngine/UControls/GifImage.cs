@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
 using System.Windows.Media.Imaging;
 
-namespace tEngine.UControls {
+namespace tEngine.UControls
+{
     public class GifImage : Image {
         private Int32Animation mAnimation;
         private GifBitmapDecoder mGifDecoder;

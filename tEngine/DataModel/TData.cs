@@ -3,19 +3,15 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Numerics;
-using System.Runtime.Remoting.Contexts;
 using System.Runtime.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
-using System.Windows.Annotations;
-using System.Windows.Converters;
 using MathNet.Numerics.IntegralTransforms;
-using MathNet.Numerics.Statistics;
-using Microsoft.Win32.SafeHandles;
 using OxyPlot;
 using tEngine.Helpers;
 
-namespace tEngine.DataModel {
+namespace tEngine.DataModel
+{
     public enum Hands {
         Left,
         Right
@@ -24,7 +20,6 @@ namespace tEngine.DataModel {
 
     [DataContract]
     public class TData {
-        private static int mNowTaskCount = 0;
         private readonly Mutex mMutex = new Mutex();
         private Hand[] mHands = new Hand[2] {new Hand(), new Hand()};
         private List<HAND_DATA> mHandsData = new List<HAND_DATA>() {new HAND_DATA(), new HAND_DATA()};
@@ -115,8 +110,8 @@ namespace tEngine.DataModel {
         /// </summary>
         /// <returns></returns>
         public Guid BaseAnalys( Action<double, double> percentCallBack, Action<TData, bool> finalCallBack ) {
-            var id = Guid.NewGuid();
-            var cts = new CancellationTokenSource();
+            Guid id = Guid.NewGuid();
+            CancellationTokenSource cts = new CancellationTokenSource();
 
             // посылает значения (предполагается процент выполнения на каждую руку)
             var percentAction = new Action<double, double>( ( h1, h2 ) => {
@@ -163,28 +158,31 @@ namespace tEngine.DataModel {
             }
         }
 
-        public int DataLength() {
-            return mHands[0].GetLength();
-        }
+        public int DataLength() => mHands[0].GetLength();
 
         public IList<DataPoint> GetConst( Hands hand ) {
-            var index = (hand == Hands.Left) ? 0 : 1;
+            int index = (hand == Hands.Left) ? 0 : 1;
             return mHandsData[index].Constant.Data;
         }
 
         public IEnumerable<short> GetConstBase( Hands hand ) {
-            var index = (hand == Hands.Left) ? 0 : 1;
+            int index = (hand == Hands.Left) ? 0 : 1;
             return mHands[index].Const;
         }
 
         public IList<DataPoint> GetCorrelation( Hands hand ) {
-            var index = (hand == Hands.Left) ? 0 : 1;
+            int index = (hand == Hands.Left) ? 0 : 1;
             return mHandsData[index].Correlation.Data;
         }
 
         public IList<DataPoint> GetSpectrum( Hands hand ) {
-            var index = (hand == Hands.Left) ? 0 : 1;
+            int index = (hand == Hands.Left) ? 0 : 1;
             return mHandsData[index].Spectrum.Data;
+        }
+
+        public IList<DataPoint> GetTremor( Hands hand ) {
+            int index = (hand == Hands.Left) ? 0 : 1;
+            return mHandsData[index].Tremor.Data;
         }
 
         /// <summary>
@@ -195,24 +193,25 @@ namespace tEngine.DataModel {
         /// <param name="maximum">Верхняя граница, Гц</param>
         /// <returns></returns>
         public IList<DataPoint> GetSpectrumByHz( Hands hand, double minimum, double maximum ) {
-            var start = -1;
-            var end = -1;
-            var index = (hand == Hands.Left) ? 0 : 1;
-            if( mHandsData[index].Spectrum.Data == null ) return null;
+            int start = -1;
+            int end = -1;
+            int index = (hand == Hands.Left) ? 0 : 1;
+            if( mHandsData[index].Spectrum.Data == null )
+                return null;
 
             if( double.IsNaN( minimum ) == false ) {
-                var sortValues = mHandsData[index].Spectrum.Data.OrderBy( dp => dp.X );
-                var goodValues = sortValues.Where( dp => dp.X >= minimum );
-                var first = goodValues.Any() ? goodValues.First() : sortValues.FirstOrDefault();
+                var sortedValues = mHandsData[index].Spectrum.Data.OrderBy( dp => dp.X );
+                var goodValues = sortedValues.Where( dp => dp.X >= minimum );
+                var first = goodValues.Any() ? goodValues.First() : sortedValues.FirstOrDefault();
 
 
                 Debug.Assert( first.IsDefined() );
                 start = mHandsData[index].Spectrum.Data.IndexOf( first );
             }
             if( double.IsNaN( maximum ) == false ) {
-                var sortValues = mHandsData[index].Spectrum.Data.OrderBy( dp => dp.X );
-                var goodValues = sortValues.Where( dp => dp.X >= maximum );
-                var last = goodValues.Any() ? goodValues.Last() : sortValues.LastOrDefault();
+                var sortedValues = mHandsData[index].Spectrum.Data.OrderBy( dp => dp.X );
+                var goodValues = sortedValues.Where( dp => dp.X >= maximum );
+                var last = goodValues.Any() ? goodValues.Last() : sortedValues.LastOrDefault();
 
                 Debug.Assert( last.IsDefined() );
                 end = mHandsData[index].Spectrum.Data.IndexOf( last );
@@ -220,10 +219,6 @@ namespace tEngine.DataModel {
             return GetSpectrum( hand ).Where( ( dp, i ) => i > start && i < end ).ToList();
         }
 
-        public IList<DataPoint> GetTremor( Hands hand ) {
-            var index = (hand == Hands.Left) ? 0 : 1;
-            return mHandsData[index].Tremor.Data;
-        }
 
         /// <summary>
         /// Возвращает амплитуду тремора
@@ -231,8 +226,8 @@ namespace tEngine.DataModel {
         /// <param name="hand"></param>
         /// <returns></returns>
         public double GetTremorAmplitude( Hands hand ) {
-            var index = (hand == Hands.Left) ? 0 : 1;
-            var interval = mHandsData[index].Tremor.Max - mHandsData[index].Tremor.Min;
+            int index = (hand == Hands.Left) ? 0 : 1;
+            double interval = mHandsData[index].Tremor.Max - mHandsData[index].Tremor.Min;
             return Math.Abs( interval );
         }
 
@@ -242,7 +237,7 @@ namespace tEngine.DataModel {
         /// <param name="hand"></param>
         /// <returns></returns>
         public IEnumerable<short> GetTremorBase( Hands hand ) {
-            var index = (hand == Hands.Left) ? 0 : 1;
+            int index = (hand == Hands.Left) ? 0 : 1;
             return mHands[index].Tremor;
         }
 
@@ -252,18 +247,18 @@ namespace tEngine.DataModel {
         /// <param name="hand"></param>
         /// <returns></returns>
         public double GetTremorPercent( Hands hand ) {
-            var index = (hand == Hands.Left) ? 0 : 1;
-            var tremor = GetTremorAmplitude( hand );
-            var force = mHandsData[index].Constant.Mean;
+            int index = (hand == Hands.Left) ? 0 : 1;
+            double tremor = GetTremorAmplitude( hand );
+            double force = mHandsData[index].Constant.Mean;
             return tremor*100.0/force;
         }
 
         public bool LoadFromArray( byte[] array ) {
-            var handsData = BytesPacker.UnpackBytes( array );
+            byte[][] handsData = BytesPacker.UnpackBytes( array );
 
             if( handsData.Length >= 2 ) {
-                var h1 = mHands[0].LoadFromArray( handsData[0] );
-                var h2 = mHands[1].LoadFromArray( handsData[1] );
+                bool h1 = mHands[0].LoadFromArray( handsData[0] );
+                bool h2 = mHands[1].LoadFromArray( handsData[1] );
                 if( (h1 || h2) == false )
                     return false;
             }
@@ -306,8 +301,8 @@ namespace tEngine.DataModel {
 
         public Guid SpectrumAnalys( Action<double, double> percentCallBack, Action<TData, bool> finalCallBack,
             bool corr = false ) {
-            var id = Guid.NewGuid();
-            var cts = new CancellationTokenSource();
+            Guid id = Guid.NewGuid();
+            CancellationTokenSource cts = new CancellationTokenSource();
 
             var percentAction = new Action<double, double>( ( h1, h2 ) => {
                 if( percentCallBack != null ) {
@@ -364,17 +359,19 @@ namespace tEngine.DataModel {
         /// <param name="cancelTok"></param>
         /// <param name="percentAction"></param>
         /// <returns></returns>
-        private bool Async_BaseAnalys( CancellationToken cancelTok, Action<double, double> percentAction ) {
-            if( cancelTok.IsCancellationRequested ) return false;
+        private bool Async_BaseAnalys( CancellationToken cancelTok, Action<double, double> percentAction ) 
+        {
+            if( cancelTok.IsCancellationRequested ) 
+                return false;
 
-            var percent = new double[] {0, 0};
+            double[] percent = new double[] {0, 0};
             percentAction( percent[0], percent[1] );
 
             for( int i = 0; i < 2; i++ ) {
                 var cd = mHands[i].Const.Where( ( s, index ) => (index >= BeginPoint && index <= EndPoint) );
                 var td = mHands[i].Tremor.Where( ( s, index ) => (index >= BeginPoint && index <= EndPoint) );
-                var constData = cd.Any() ? cd.ToList() : null;
-                var tremorData = td.Any() ? td.ToList() : null;
+                List<short> constData = cd.Any() ? cd.ToList() : null;
+                List<short> tremorData = td.Any() ? td.ToList() : null;
 
                 // проверка на возможность расчетов
                 if( constData == null || tremorData == null ||
@@ -383,21 +380,21 @@ namespace tEngine.DataModel {
                 }
 
                 // временной шаг, считаем что все промежутки между отсчетами равны
-                var dt = Time/mHands[i].GetLength();
+                double dt = Time/mHands[i].GetLength();
 
                 percent[i] = 10;
                 percentAction( percent[0], percent[1] );
 
-                mHandsData[i].Constant.Data =
-                    constData.Select( ( s, index ) => new DataPoint( index*dt, s ) ).ToList();
-                if( cancelTok.IsCancellationRequested ) return false;
+                mHandsData[i].Constant.Data = constData.Select( ( s, index ) => new DataPoint( index*dt, s ) ).ToList();
+                if( cancelTok.IsCancellationRequested )
+                    return false;
 
                 percent[i] = 45;
                 percentAction( percent[0], percent[1] );
 
-                mHandsData[i].Tremor.Data =
-                    tremorData.Select( ( s, index ) => new DataPoint( index*dt, s ) ).ToList();
-                if( cancelTok.IsCancellationRequested ) return false;
+                mHandsData[i].Tremor.Data = tremorData.Select( ( s, index ) => new DataPoint( index*dt, s ) ).ToList();
+                if( cancelTok.IsCancellationRequested ) 
+                    return false;
 
                 percent[i] = 100;
                 percentAction( percent[0], percent[1] );
@@ -405,36 +402,43 @@ namespace tEngine.DataModel {
             return true;
         }
 
-        private bool Async_SpectrumAnalys( CancellationToken cancelTok, Action<double, double> percentAction, bool corr ) {
-            if( cancelTok.IsCancellationRequested ) return false;
+        private bool Async_SpectrumAnalys( CancellationToken cancelTok, Action<double, double> percentAction, bool corr ) 
+        {
+            if( cancelTok.IsCancellationRequested ) 
+                return false;
+
             // Посылка начальных значений процентов
-            var percent = new double[] {0, 0};
+            double[] percent = new double[] {0, 0};
             percentAction( percent[0], percent[1] );
 
-            for( int i = 0; i < 2; i++ ) {
+            for( int i = 0; i < 2; i++ ) 
+            {
                 var tremorData = mHandsData[i].Tremor.Data;
 
-                if( tremorData == null || tremorData.Count == 0 ) return false;
+                if( tremorData == null || tremorData.Count == 0 ) 
+                    return false;
 
                 var samples = tremorData.Select( item => new Complex( item.Y, 0.0 ) ).ToArray();
 
                 Fourier.Forward( samples, FourierOptions.Matlab );
-                var N = samples.Count();
-                if( N > 2 ) {
+                int N = samples.Count();
+                if( N > 2 ) 
+                {
                     mHandsData[i].Spectrum.Data =
                         samples.Take( (int) Math.Ceiling( N/2.0 ) )
                             .Select( ( cmpl, x ) => new DataPoint( x/Time, cmpl.Magnitude*(x == 0 ? 1 : 2)/N ) )
                             .ToList();
                 }
-                if( cancelTok.IsCancellationRequested ) return false;
+                if( cancelTok.IsCancellationRequested ) 
+                    return false;
                 if( corr ) {
-                    var dt = Time/mHandsData[i].Constant.Count;
+                    double dt = Time/mHandsData[i].Constant.Count;
                     // спектральная плотность
                     var den = samples.Select( complex => complex*complex ).ToArray();
                     Fourier.Inverse( den, FourierOptions.Matlab );
                     // перенос второй части в отрицательую сторону
-                    var secondCount = (int) Math.Ceiling( N/2.0 );
-                    var firstCount = den.Count() - secondCount;
+                    int secondCount = (int) Math.Ceiling( N/2.0 );
+                    int firstCount = den.Count() - secondCount;
                     var second =
                         den.Take( secondCount ).Select( ( complex, x ) => new DataPoint( dt*x, complex.Magnitude ) );
                     var first =
@@ -449,6 +453,7 @@ namespace tEngine.DataModel {
             return true;
         }
 
+        #region Закоменченные методы
         //private void CalculateBaseParam() {
         //    if( mConstant[0] == null || mConstant[0].Count == 0 ||
         //        mConstant[1] == null || mConstant[1].Count == 0 ||
@@ -530,6 +535,7 @@ namespace tEngine.DataModel {
         //        mSpectrumParameters["spectrum_d2-" + Hands.Right] = df_rigth2[1];
         //    }
         //}
+        #endregion
 
         /// <summary>
         /// Возвращает часть коллекции в заданном диапазоне, с заданным разрешением
@@ -570,8 +576,10 @@ namespace tEngine.DataModel {
         }
 
         private double Param1( IEnumerable<DataPoint> data, DataMode mode = DataMode.First ) {
-            if( mode == DataMode.First ) return data.Average( dp => dp.Y );
-            if( mode == DataMode.Second ) return data.Average( dp => dp.Y*dp.X );
+            if( mode == DataMode.First ) 
+                return data.Average( dp => dp.Y );
+            if( mode == DataMode.Second ) 
+                return data.Average( dp => dp.Y*dp.X );
             return data.Average( dp => dp.Y );
         }
 

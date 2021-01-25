@@ -1,13 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Linq;
-using System.Text;
+﻿using System.ComponentModel;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace tEngine.MVVM {
-// Watches a task and raises property-changed notifications when the task completes.
+namespace tEngine.MVVM
+{
+    // Watches a task and raises property-changed notifications when the task completes.
     public sealed class TaskCompletionNotifier<TResult> : INotifyPropertyChanged {
         // Gets whether the task has been canceled.
         public bool IsCanceled {

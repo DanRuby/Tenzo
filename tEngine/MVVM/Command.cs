@@ -1,10 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using System.Windows.Input;
 
-namespace tEngine.MVVM {
+namespace tEngine.MVVM
+{
     /// <summary>
     /// The CancelCommandEvent delegate.
     /// </summary>

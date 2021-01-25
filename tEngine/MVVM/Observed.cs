@@ -8,7 +8,8 @@ using System.Xml.Serialization;
 namespace tEngine.MVVM {
     public static class Designer {
         [XmlIgnore]
-        [field: NonSerialized]
+        //Д: XmlIgnore должно хватать + варнинг на нижний аттрибут
+        //[field: NonSerialized]
         public static bool IsDesignMode {
             get { return (LicenseManager.UsageMode == LicenseUsageMode.Designtime); }
         }
@@ -17,7 +18,7 @@ namespace tEngine.MVVM {
     [Serializable]
     public class Observed<TModel> : INotifyPropertyChanged {
         [XmlIgnore]
-        [field: NonSerialized]
+       // [field: NonSerialized]
         public bool IsDesignMode {
             get { return (LicenseManager.UsageMode == LicenseUsageMode.Designtime); }
         }

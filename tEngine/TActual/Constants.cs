@@ -23,7 +23,7 @@ namespace tEngine.TActual {
         }
     }
 
-    public class Constants1 : IConstants {
+   public class Constants1 : IConstants {
         private static readonly string mAppDataFolder =
             Environment.GetFolderPath( Environment.SpecialFolder.MyDocuments ) + "\\TenzoActual";
 

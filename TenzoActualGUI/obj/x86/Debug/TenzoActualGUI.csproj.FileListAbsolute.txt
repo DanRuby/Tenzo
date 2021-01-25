@@ -5,12 +5,9 @@ D:\tenzo\bin\Debug\TenzoActualGUI.exe
 D:\tenzo\bin\Debug\TenzoActualGUI.pdb
 D:\tenzo\TenzoActualGUI\obj\x86\Debug\TenzoActualGUI.csprojAssemblyReference.cache
 D:\tenzo\TenzoActualGUI\obj\x86\Debug\Styles\CommonStyles.baml
-D:\tenzo\TenzoActualGUI\obj\x86\Debug\View\old\PlayListRunner.baml
 D:\tenzo\TenzoActualGUI\obj\x86\Debug\App.baml
 D:\tenzo\TenzoActualGUI\obj\x86\Debug\Styles\CommonStyles.g.cs
 D:\tenzo\TenzoActualGUI\obj\x86\Debug\View\MsmMaster.g.cs
-D:\tenzo\TenzoActualGUI\obj\x86\Debug\View\old\PlayListRunner.g.cs
-D:\tenzo\TenzoActualGUI\obj\x86\Debug\View\old\ResultWindow.g.cs
 D:\tenzo\TenzoActualGUI\obj\x86\Debug\View\ResultWindow.g.cs
 D:\tenzo\TenzoActualGUI\obj\x86\Debug\View\SlideCreator.g.cs
 D:\tenzo\TenzoActualGUI\obj\x86\Debug\View\SlideShow.g.cs
@@ -21,7 +18,6 @@ D:\tenzo\TenzoActualGUI\obj\x86\Debug\GeneratedInternalTypeHelper.g.cs
 D:\tenzo\TenzoActualGUI\obj\x86\Debug\TenzoActualGUI_MarkupCompile.cache
 D:\tenzo\TenzoActualGUI\obj\x86\Debug\TenzoActualGUI_MarkupCompile.lref
 D:\tenzo\TenzoActualGUI\obj\x86\Debug\View\MsmMaster.baml
-D:\tenzo\TenzoActualGUI\obj\x86\Debug\View\old\ResultWindow.baml
 D:\tenzo\TenzoActualGUI\obj\x86\Debug\View\ResultWindow.baml
 D:\tenzo\TenzoActualGUI\obj\x86\Debug\View\SlideCreator.baml
 D:\tenzo\TenzoActualGUI\obj\x86\Debug\View\SlideShow.baml

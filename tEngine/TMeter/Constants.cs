@@ -1,14 +1,14 @@
 ﻿using System;
 using System.IO;
-using System.Security.AccessControl;
 
-namespace tEngine.TMeter {
+namespace tEngine.TMeter
+{
     public class Constants : BConstants {
         public const int DEVICE_ID = 11;
         public const string RSCH_EXT = ".tmr";
         public const string USER_EXT = ".tmu";
         public new static string AppDataFolder { get; set; }
-        public new static string AppImageFolder { get; set; }
+        public static string AppImageFolder { get; set; }
         public new static string ApplicationFolder { get; set; }
 
         public static string UsersFolder {

@@ -1,10 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
+﻿using System.IO;
 
-namespace tEngine.Helpers {
+namespace tEngine.Helpers
+{
+    /// <summary>
+    /// Два дополнительных метода для string
+    /// </summary>
     public static class StringExtetion {
         /// <summary>
         /// ..\path => ..\path\

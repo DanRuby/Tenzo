@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Diagnostics;
@@ -8,15 +7,14 @@ using System.IO;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
-using Newtonsoft.Json;
 using tEngine.Helpers;
-using tEngine.TMeter.DataModel.IData;
 
-namespace tEngine.TMeter.DataModel {
+namespace tEngine.TMeter.DataModel
+{
     [DataContract]
     public class User {
         public const string FOLDER_KEY = "LastUserFolder";
-        private List<Msm> mMsms;
+        private List<Measurement> mMsms;
 
         public string BirthDateString {
             get {
@@ -30,29 +28,27 @@ namespace tEngine.TMeter.DataModel {
         public string FilePath { get; set; }
         public bool IsNotSaveChanges { get; set; }
 
-        public ObservableCollection<Msm> Msms {
-            get { return new ObservableCollection<Msm>( mMsms ); }
+        public ObservableCollection<Measurement> Msms {
+            get { return new ObservableCollection<Measurement>( mMsms ); }
         }
 
-        public User() {
-            Init();
-        }
+        public User() => Init();
 
         public User( User user ) {
             Init();
             LoadFromArray( user.ToByteArray() );
             return;
             // todo проверить все ли копируется
-            var pinfo = user.GetType().GetProperties();
+            /*var pinfo = user.GetType().GetProperties();
             pinfo.ToList().ForEach( info => {
                 if( info.CanRead && info.CanWrite ) {
                     info.SetValue( this, info.GetValue( user, null ), null );
                 }
             } );
-            mMsms = user.mMsms;
+            mMsms = user.mMsms;*/
         }
 
-        public void AddMsm( Msm msm ) {
+        public void AddMsm( Measurement msm ) {
             msm.UserAssociated( this );
             mMsms.Add( msm );
             IsNotSaveChanges = true;
@@ -65,25 +61,21 @@ namespace tEngine.TMeter.DataModel {
             return dinfo.GetFiles().Where( finfo => finfo.Extension.Equals( Constants.USER_EXT ) );
         }
 
-        public Msm GetMsm( Guid msmId ) {
+        public Measurement GetMsm( Guid msmId ) {
             var msms = mMsms.Where( msm => msm.ID.Equals( msmId ) );
-            var enumerable = msms as Msm[] ?? msms.ToArray();
+            var enumerable = msms as Measurement[] ?? msms.ToArray();
             return enumerable.Any() ? enumerable[0] : null;
         }
 
-        public Msm GetMsm( int index ) {
+        public Measurement GetMsm( int index ) {
             if( mMsms.Count > index )
                 return mMsms[index];
             return null;
         }
 
-        public int GetMsmCount() {
-            return mMsms.Count;
-        }
+        public int GetMsmCount() => mMsms.Count;
 
-        public IEnumerable<Msm> GetMsms() {
-            return mMsms;
-        }
+        public IEnumerable<Measurement> GetMsms() => mMsms;
 
         public static User GetTestUser( string name = "Имя", int msmCount = 10 ) {
             var sb = new StringBuilder();
@@ -97,11 +89,10 @@ namespace tEngine.TMeter.DataModel {
                 SName = "Фамилия",
                 FName = "Отчество",
                 BirthDate = DateTime.Now,
-                //Comment = "Тестовый пациент"
                 Comment = sb.ToString()
             };
             for( var i = 0; i < msmCount; i++ ) {
-                testUser.AddMsm( Msm.GetTestMsm( testUser, "Измерение " + (i + 1) ) );
+                testUser.AddMsm( Measurement.GetTestMsm( testUser, "Измерение " + (i + 1) ) );
             }
             return testUser;
         }
@@ -123,13 +114,13 @@ namespace tEngine.TMeter.DataModel {
 
                 user.IsNotSaveChanges = false;
                 return result;
-            } catch( Exception ex ) {
+            } catch( Exception  ) {
                 user = new User();
                 return false;
             }
         }
 
-        public void RemoveMsm( Msm msm ) {
+        public void RemoveMsm( Measurement msm ) {
             mMsms.Remove( msm );
             IsNotSaveChanges = true;
         }
@@ -171,12 +162,9 @@ namespace tEngine.TMeter.DataModel {
             return Save( filepath );
         }
 
-        public string ToString( bool longName = false ) {
-            return longName ? UserLong() : UserShort();
-        }
+        public string ToString(bool longName = false) => longName ? UserLong() : UserShort();
 
         public string UserLong() {
-            ;
             var str = string.Format( "{0} {1} {2}", SName, Name, FName );
             return str;
         }
@@ -199,7 +187,7 @@ namespace tEngine.TMeter.DataModel {
         private void Init() {
             ID = Guid.NewGuid();
             BirthDate = DateTime.Now;
-            mMsms = new List<Msm>();
+            mMsms = new List<Measurement>();
             FilePath = DefaultPath( this );
         }
 
@@ -254,7 +242,7 @@ namespace tEngine.TMeter.DataModel {
             var msmsArray = BytesPacker.UnpackBytes( objData[1] );
             var result = true;
             foreach( byte[] bytes in msmsArray ) {
-                var newMsm = new Msm();
+                var newMsm = new Measurement();
                 result = result && newMsm.LoadFromArray( bytes );
                 this.AddMsm( newMsm );
             }

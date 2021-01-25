@@ -31,7 +31,7 @@ namespace tEngine.TMeter.DataModel.IData {
         /// <summary>
         /// Список проведенных измерений 
         /// </summary>
-        List<Msm> Msms { get; set; }
+        List<Measurement> Msms { get; set; }
 
         /// <summary>
         /// Имя
@@ -47,21 +47,21 @@ namespace tEngine.TMeter.DataModel.IData {
         /// Добавить измерение
         /// </summary>
         /// <param name="msm"></param>
-        void AddMsm( Msm msm );
+        void AddMsm( Measurement msm );
 
         /// <summary>
         /// Получить измерение по номеру
         /// </summary>
         /// <param name="index"></param>
         /// <returns></returns>
-        Msm GetMsm( int index );
+        Measurement GetMsm( int index );
 
         /// <summary>
         /// Получить измерение по ID
         /// </summary>
         /// <param name="msmId"></param>
         /// <returns></returns>
-        Msm GetMsm( Guid msmId );
+        Measurement GetMsm( Guid msmId );
 
         /// <summary>
         /// Количество измерений
@@ -73,7 +73,7 @@ namespace tEngine.TMeter.DataModel.IData {
         /// Получить коллекцию измерений
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Msm> GetMsms();
+        IEnumerable<Measurement> GetMsms();
 
         /// <summary>
         /// Открыть файл с пользователем
@@ -85,7 +85,7 @@ namespace tEngine.TMeter.DataModel.IData {
         /// Удаоить измерение
         /// </summary>
         /// <param name="msm"></param>
-        void RemoveMsm( Msm msm );
+        void RemoveMsm( Measurement msm );
 
         /// <summary>
         /// Удалить измерение

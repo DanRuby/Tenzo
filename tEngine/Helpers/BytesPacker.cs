@@ -1,14 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Security.Policy;
-using System.Text;
 using Newtonsoft.Json;
 using OxyPlot;
-using tEngine.DataModel;
 
-namespace tEngine.Helpers {
+namespace tEngine.Helpers
+{
+    /// <summary>
+    /// Д: класс с методами перевода массивов байтов в другие типы и разбиения массивов
+    /// </summary>
     public static class BytesPacker {
         public static byte[] GetBytes( string str ) {
             byte[] bytes = new byte[str.Length*sizeof( char )];
@@ -33,18 +33,18 @@ namespace tEngine.Helpers {
         }
 
         public static byte[] PackBytes( params byte[][] arrays ) {
-            UInt32 count = Convert.ToUInt32( arrays.Length );
-            UInt32[] dscr = new uint[count + 1];
+            uint count = Convert.ToUInt32( arrays.Length );
+            uint [] dscr = new uint[count + 1];
             for( int i = 0; i < count; i++ ) {
                 dscr[i + 1] = Convert.ToUInt32( arrays[i].Length );
             }
             dscr[0] = count;
-            var descriptor = dscr.ToByteArray();
+            byte[] descriptor = dscr.ToByteArray();
 
-            var fullLength = descriptor.Length + arrays.Sum( array => array.Length );
-            var result = new byte[fullLength];
+            int fullLength = descriptor.Length + arrays.Sum( array => array.Length );
+            byte[] result = new byte[fullLength];
 
-            var pointer = 0;
+            int pointer = 0;
             Array.Copy( descriptor, 0, result, pointer, descriptor.Length );
             pointer += descriptor.Length;
             for( int i = 0; i < count; i++ ) {
@@ -55,17 +55,18 @@ namespace tEngine.Helpers {
         }
 
         public static byte[][] UnpackBytes( byte[] array ) {
-            if( array.Length == 0 ) return new byte[][] {};
-            UInt32 length = BitConverter.ToUInt32( array, 0 );
-            UInt32[] dscr = new uint[length + 1];
+            if( array.Length == 0 )
+                return new byte[][] {};
+            uint length = BitConverter.ToUInt32( array, 0 );
+            uint[] dscr = new uint[length + 1];
 
             for( int i = 0; i < length; i++ ) {
                 dscr[i + 1] = BitConverter.ToUInt32( array, (i + 1)*sizeof( UInt32 ) );
             }
 
             dscr[0] = length;
-            var result = new byte[length][];
-            var pointer = (length + 1)*sizeof( UInt32 );
+            byte[][] result = new byte[length][];
+            uint pointer = (length + 1)*sizeof(uint);
 
             for( int i = 0; i < length; i++ ) {
                 result[i] = new byte[dscr[i + 1]];

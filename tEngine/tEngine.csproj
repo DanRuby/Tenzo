@@ -25,6 +25,7 @@
     <DocumentationFile>
     </DocumentationFile>
     <RegisterForComInterop>false</RegisterForComInterop>
+    <WarningLevel>1</WarningLevel>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x86'">
     <DebugSymbols>true</DebugSymbols>
@@ -128,18 +129,15 @@
     <Compile Include="PlotCreator\PlotSettings.xaml.cs">
       <DependentUpon>PlotSettings.xaml</DependentUpon>
     </Compile>
-    <Compile Include="Recorder\BPacket.cs" />
     <Compile Include="Recorder\Packet.cs" />
-    <Compile Include="Recorder\TestPacket_old.cs" />
     <Compile Include="TActual\Constants.cs" />
-    <Compile Include="TActual\DataModel\Msm.cs" />
-    <Compile Include="TMeter\DataModel\Msm.cs" />
+    <Compile Include="TActual\DataModel\Measurement.cs" />
+    <Compile Include="TMeter\DataModel\Measurement.cs" />
     <Compile Include="TActual\DataModel\PlayList.cs" />
     <Compile Include="TActual\DataModel\Slide.cs" />
     <Compile Include="TActual\DataModel\User.cs" />
     <Compile Include="TMeter\DataModel\User.cs" />
     <Compile Include="Helpers\FileIO.cs" />
-    <Compile Include="Helpers\IndexedObject.cs" />
     <Compile Include="Helpers\JSONContractResolver.cs" />
     <Compile Include="TMeter\DataModel\IData\IRsch.cs" />
     <Compile Include="TMeter\DataModel\IData\IUser.cs" />
@@ -162,7 +160,6 @@
     <Compile Include="Recorder\Collector.cs" />
     <Compile Include="Recorder\Commands.cs" />
     <Compile Include="Recorder\Device.cs" />
-    <Compile Include="Recorder\Packet_old.cs" />
     <Compile Include="UControls\GifImage.cs" />
     <Compile Include="UControls\GridViewSort.cs" />
     <Compile Include="UControls\NumericUpDown.xaml.cs">

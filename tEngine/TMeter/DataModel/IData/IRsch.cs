@@ -50,7 +50,7 @@ namespace tEngine.TMeter.DataModel.IData {
         /// Получить одно измерение
         /// </summary>
         /// <returns></returns>
-        Msm GetMsm( Guid msmId );
+        Measurement GetMsm( Guid msmId );
 
         /// <summary>
         /// Количество измерений
@@ -62,7 +62,7 @@ namespace tEngine.TMeter.DataModel.IData {
         /// Получить набор измерений
         /// </summary>
         /// <returns></returns>
-        IEnumerable<Msm> GetMsms();
+        IEnumerable<Measurement> GetMsms();
 
         /// <summary>
         /// Получить набор измерений
@@ -93,7 +93,7 @@ namespace tEngine.TMeter.DataModel.IData {
         /// Удалить измерение из набора
         /// </summary>
         /// <param name="msm"></param>
-        void RemoveMsm( Msm msm );
+        void RemoveMsm( Measurement msm );
 
         /// <summary>
         /// Сохранить в файл по умолчанию

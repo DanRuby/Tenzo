@@ -60,7 +60,8 @@ namespace tEngine.Helpers {
         public static BitmapImage GetSimilarImage( BitmapImage image, Size size ) {
             // не работает =( можно сделать через BI2Array
             throw new NotImplementedException();
-            if( image == null ) return null;
+            /*if( image == null ) 
+                return null;
             var orignBi = image;
             var bi = new BitmapImage();
 
@@ -79,7 +80,7 @@ namespace tEngine.Helpers {
             bi.DecodePixelWidth = (int) (k*orignBi.PixelWidth);
             bi.EndInit();
 
-            return bi;
+            return bi;*/
         }
 
         public static byte[] Int2Array( Int32 value ) {
@@ -96,7 +97,7 @@ namespace tEngine.Helpers {
             try {
                 using( var filestream = new FileStream( filepath, FileMode.Create ) )
                     encoder.Save( filestream );
-            } catch( IOException ex ) {
+            } catch( IOException  ) {
                 MessageBox.Show( "Ошибка создания файла", "Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }

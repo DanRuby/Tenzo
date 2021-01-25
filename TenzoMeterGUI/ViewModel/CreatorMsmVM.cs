@@ -9,7 +9,7 @@ using tEngine.TMeter.DataModel;
 namespace TenzoMeterGUI.ViewModel {
     public class CreatorMsmVM : Observed<CreatorMsmVM> {
         public Action Close;
-        public Action<Msm> FixResult;
+        public Action<Measurement> FixResult;
         private string mComment;
         private string mTitle;
         public Command CMDCancel { get; private set; }
@@ -50,14 +50,14 @@ namespace TenzoMeterGUI.ViewModel {
         }
 
         private void Create() {
-            EndDialog( new Msm() {
+            EndDialog( new Measurement() {
                 Comment = Comment,
                 Title = Title,
                 CreateTime = DateTime.Now
             } );
         }
 
-        private void EndDialog( Msm result = null ) {
+        private void EndDialog( Measurement result = null ) {
             if( FixResult != null )
                 FixResult( result );
             if( Close != null )

@@ -22,7 +22,7 @@ namespace TenzoActualGUI.View
             try
             {
                 InitializeComponent();
-                WindowManager.UpdateWindowPos(this.GetType().Name, this);
+                WindowManager.UpdateWindowPos(GetType().Name, this);
                 mDataContext = new StartWindowVM() { Parent = this };
                 DataContext = mDataContext;
             }
@@ -45,7 +45,7 @@ namespace TenzoActualGUI.View
                     /*если окно не диалог - вылетит исключение, ну и пусть*/
                 }
             }
-            WindowManager.SaveWindowPos(this.GetType().Name, this);
+            WindowManager.SaveWindowPos(GetType().Name, this);
         }
     }
 
@@ -73,7 +73,8 @@ namespace TenzoActualGUI.View
         {
             try
             {
-                if (Parent != null) Parent.Hide();
+                if (Parent != null) 
+                    Parent.Hide();
 
                 MsmMaster wnd = new MsmMaster();
 
@@ -95,7 +96,8 @@ namespace TenzoActualGUI.View
             }
             finally
             {
-                if (Parent != null) Parent.Show();
+                if (Parent != null) 
+                    Parent.Show();
             }
         }
 
@@ -129,17 +131,21 @@ namespace TenzoActualGUI.View
             else
             {
                 string file = SlideCreatorVM.OpenDialog();
-                if (file == null) return;
+                if (file == null)
+                    return;
                 PlayList.Open(file, out playList);
             }
+
             if (playList != null)
             {
-                if (Parent != null) Parent.Hide();
+                if (Parent != null) 
+                    Parent.Hide();
 
                 SlideCreator wnd = new SlideCreator { PlayList = playList };
                 wnd.ShowDialog();
             }
-            if (Parent != null) Parent.Show();
+            if (Parent != null) 
+                Parent.Show();
         }
     }
 }

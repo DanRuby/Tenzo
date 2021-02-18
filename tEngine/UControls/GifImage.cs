@@ -39,7 +39,7 @@ namespace tEngine.UControls
         public void StartAnimation()
         {
             if (!mIsInitialized)
-                this.Initialize();
+                Initialize();
 
             BeginAnimation(FrameIndexProperty, mAnimation);
         }
@@ -77,14 +77,13 @@ namespace tEngine.UControls
 
         private void Initialize()
         {
-            //todo ругается в дизайнере, не критично
-            mGifDecoder = new GifBitmapDecoder(new Uri(@"pack://application:,,," + this.GifSource),
+            mGifDecoder = new GifBitmapDecoder(new Uri(@"pack://application:,,," + GifSource),
                 BitmapCreateOptions.PreservePixelFormat, BitmapCacheOption.Default);
             mAnimation = new Int32Animation(0, mGifDecoder.Frames.Count - 1,
                 new Duration(new TimeSpan(0, 0, 0, mGifDecoder.Frames.Count / 10,
                     (int)((mGifDecoder.Frames.Count / 10.0 - mGifDecoder.Frames.Count / 10) * 1000))));
             mAnimation.RepeatBehavior = RepeatBehavior.Forever;
-            this.Source = mGifDecoder.Frames[0];
+            Source = mGifDecoder.Frames[0];
 
             mIsInitialized = true;
         }

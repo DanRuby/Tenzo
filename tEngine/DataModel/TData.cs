@@ -330,7 +330,7 @@ namespace tEngine.DataModel
             if (handsData.Length >= 9)
             {
                 TData obj = BytesPacker.LoadJSONObj<TData>(handsData[8]);
-                this.Time = obj.Time;
+                Time = obj.Time;
             }
 
             if (handsData.Length >= 11)

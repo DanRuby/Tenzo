@@ -32,7 +32,7 @@ namespace TenzoActualGUI.View
 
             InitializeComponent();
             mResizeTimer.Tick += ResizeTimerOnTick;
-            WindowManager.UpdateWindowPos(this.GetType().Name, this);
+            WindowManager.UpdateWindowPos(GetType().Name, this);
             mDataContext = new MsmMasterVM(this);
             DataContext = mDataContext;
         }
@@ -86,7 +86,7 @@ namespace TenzoActualGUI.View
                     /*если окно не диалог - вылетит исключение, ну и пусть*/
                 }
             }
-            WindowManager.SaveWindowPos(this.GetType().Name, this);
+            WindowManager.SaveWindowPos(GetType().Name, this);
         }
 
         private void Window_OnSizeChanged(object sender, SizeChangedEventArgs e)

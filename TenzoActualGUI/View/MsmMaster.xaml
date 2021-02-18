@@ -175,7 +175,7 @@
                                     </StackPanel>
                                     <DockPanel Style="{DynamicResource DockPanelStyle}" Margin="0,5">
                                         <TextBlock Text="Дата проведения: " VerticalAlignment="Center"/>
-                                        <DatePicker Text="{Binding DCInfo.CreateDate, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" Width="300" HorizontalAlignment="Left" />
+                                        <DatePicker SelectedDate="{Binding DCInfo.CreateDate, StringFormat=dd/MM/yyyy, UpdateSourceTrigger=PropertyChanged}" Width="300" HorizontalAlignment="Left"/>
                                     </DockPanel>
                                     <TextBlock Text="{Binding DCSlides.Slides.Count, StringFormat='{}Картинок в наборе: {0}'}" VerticalAlignment="Center"/>
                                     <TextBlock Text="{Binding DCMsmGuide.Msm.PlayList.SecondsToSlide, StringFormat='{}Время измерения одной картинки: {0:F2} секунд'}" VerticalAlignment="Center"/>

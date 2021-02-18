@@ -16,7 +16,7 @@ namespace TenzoActualGUI.View
         {
             AppSettings.Init(AppSettings.Project.Actual);
             InitializeComponent();
-            WindowManager.UpdateWindowPos(this.GetType().Name, this);
+            WindowManager.UpdateWindowPos(GetType().Name, this);
             mDataContext = new testplVM() { Parent = this };
             DataContext = mDataContext;
         }
@@ -31,7 +31,7 @@ namespace TenzoActualGUI.View
                 }
                 catch { /*если окно не диалог - вылетит исключение, ну и пусть*/ }
             }
-            WindowManager.SaveWindowPos(this.GetType().Name, this);
+            WindowManager.SaveWindowPos(GetType().Name, this);
             AppSettings.Save();
         }
     }

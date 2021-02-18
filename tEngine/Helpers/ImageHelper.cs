@@ -41,7 +41,6 @@ namespace tEngine.Helpers
 
         public static byte[] BI2Array(BitmapImage image)
         {
-            // TODO so loooong
             PngBitmapEncoder encoder = new PngBitmapEncoder();
             encoder.Frames.Add(BitmapFrame.Create(image));
             using (MemoryStream stream = new MemoryStream())

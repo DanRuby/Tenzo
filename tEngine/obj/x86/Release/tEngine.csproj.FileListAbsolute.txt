@@ -27,3 +27,4 @@ D:\tenzo\tEngine\obj\x86\Release\tEngine.csproj.CoreCompileInputs.cache
 D:\tenzo\tEngine\obj\x86\Release\tEngine.csproj.CopyComplete
 D:\tenzo\tEngine\obj\x86\Release\tEngine.dll
 D:\tenzo\tEngine\obj\x86\Release\tEngine.pdb
+D:\tenzo\tEngine\obj\x86\Release\tEngine.csprojAssemblyReference.cache

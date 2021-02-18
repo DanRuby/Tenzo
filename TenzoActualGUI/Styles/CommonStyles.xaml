@@ -7,7 +7,9 @@
     
     <!--Конвертеры-->
     <converters:BooleanToVisibilityConverter x:Key="BooleanToVisibilityConverter"/>
-    
+
+
+
     <!--Кнстанты-->
     <system:Double x:Key="DefWidth">100</system:Double>
     <system:Double x:Key="DefHeight">27</system:Double>

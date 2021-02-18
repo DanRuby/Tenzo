@@ -42,18 +42,18 @@ namespace tEngine.TActual.DataModel
 
         public Slide(Slide slide)
         {
-            this.Id = slide.Id;
-            this.RareFactor_Left = slide.RareFactor_Left;
-            this.RareFactor_Right = slide.RareFactor_Right;
-            this.Index = slide.Index;
-            this.Grade = slide.Grade;
-            this.Name = slide.Name;
-            this.IsShow = slide.IsShow;
-            this.FileUri = slide.FileUri;
-            this.mData = slide.Data;
-            this.ImageBig = slide.ImageBig.CloneCurrentValue();
-            this.ImageMedium = slide.ImageMedium.CloneCurrentValue();
-            this.ImageSmall = slide.ImageSmall.CloneCurrentValue();
+            Id = slide.Id;
+            RareFactor_Left = slide.RareFactor_Left;
+            RareFactor_Right = slide.RareFactor_Right;
+            Index = slide.Index;
+            Grade = slide.Grade;
+            Name = slide.Name;
+            IsShow = slide.IsShow;
+            FileUri = slide.FileUri;
+            mData = slide.Data;
+            ImageBig = slide.ImageBig.CloneCurrentValue();
+            ImageMedium = slide.ImageMedium.CloneCurrentValue();
+            ImageSmall = slide.ImageSmall.CloneCurrentValue();
         }
 
         public Slide()
@@ -127,14 +127,14 @@ namespace tEngine.TActual.DataModel
             if (objData.Length != 2) return false;
 
             Slide obj = BytesPacker.LoadJSONObj<Slide>(objData[0]);
-            this.Id = obj.Id;
-            this.RareFactor_Left = obj.RareFactor_Left;
-            this.RareFactor_Right = obj.RareFactor_Right;
-            this.Index = obj.Index;
-            this.Grade = obj.Grade;
-            this.Name = obj.Name;
-            this.IsShow = obj.IsShow;
-            this.FileUri = obj.FileUri;
+            Id = obj.Id;
+            RareFactor_Left = obj.RareFactor_Left;
+            RareFactor_Right = obj.RareFactor_Right;
+            Index = obj.Index;
+            Grade = obj.Grade;
+            Name = obj.Name;
+            IsShow = obj.IsShow;
+            FileUri = obj.FileUri;
 
             bool result = mData.LoadFromArray(objData[1]);
             return result;

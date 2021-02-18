@@ -30,7 +30,7 @@ namespace TMSingleMeasurement.View
         {
             InitializeComponent();
 
-            WindowManager.UpdateWindowPos(this.GetType().Name, this);
+            WindowManager.UpdateWindowPos(GetType().Name, this);
             mDataContext = new MainControlVM() { Parent = this };
             DataContext = mDataContext;
         }
@@ -54,7 +54,7 @@ namespace TMSingleMeasurement.View
                     /*если окно не диалог - вылетит исключение, ну и пусть*/
                 }
             }
-            WindowManager.SaveWindowPos(this.GetType().Name, this);
+            WindowManager.SaveWindowPos(GetType().Name, this);
         }
     }
 

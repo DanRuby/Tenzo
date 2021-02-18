@@ -36,9 +36,9 @@ namespace tEngine.TMeter.DataModel
         {
             Init();
             // полное копирование Msm
+            //Д: пизда какое медленное копирование
             LoadFromArray(msm.ToByteArray());
-            return;
-            // todo проверить все ли копируется
+
             /* var pinfo = msm.GetType().GetProperties();
              pinfo.ToList().ForEach( info => {
                  if( info.CanRead && info.CanWrite ) {

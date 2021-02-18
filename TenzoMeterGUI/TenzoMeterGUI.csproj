@@ -149,9 +149,6 @@
     <Compile Include="View\PdfSave.xaml.cs">
       <DependentUpon>PdfSave.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\plottest.xaml.cs">
-      <DependentUpon>plottest.xaml</DependentUpon>
-    </Compile>
     <Compile Include="View\ResultWindow.xaml.cs">
       <DependentUpon>ResultWindow.xaml</DependentUpon>
     </Compile>
@@ -164,7 +161,6 @@
     <Compile Include="View\UserWorkSpace.xaml.cs">
       <DependentUpon>UserWorkSpace.xaml</DependentUpon>
     </Compile>
-    <Compile Include="ViewModel\UserWorkSpaceVM.cs" />
     <Compile Include="WPFComponents\UserLine.xaml.cs">
       <DependentUpon>UserLine.xaml</DependentUpon>
     </Compile>
@@ -225,10 +221,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\PdfSave.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\plottest.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

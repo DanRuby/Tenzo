@@ -30,24 +30,24 @@ namespace tEngine.TMeter.DataModel
 
         Guid IRsch<Rsch>.ID
         {
-            get { return this.ID; }
-            set { this.ID = value; }
+            get { return ID; }
+            set { ID = value; }
         }
 
         private List<Guid> MsmsGuids { get; set; }
 
         List<Guid> IRsch<Rsch>.MsmsGuids
         {
-            get { return this.MsmsGuids; }
-            set { this.MsmsGuids = value; }
+            get { return MsmsGuids; }
+            set { MsmsGuids = value; }
         }
 
         private List<string> UsersPaths { get; set; }
 
         List<string> IRsch<Rsch>.UsersPaths
         {
-            get { return this.UsersPaths; }
-            set { this.UsersPaths = value; }
+            get { return UsersPaths; }
+            set { UsersPaths = value; }
         }
 
         public Rsch()

@@ -42,8 +42,8 @@ namespace tEngine.TMeter.DataModel
         {
             Init();
             LoadFromArray(user.ToByteArray());
-            return;
-            // todo проверить все ли копируется
+            
+            
             /*var pinfo = user.GetType().GetProperties();
             pinfo.ToList().ForEach( info => {
                 if( info.CanRead && info.CanWrite ) {
@@ -153,7 +153,7 @@ namespace tEngine.TMeter.DataModel
         public bool Restore()
         {
             byte[] bytes;
-            if (FileIO.ReadBytes(this.FilePath, out bytes))
+            if (FileIO.ReadBytes(FilePath, out bytes))
             {
                 IsNotSaveChanges = false;
                 return LoadFromArray(bytes);
@@ -175,7 +175,7 @@ namespace tEngine.TMeter.DataModel
                 //var json = JsonConvert.SerializeObject( this, settings );
                 //FileIO.WriteText( filePath, json );
 
-                FileIO.WriteBytes(filePath, this.ToByteArray());
+                FileIO.WriteBytes(filePath, ToByteArray());
             }
             catch (Exception ex)
             {
@@ -266,21 +266,21 @@ namespace tEngine.TMeter.DataModel
             if (objData.Length != 2) return false;
 
             User obj = BytesPacker.LoadJSONObj<User>(objData[0]);
-            this.Name = obj.Name;
-            this.SName = obj.SName;
-            this.FName = obj.FName;
-            this.ID = obj.ID;
-            this.BirthDate = obj.BirthDate;
-            this.Comment = obj.Comment;
+            Name = obj.Name;
+            SName = obj.SName;
+            FName = obj.FName;
+            ID = obj.ID;
+            BirthDate = obj.BirthDate;
+            Comment = obj.Comment;
 
-            this.mMsms.Clear();
+            mMsms.Clear();
             byte[][] msmsArray = BytesPacker.UnpackBytes(objData[1]);
             bool result = true;
             foreach (byte[] bytes in msmsArray)
             {
                 Measurement newMsm = new Measurement();
                 result = result && newMsm.LoadFromArray(bytes);
-                this.AddMsm(newMsm);
+                AddMsm(newMsm);
             }
             IsNotSaveChanges = false;
             return result;

@@ -1,19 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Linq;
 using System.Runtime.Serialization;
-using System.Text;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
 using System.Windows.Input;
 using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
 using OxyPlot;
 using OxyPlot.Axes;
 using tEngine.Helpers;
@@ -95,9 +87,9 @@ namespace tEngine.PlotCreator
         {
             BackColor = pm.Background.GetColorMedia();
             Title = pm.Title;
-            TitleFontSize = (int)pm.TitleFontSize; // todo проверить размеры шрифтов
+            TitleFontSize = (int)pm.TitleFontSize;
             ShowTitle = true;
-            //TitlePos = 
+            
 
             Axis axes1 = pm.Axes.Count > 0 ? pm.Axes[0] : null;
             Axis axes2 = pm.Axes.Count > 1 ? pm.Axes[1] : null;
@@ -127,10 +119,10 @@ namespace tEngine.PlotCreator
             AxesStyle = EAxesStyle.Boxed;
             BackColor = Colors.White;
             Title = "";
-            TitleFontSize = 12; // todo проверить размеры шрифтов
+            TitleFontSize = 12; 
             ShowTitle = true;
             TitlePos = ETitlePos.Top;
-            AxesFontSize = 12; // проверить 
+            AxesFontSize = 12;  
         }
 
         private void Init(PlotModelEx pm)
@@ -245,7 +237,7 @@ namespace tEngine.PlotCreator
             Grid = 2;
             DecimalCount = 2;
             ExponentCount = 3;
-            NumbersFontSize = 12; // проверить
+            NumbersFontSize = 12; 
             Title = "";
             ShowTitle = true;
             IsPanEnabled = true;
@@ -275,7 +267,7 @@ namespace tEngine.PlotCreator
         public PlotSettings()
         {
             InitializeComponent();
-            WindowManager.UpdateWindowPos(this.GetType().Name, this);
+            WindowManager.UpdateWindowPos(GetType().Name, this);
             mDataContext = new PlotSettingsVM() { Parent = this };
             DataContext = mDataContext;
         }
@@ -317,7 +309,7 @@ namespace tEngine.PlotCreator
                     Debug.Assert(false, ex.Message);
                 }
             }
-            WindowManager.SaveWindowPos(this.GetType().Name, this);
+            WindowManager.SaveWindowPos(GetType().Name, this);
         }
     }
 

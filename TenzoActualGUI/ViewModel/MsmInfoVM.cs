@@ -75,8 +75,10 @@ namespace TenzoActualGUI.ViewModel
             }
             set
             {
-                if (Msm == null) return;
+                if (Msm == null) 
+                    return;
                 Msm.CreateTime = value;
+
                 NotifyPropertyChanged(m => m.CreateDate);
             }
         }

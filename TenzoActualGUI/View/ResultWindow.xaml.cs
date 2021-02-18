@@ -20,7 +20,7 @@ namespace TenzoActualGUI.View
         public ResultWindow()
         {
             InitializeComponent();
-            WindowManager.UpdateWindowPos(this.GetType().Name, this);
+            WindowManager.UpdateWindowPos(GetType().Name, this);
             mDataContext = new ResultWindowVM() { Parent = this };
             DataContext = mDataContext;
         }
@@ -43,7 +43,7 @@ namespace TenzoActualGUI.View
                     //Debug.Assert( false, ex.Message );
                 }
             }
-            WindowManager.SaveWindowPos(this.GetType().Name, this);
+            WindowManager.SaveWindowPos(GetType().Name, this);
         }
 
         private void FrameworkElement_OnTargetUpdated(object sender, DataTransferEventArgs e)

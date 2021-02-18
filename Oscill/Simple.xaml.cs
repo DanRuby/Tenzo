@@ -21,7 +21,7 @@ namespace Oscill
         public Simple()
         {
             InitializeComponent();
-            WindowManager.UpdateWindowPos(this.GetType().Name, this);
+            WindowManager.UpdateWindowPos(GetType().Name, this);
             mDataContext = new SimpleVM() { Parent = this };
             DataContext = mDataContext;
         }
@@ -39,7 +39,7 @@ namespace Oscill
                     /*если окно не диалог - вылетит исключение, ну и пусть*/
                 }
             }
-            WindowManager.SaveWindowPos(this.GetType().Name, this);
+            WindowManager.SaveWindowPos(GetType().Name, this);
         }
     }
 

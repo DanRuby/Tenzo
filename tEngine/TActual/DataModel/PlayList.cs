@@ -326,10 +326,10 @@ namespace tEngine.TActual.DataModel
             if (objData.Length != 2) return false;
 
             PlayList obj = BytesPacker.LoadJSONObj<PlayList>(objData[0]);
-            this.ID = obj.ID;
-            this.CreateTime = obj.CreateTime;
-            this.SecondsToSlide = obj.SecondsToSlide;
-            this.Title = obj.Title;
+            ID = obj.ID;
+            CreateTime = obj.CreateTime;
+            SecondsToSlide = obj.SecondsToSlide;
+            Title = obj.Title;
 
             byte[][] slidesArray = BytesPacker.UnpackBytes(objData[1]);
             bool result = true;
@@ -337,7 +337,7 @@ namespace tEngine.TActual.DataModel
             {
                 Slide newSlide = new Slide();
                 result = result && newSlide.LoadFromArray(bytes);
-                this.AddSlide(newSlide);
+                AddSlide(newSlide);
             }
             IsNotSaveChanges = false;
             return result;

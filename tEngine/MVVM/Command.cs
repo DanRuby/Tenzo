@@ -72,8 +72,8 @@ namespace tEngine.MVVM
         public Command(Action action, bool canExecute = true)
         {
             //  Set the action.
-            this.mAction = action;
-            this.mCanExecute = canExecute;
+            mAction = action;
+            mCanExecute = canExecute;
         }
 
         /// <summary>
@@ -84,8 +84,8 @@ namespace tEngine.MVVM
         public Command(Action<object> parameterizedAction, bool canExecute = true)
         {
             //  Set the action.
-            this.mParameterizedAction = parameterizedAction;
-            this.mCanExecute = canExecute;
+            mParameterizedAction = parameterizedAction;
+            mCanExecute = canExecute;
         }
 
         /// <summary>
@@ -172,7 +172,7 @@ namespace tEngine.MVVM
         /// <param name="parameter">Data used by the command.  If the command does not require data to be passed, this object can be set to null.</param>
         void ICommand.Execute(object parameter)
         {
-            this.DoExecute(parameter);
+            DoExecute(parameter);
         }
 
         #endregion ICommand Members

@@ -34,7 +34,7 @@ namespace TenzoMeterGUI.View
         public MsmCreator()
         {
             InitializeComponent();
-            WindowManager.UpdateWindowPos(this.GetType().Name, this);
+            WindowManager.UpdateWindowPos(GetType().Name, this);
             mDataContext = new MsmCreatorVM() { Parent = this };
             DataContext = mDataContext;
         }
@@ -75,7 +75,7 @@ namespace TenzoMeterGUI.View
                     NotDialogButResult = mDataContext.DialogResult;
                 }
             }
-            WindowManager.SaveWindowPos(this.GetType().Name, this);
+            WindowManager.SaveWindowPos(GetType().Name, this);
         }
     }
 

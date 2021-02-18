@@ -45,7 +45,6 @@ namespace tEngine.PlotCreator
             double maxY = double.MinValue;
             foreach (PlotModel model in models)
             {
-                // todo убрать индексы
                 Axis axesY = model.Axes[0];
                 Axis axesX = model.Axes[1];
 

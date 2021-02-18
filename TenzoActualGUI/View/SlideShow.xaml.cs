@@ -86,7 +86,7 @@ namespace TenzoActualGUI.View
         {
             InitializeComponent();
             mDevice = Device.CreateDevice(SlideShowVM.DEVICE_ID);
-            WindowManager.UpdateWindowPos(this.GetType().Name, this);
+            WindowManager.UpdateWindowPos(GetType().Name, this);
 
             mDataContext = new SlideShowVM() { Parent = this };
             DataContext = mDataContext;
@@ -162,7 +162,7 @@ namespace TenzoActualGUI.View
             }
             mDevice.RemoveListener(HandCallBack);
             mDevice.Abort();
-            WindowManager.SaveWindowPos(this.GetType().Name, this);
+            WindowManager.SaveWindowPos(GetType().Name, this);
             mMWindow.Clear();
             mDataContext.PreClosed();
             if (PreClosed != null)

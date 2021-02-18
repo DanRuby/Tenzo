@@ -229,7 +229,7 @@
                         </StackPanel>
                         <Grid>
                             <ListView x:Name="lv" ItemsSource="{Binding MsmsToDraw, Mode=OneWay}"
-                                      d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type dataModel:Msm}}"
+                                      d:DataContext="{d:DesignInstance IsDesignTimeCreatable=False, Type={x:Type dataModel:Measurement}}"
                                       Background="White"
                                       ScrollViewer.CanContentScroll="False"
                                       IsSynchronizedWithCurrentItem="True">

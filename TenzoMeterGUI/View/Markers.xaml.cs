@@ -106,7 +106,7 @@ namespace TenzoMeterGUI.View
             InitializeComponent();
             tgb.IsChecked = mDevice.DemoMode;
 
-            WindowManager.UpdateWindowPos(this.GetType().Name, this);
+            WindowManager.UpdateWindowPos(GetType().Name, this);
             mTimerDraw = new DispatcherTimer();
             mTimerDraw.Tick += TimerDrawOnTick;
             mTimerDraw.Interval = new TimeSpan(0, 0, 0, 0, 1000 / 25);
@@ -144,7 +144,7 @@ namespace TenzoMeterGUI.View
             mDevice.Stop();
             mTimerDraw.Stop();
             mWindow = null;
-            WindowManager.SaveWindowPos(this.GetType().Name, this);
+            WindowManager.SaveWindowPos(GetType().Name, this);
         }
 
         private void Markers_OnLoaded(object sender, RoutedEventArgs e)

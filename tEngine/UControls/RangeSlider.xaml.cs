@@ -53,7 +53,7 @@ namespace tEngine.UControls
         {
             InitializeComponent();
 
-            this.Loaded += Slider_Loaded;
+            Loaded += Slider_Loaded;
         }
 
         private void LowerSlider_ValueChanged(object sender, RoutedPropertyChangedEventArgs<double> e)

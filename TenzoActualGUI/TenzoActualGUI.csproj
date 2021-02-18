@@ -101,9 +101,6 @@
     <Compile Include="View\StartWindow.xaml.cs">
       <DependentUpon>StartWindow.xaml</DependentUpon>
     </Compile>
-    <Compile Include="View\testpl.xaml.cs">
-      <DependentUpon>testpl.xaml</DependentUpon>
-    </Compile>
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs">
@@ -153,10 +150,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\StartWindow.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="View\testpl.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>

@@ -112,6 +112,12 @@ namespace tEngine.Test {
         [TestMethod]
         public void TestMsmCreate() {
             var result = Measurement.GetTestMsm();
+            Measurement copy = new Measurement(result);
+
+            Assert.AreEqual(copy.Comment,result.Comment);
+            Assert.AreEqual(copy.CreateTime, result.CreateTime);
+            Assert.AreEqual(copy.MsmTime, result.MsmTime);
+            Assert.AreEqual(copy.Title, result.Title);
         }
 
         [TestMethod]

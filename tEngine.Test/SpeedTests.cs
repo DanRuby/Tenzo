@@ -43,7 +43,7 @@ namespace tEngine.Test {
                 packetHere++;
             });
             device.Start();
-            Thread.Sleep( 10000 );
+            //Thread.Sleep( 10000 );
             device.Stop();
             Console.WriteLine( "\tPack here -\t{0}", packetHere );
             Console.WriteLine( "\tInvalidPack -\t{0}", device.Counters.InvalidPack );

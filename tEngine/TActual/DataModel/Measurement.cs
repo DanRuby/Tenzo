@@ -186,7 +186,7 @@ namespace tEngine.TActual.DataModel
                 //var settings = new JsonSerializerSettings {ContractResolver = new JSONContractResolver()};
                 //var json = JsonConvert.SerializeObject( this, settings );
                 //FileIO.WriteText( filePath, json );
-                FileIO.WriteBytes(filePath, this.ToByteArray());
+                FileIO.WriteBytes(filePath, ToByteArray());
             }
             catch (Exception)
             {
@@ -219,9 +219,9 @@ namespace tEngine.TActual.DataModel
             if (objData.Length != 2) return false;
 
             Measurement obj = BytesPacker.LoadJSONObj<Measurement>(objData[0]);
-            this.Comment = obj.Comment;
-            this.CreateTime = obj.CreateTime;
-            this.Title = obj.Title;
+            Comment = obj.Comment;
+            CreateTime = obj.CreateTime;
+            Title = obj.Title;
 
             bool pl = PlayList.LoadFromArray(objData[1]);
 

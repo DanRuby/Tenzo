@@ -1,4 +1,5 @@
 using System;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
@@ -165,6 +166,7 @@ namespace TenzoActualGUI.ViewModel
 
         private void Init(Window parent)
         {
+
             CMDNextStep = new Command(NextStep);
             CMDPrevStep = new Command(PrevStep);
             CMDOpenTab = new Command(OpenTab);

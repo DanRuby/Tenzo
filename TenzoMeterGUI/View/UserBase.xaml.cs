@@ -28,7 +28,7 @@ namespace TenzoMeterGUI.View
         public UserBase()
         {
             InitializeComponent();
-            WindowManager.UpdateWindowPos(this.GetType().Name, this);
+            WindowManager.UpdateWindowPos(GetType().Name, this);
             mDataContext = new UserBaseVM() { Parent = this };
             DataContext = mDataContext;
         }
@@ -54,7 +54,7 @@ namespace TenzoMeterGUI.View
             Device.AbortAll();
             Markers.CloseWindow();
             WindowManager.CloseAll();
-            WindowManager.SaveWindowPos(this.GetType().Name, this);
+            WindowManager.SaveWindowPos(GetType().Name, this);
         }
     }
 

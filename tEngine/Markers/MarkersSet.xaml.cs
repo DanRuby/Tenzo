@@ -18,7 +18,7 @@ namespace tEngine.Markers
         public MarkersSet()
         {
             InitializeComponent();
-            WindowManager.UpdateWindowPos(this.GetType().Name, this);
+            WindowManager.UpdateWindowPos(GetType().Name, this);
             mDataContext = new MarkersSetVM() { Parent = this };
             DataContext = mDataContext;
         }
@@ -36,7 +36,7 @@ namespace tEngine.Markers
                     /*если окно не диалог - вылетит исключение, ну и пусть*/
                 }
             }
-            WindowManager.SaveWindowPos(this.GetType().Name, this);
+            WindowManager.SaveWindowPos(GetType().Name, this);
         }
     }
 

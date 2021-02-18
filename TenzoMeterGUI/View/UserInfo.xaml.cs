@@ -37,7 +37,7 @@ namespace TenzoMeterGUI.View
         public UserInfo()
         {
             InitializeComponent();
-            WindowManager.UpdateWindowPos(this.GetType().Name, this);
+            WindowManager.UpdateWindowPos(GetType().Name, this);
             mDataContext = new UserInfoVM() { Parent = this };
             DataContext = mDataContext;
         }
@@ -73,7 +73,7 @@ namespace TenzoMeterGUI.View
                     /*если окно не диалог - вылетит исключение, ну и пусть*/
                 }
             }
-            WindowManager.SaveWindowPos(this.GetType().Name, this);
+            WindowManager.SaveWindowPos(GetType().Name, this);
         }
     }
 
@@ -172,7 +172,7 @@ namespace TenzoMeterGUI.View
             NotifyPropertyChanged(m => m.DirPaths);
 
             // update all properties
-            this.GetType()
+            GetType()
                 .GetProperties()
                 .Where(info => info.CanRead)
                 .ToList()

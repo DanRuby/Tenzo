@@ -33,7 +33,7 @@ namespace tEngine.MVVM
 
         public void UpdateAllProperties()
         {
-            this.GetType()
+            GetType()
                 .GetProperties()
                 .Where(info => info.CanRead)
                 .ToList()

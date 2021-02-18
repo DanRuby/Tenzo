@@ -353,7 +353,7 @@ namespace TenzoMeterGUI.View
                     pve.PlotModel.AutoScale();
                 });
                 PlotExtension.SynchScale(plots.Select(pve => (PlotModel)pve.PlotModel).ToArray());
-                // todo убрать индексы
+                
                 OxyPlot.Axes.Axis axesY = plots.First().PlotModel.Axes[0];
                 OxyPlot.Axes.Axis axesX = plots.First().PlotModel.Axes[1];
                 PlotSet.AxesOX.Minimum = axesX.Minimum;
@@ -449,7 +449,7 @@ namespace TenzoMeterGUI.View
                     });
                     PlotExtension.SynchScale(plots.Select(pve => (PlotModel)pve.PlotModel).ToArray());
 
-                    //// todo убрать индексы
+                    
                     //var axesY = plots.First().PlotModel.Axes[0];
                     //var axesX = plots.First().PlotModel.Axes[1];
                     //PlotSet.AxesOX.Minimum = axesX.Minimum;

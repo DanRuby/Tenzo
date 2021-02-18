@@ -22,7 +22,7 @@ namespace TenzoActualGUI.View
         public SlideCreator()
         {
             InitializeComponent();
-            WindowManager.UpdateWindowPos(this.GetType().Name, this);
+            WindowManager.UpdateWindowPos(GetType().Name, this);
             mDataContext = new SlideCreatorVM() { Parent = this };
             DataContext = mDataContext;
         }
@@ -37,7 +37,7 @@ namespace TenzoActualGUI.View
                 }
                 catch { /*если окно не диалог - вылетит исключение, ну и пусть*/ }
             }
-            WindowManager.SaveWindowPos(this.GetType().Name, this);
+            WindowManager.SaveWindowPos(GetType().Name, this);
         }
     }
 }

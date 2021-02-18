@@ -127,22 +127,22 @@ namespace tEngine.Markers
                 set = new MArea();
             }
 
-            this.Color = set.Color;
-            this.Grid = set.Grid;
-            this.Maximum = set.Maximum;
-            this.Minimum = set.Minimum;
-            this.ShowAxis = set.ShowAxis;
-            this.ShowGrid = set.ShowGrid;
-            this.Marker1 = set.Marker1;
-            this.Marker2 = set.Marker2;
-            this.GridColor = set.GridColor;
-            this.ShowMarker1 = set.ShowMarker1;
-            this.ShowMarker2 = set.ShowMarker2;
+            Color = set.Color;
+            Grid = set.Grid;
+            Maximum = set.Maximum;
+            Minimum = set.Minimum;
+            ShowAxis = set.ShowAxis;
+            ShowGrid = set.ShowGrid;
+            Marker1 = set.Marker1;
+            Marker2 = set.Marker2;
+            GridColor = set.GridColor;
+            ShowMarker1 = set.ShowMarker1;
+            ShowMarker2 = set.ShowMarker2;
 
             Marker2.Hole = Marker1.Height;
 
-            this.Marker1.UpdateSource();
-            this.Marker2.UpdateSource();
+            Marker1.UpdateSource();
+            Marker2.UpdateSource();
 
             //var set = Serializator.DeserializeDataContract<MArea>( AppSettings.Constants.MarkersSettings ) ??
             //          new MArea();

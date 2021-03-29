@@ -4,16 +4,16 @@
 winexe
 C#
 .cs
-D:\tenzo\TenzoActualGUI\obj\x86\Debug\
+D:\GithubRepositories\Tenzo\TenzoActualGUI\obj\x86\Debug\
 TenzoActualGUI
 none
 false
 DEBUG;TRACE
-D:\tenzo\TenzoActualGUI\App.xaml
+D:\GithubRepositories\Tenzo\TenzoActualGUI\App.xaml
 6-847124562
 
 191828149334
-151129105774
+15-1581653527
 Styles\CommonStyles.xaml;View\MsmMaster.xaml;View\ResultWindow.xaml;View\SlideCreator.xaml;View\SlideShow.xaml;View\StartWindow.xaml;
 
 False

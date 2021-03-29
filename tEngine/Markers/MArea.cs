@@ -93,7 +93,6 @@ namespace tEngine.Markers
 
         public void SaveSettings()
         {
-            //Serializator.SerializeDataContrakt( this, AppSettings.Constants.MarkersSettings );
             JsonSerializerSettings settings = new JsonSerializerSettings() { ContractResolver = new JSONContractResolver() };
             string json = JsonConvert.SerializeObject(this, settings);
             FileIO.WriteText(AppSettings.Constants.MarkersSettings, json);
@@ -143,21 +142,6 @@ namespace tEngine.Markers
 
             Marker1.UpdateSource();
             Marker2.UpdateSource();
-
-            //var set = Serializator.DeserializeDataContract<MArea>( AppSettings.Constants.MarkersSettings ) ??
-            //          new MArea();
-            //this.mColor = set.mColor;
-            //this.mGrid = set.mGrid;
-            //this.mMaximum = set.mMaximum;
-            //this.mMinimum = set.mMinimum;
-            //this.mShowAxis = set.mShowAxis;
-            //this.mMarker1 = set.mMarker1;
-            //this.mMarker2 = set.mMarker2;
-            //this.mGridColor = set.mGridColor;
-            //this.ShowMarker1 = set.mShowMarker1;
-            //this.ShowMarker2 = set.mShowMarker2;
-
-            //mMarker2.Hole = mMarker1.Height;
         }
 
         private void CopyBacground()
@@ -206,14 +190,11 @@ namespace tEngine.Markers
             int y1Last = RelToAbsY(mLastLeft);
             int y2Last = RelToAbsY(mLastRight);
 
-            //if ( y1 != y1Last )
             HideMarker(mSource, y1Last, Marker1.Width + 10, Marker1.Height + 10);
-            //if ( y2 != y2Last )
             HideMarker(mSource, y2Last, Marker2.Width + 10, Marker2.Height * 2 + (Marker2.Hole ?? 0) + 10);
-            //if ( y1 != y1Last && ShowMarker1 == true )
+
             if (ShowMarker1)
                 Marker1.Draw(mSource, y1);
-            //if ( y2 != y2Last && ShowMarker2 == true )
             if (ShowMarker2)
                 Marker2.Draw(mSource, y2);
 

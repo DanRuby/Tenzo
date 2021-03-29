@@ -8,3 +8,13 @@ D:\tenzo\CheckDll\obj\x86\Debug\CheckDll.csproj.CopyComplete
 D:\tenzo\CheckDll\obj\x86\Debug\CheckDll.exe
 D:\tenzo\CheckDll\obj\x86\Debug\CheckDll.pdb
 D:\tenzo\CheckDll\obj\x86\Debug\CheckDll.csprojAssemblyReference.cache
+D:\GithubRepositories\Tenzo\bin\Debug\lib\TenzoDevice.dll
+D:\GithubRepositories\Tenzo\bin\Debug\lib\TenzoDevice_d.dll
+D:\GithubRepositories\Tenzo\bin\Debug\CheckDll.exe.config
+D:\GithubRepositories\Tenzo\bin\Debug\CheckDll.exe
+D:\GithubRepositories\Tenzo\bin\Debug\CheckDll.pdb
+D:\GithubRepositories\Tenzo\CheckDll\obj\x86\Debug\CheckDll.csprojAssemblyReference.cache
+D:\GithubRepositories\Tenzo\CheckDll\obj\x86\Debug\CheckDll.csproj.CoreCompileInputs.cache
+D:\GithubRepositories\Tenzo\CheckDll\obj\x86\Debug\CheckDll.csproj.CopyComplete
+D:\GithubRepositories\Tenzo\CheckDll\obj\x86\Debug\CheckDll.exe
+D:\GithubRepositories\Tenzo\CheckDll\obj\x86\Debug\CheckDll.pdb

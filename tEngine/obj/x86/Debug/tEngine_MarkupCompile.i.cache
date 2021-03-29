@@ -4,7 +4,7 @@
 library
 C#
 .cs
-D:\tenzo\tEngine\obj\x86\Debug\
+D:\GithubRepositories\Tenzo\tEngine\obj\x86\Debug\
 tEngine
 none
 false
@@ -12,8 +12,8 @@ DEBUG;TRACE
 
 8922971732
 2-1432345895
-64-1015910511
-26-1295227168
+641648898
+26-799079300
 Markers\MarkersSet.xaml;Markers\UIMarkers.xaml;PlotCreator\PlotSettings.xaml;UControls\NumericUpDown.xaml;UControls\PlotViewEx.xaml;UControls\RangeSlider.xaml;UControls\SelectablePlot.xaml;UControls\WaitBagel.xaml;
 
 False

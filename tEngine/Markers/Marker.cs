@@ -21,6 +21,36 @@ namespace tEngine.Markers
         [DataMember(Name = "bw")]
         protected int mWidth;
 
+        public Color Color
+        {
+            get { return mColor; }
+            set
+            {
+                mColor = value;
+                UpdateSource();
+            }
+        }
+
+        public int Height
+        {
+            get { return mHeight; }
+            set
+            {
+                mHeight = value;
+                UpdateSource();
+            }
+        }
+
+        public int Width
+        {
+            get { return mWidth; }
+            set
+            {
+                mWidth = value;
+                UpdateSource();
+            }
+        }
+
         public Marker()
         {
             UpdateSource();
@@ -37,7 +67,7 @@ namespace tEngine.Markers
             Drawer.DrawRectangle(mSource, new Rect(0, 0, mSource.PixelWidth, mSource.PixelHeight), mColor);
         }
 
-        protected virtual void Draw(WriteableBitmap bitmap, int yPos)
+        public virtual void Draw(WriteableBitmap bitmap, int yPos)
         {
             if (bitmap == null)
             {
@@ -52,7 +82,6 @@ namespace tEngine.Markers
             double left = (bitmap.Width - mWidth) / 2;
             double top = yPos - mHeight / 2.0;
             Drawer.CopyPart(mSource, new Rect(0, 0, mWidth, mHeight), bitmap, new Rect(left, top, mWidth, mHeight));
-            //Drawer.DrawRectangle( bitmap, (int)left, (int)top, mWidth, mHeight, color );
         }
     }
 }

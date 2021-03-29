@@ -4,17 +4,17 @@
 winexe
 C#
 .cs
-D:\tenzo\TMSingleMeasurement\obj\x86\Debug\
+D:\GithubRepositories\Tenzo\TMSingleMeasurement\obj\x86\Debug\
 TMSingleMeasurement
 none
 false
 DEBUG;TRACE
-D:\tenzo\TMSingleMeasurement\App.xaml
+D:\GithubRepositories\Tenzo\TMSingleMeasurement\App.xaml
 2984383107
 
-6-150913087
-161894825738
+7-325919614
+16463903614
 View\MarkersControl.xaml;View\Markers.xaml;
 
-False
+True
 

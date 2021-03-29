@@ -5,37 +5,8 @@ namespace tEngine.Markers
 {
     public class Marker2 : Marker
     {
-        public Color Color
-        {
-            get { return mColor; }
-            set
-            {
-                mColor = value;
-                UpdateSource();
-            }
-        }
-
-        public int Height
-        {
-            get { return mHeight; }
-            set
-            {
-                mHeight = value;
-                UpdateSource();
-            }
-        }
-
         public int? Hole { get; set; }
 
-        public int Width
-        {
-            get { return mWidth; }
-            set
-            {
-                mWidth = value;
-                UpdateSource();
-            }
-        }
 
         public Marker2()
         {
@@ -44,7 +15,7 @@ namespace tEngine.Markers
             Height = 6;
         }
 
-        public new void Draw(WriteableBitmap bitmap, int yPos)
+        public override void Draw(WriteableBitmap bitmap, int yPos)
         {
             int delta = Hole ?? mHeight;
             double y1 = yPos - (delta + mHeight) / 2.0;

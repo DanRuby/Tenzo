@@ -10,7 +10,7 @@
         xmlns:system="clr-namespace:System;assembly=mscorlib"
         xmlns:i="http://schemas.microsoft.com/expression/2010/interactivity" xmlns:ei="http://schemas.microsoft.com/expression/2010/interactions"
     xmlns:oxy="http://oxyplot.org/wpf"
-    xmlns:viewModel="clr-namespace:TenzoMeterGUI.ViewModel"
+    xmlns:viewModel="clr-namespace:TenzoMeterGUI.View"
     xmlns:converters="clr-namespace:TenzoMeterGUI.Converters"
     x:Class="TenzoMeterGUI.View.UserWorkSpace"
         mc:Ignorable="d"

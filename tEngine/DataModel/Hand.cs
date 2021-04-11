@@ -51,30 +51,6 @@ namespace tEngine.DataModel
             ResetPoints();
         }
 
-        private void ResetPoints()
-        {
-            BeginPoint = 0;
-            EndPoint = Const.Count - 1;
-        }
-
-        /// <summary>
-        /// Д: Возвращает последние значения начиная с позиции count 
-        /// </summary>
-        /// <param name="count"></param>
-        /// <returns></returns>
-        public Hand GetHand(int count)
-        {
-            if (count > Const.Count)
-                count = Const.Count;
-            int first = Const.Count - count;
-
-            Hand result = new Hand();
-            result.Const = Const.GetRange(first, count);
-            result.Tremor = Tremor.GetRange(first, count);
-
-            return result;
-        }
-
         public int GetLength()
         {
             if (Const != null)
@@ -114,5 +90,30 @@ namespace tEngine.DataModel
 
         public byte[] ToByteArray() => BytesPacker.PackBytes(Const.ToByteArray(), Tremor.ToByteArray());
 
+        private void ResetPoints()
+        {
+            BeginPoint = 0;
+            EndPoint = Const.Count - 1;
+        }
+
+        #region No References
+        /// <summary>
+        /// Д: Возвращает последние значения начиная с позиции count 
+        /// </summary>
+        /// <param name="count"></param>
+        /// <returns></returns>
+        public Hand GetHand(int count)
+        {
+            if (count > Const.Count)
+                count = Const.Count;
+            int first = Const.Count - count;
+
+            Hand result = new Hand();
+            result.Const = Const.GetRange(first, count);
+            result.Tremor = Tremor.GetRange(first, count);
+
+            return result;
+        }
+        #endregion
     }
 }

@@ -11,7 +11,6 @@ namespace tEngine.TMeter.DataModel
     [DataContract]
     public class Measurement
     {
-
         private TData mData = new TData();
 
         public TData Data
@@ -28,7 +27,7 @@ namespace tEngine.TMeter.DataModel
             set { mData.Time = value; }
         }
 
-        private User Owner { get; set; }
+        public User Owner { get; set; }
 
         public Measurement() => Init();
 
@@ -38,19 +37,9 @@ namespace tEngine.TMeter.DataModel
             // полное копирование Msm
             //Д: пизда какое медленное копирование
             LoadFromArray(msm.ToByteArray());
-
-            /* var pinfo = msm.GetType().GetProperties();
-             pinfo.ToList().ForEach( info => {
-                 if( info.CanRead && info.CanWrite ) {
-                     info.SetValue( this, info.GetValue( msm, null ), null );
-                 }
-             } );
-             this.mData = msm.mData;*/
         }
 
         public void AddData(Hand left, Hand right) => mData.AddHands(left, right);
-
-        public void Clear() => mData.Clear();
 
         public void Copy(Measurement msm)
         {
@@ -61,10 +50,6 @@ namespace tEngine.TMeter.DataModel
             SetData(msm.Data);
         }
 
-        public int DataLength() => mData.DataLength();
-
-        public User GetOwner() => Owner;
-
         public static Measurement GetTestMsm(User owner = null, string title = "Измерение")
         {
             Measurement testMsm = new Measurement()
@@ -74,7 +59,6 @@ namespace tEngine.TMeter.DataModel
                 CreateTime = DateTime.Now,
                 MsmTime = 5
             };
-
 
             int garmonics = 10;
 
@@ -98,7 +82,7 @@ namespace tEngine.TMeter.DataModel
                     Tremor = dataTremor.Select(s => (short)(s + 10)).ToList()
                 });
 
-            testMsm.UserAssociated(owner);
+            testMsm.Owner=owner;
             return testMsm;
         }
 
@@ -124,7 +108,6 @@ namespace tEngine.TMeter.DataModel
             double[] Delta = Data.GetCorrelation(Hands.Left).Select(dp => dp.X).ToArray();
             double[] LCorrelation = Data.GetCorrelation(Hands.Left).Select(dp => dp.Y).ToArray();
             double[] RCorrelation = Data.GetCorrelation(Hands.Right).Select(dp => dp.Y).ToArray();
-
 
             for (int i = 0; i < length; i++)
             {
@@ -166,11 +149,10 @@ namespace tEngine.TMeter.DataModel
 
         public void SetData(TData data)
         {
-            Debug.Assert(data != null);
-            mData = data;
+            if (data != null)
+                mData = data;
+            else throw new NullReferenceException("Параметр data не должен быть null");
         }
-
-        public void UserAssociated(User owner) => Owner = owner;
 
         private void Init() => ID = Guid.NewGuid();
 
@@ -185,9 +167,6 @@ namespace tEngine.TMeter.DataModel
         [DataMember]
         public string Comment { get; set; }
 
-        /// <summary>
-        /// Время и дата записи
-        /// </summary>
         [DataMember]
         public DateTime CreateTime { get; set; }
 

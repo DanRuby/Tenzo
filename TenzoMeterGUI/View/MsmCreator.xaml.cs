@@ -39,25 +39,13 @@ namespace TenzoMeterGUI.View
             DataContext = mDataContext;
         }
 
-        public void PostSave()
-        {
-            mDataContext.PostSave();
-        }
+        public void PostSave() => mDataContext.PostSave();
 
-        public void PostScript()
-        {
-            mDataContext.PostScript();
-        }
+        public void PostScript() => mDataContext.PostScript();
 
-        public void SetMsm(Measurement msm)
-        {
-            mDataContext.SetMsm(msm);
-        }
+        public void SetMsm(Measurement msm) => mDataContext.SetMsm(msm);
 
-        internal void PlotSelectedTab()
-        {
-            TabControl.SelectedIndex = 1;
-        }
+        internal void PlotSelectedTab() => TabControl.SelectedIndex = 1;
 
         private void Window_OnClosing(object sender, CancelEventArgs e)
         {
@@ -66,12 +54,11 @@ namespace TenzoMeterGUI.View
                 try
                 {
                     mDataContext.TimerProgress.Stop();
-                    mDataContext.PreClosed();
+                    //mDataContext.PreClosed();
                     DialogResult = mDataContext.DialogResult;
                 }
-                catch (Exception)
+                catch (Exception )
                 {
-                    //Debug.Assert( false, ex.Message );
                     NotDialogButResult = mDataContext.DialogResult;
                 }
             }
@@ -100,6 +87,31 @@ namespace TenzoMeterGUI.View
         public Command CMDCancelMsm { get; private set; }
         public Command CMDStartMsm { get; private set; }
         public Measurement CurrentMsm { get; private set; }
+
+        public MsmCreatorVM()
+        {
+            CMDBrowse = new Command(CMDBrowse_Func);
+            CMDAcceptMsm = new Command(CMDAcceptMsm_Func);
+            CMDCancelMsm = new Command(CMDCancelMsm_Func);
+            CMDStartMsm = new Command(CMDStartMsm_Func);
+
+
+            DoPostSave = AppSettings.GetValue("DoPostSave", false);
+            SavePath = AppSettings.GetValue("SavePath", "");
+            DoPostScript = AppSettings.GetValue("DoPostScript", false);
+            ScriptPath = AppSettings.GetValue("ScriptPath", "");
+
+            CurrentMsm = new Measurement();
+
+            SelectionEnable = true;
+
+            mTimerProgress = new DispatcherTimer();
+            mTimerProgress.Tick += TimerProgressOnTick;
+            mTimerProgress.Interval = new TimeSpan(0, 0, 0, 0, 100);
+            mTimerProgress.Stop();
+            CurrentTime = "00:00.00";
+            Progress = 20;
+        }
 
         /// <summary>
         /// Время для вывода на прогрессбар
@@ -175,7 +187,7 @@ namespace TenzoMeterGUI.View
 
         public bool SelectionEnable
         {
-            get { return mSelectionEnable && CurrentMsm.Data.IsSomeData; }
+            get { return mSelectionEnable && CurrentMsm.Data.HasSomeData; }
             set
             {
                 mSelectionEnable = value;
@@ -188,30 +200,7 @@ namespace TenzoMeterGUI.View
             get { return mTimerProgress; }
         }
 
-        public MsmCreatorVM()
-        {
-            CMDBrowse = new Command(CMDBrowse_Func);
-            CMDAcceptMsm = new Command(CMDAcceptMsm_Func);
-            CMDCancelMsm = new Command(CMDCancelMsm_Func);
-            CMDStartMsm = new Command(CMDStartMsm_Func);
-
-
-            DoPostSave = AppSettings.GetValue("DoPostSave", false);
-            SavePath = AppSettings.GetValue("SavePath", "");
-            DoPostScript = AppSettings.GetValue("DoPostScript", false);
-            ScriptPath = AppSettings.GetValue("ScriptPath", "");
-
-            CurrentMsm = new Measurement();
-
-            SelectionEnable = true;
-
-            mTimerProgress = new DispatcherTimer();
-            mTimerProgress.Tick += TimerProgressOnTick;
-            mTimerProgress.Interval = new TimeSpan(0, 0, 0, 0, 1000 / 10); //скорость обновления
-            mTimerProgress.Stop();
-            CurrentTime = "00:00.00";
-            Progress = 20;
-        }
+       
 
         public void PostSave()
         {
@@ -240,9 +229,6 @@ namespace TenzoMeterGUI.View
         public void SetMsm(Measurement msm)
         {
             CurrentMsm = new Measurement(msm);
-            //Cloner.CopyAllFields( CurrentMsm, msm );
-            //Cloner.CopyAllProperties( CurrentMsm, msm );
-            //CurrentMsm.SetData( msm.Data );
             NotifyPropertyChanged(m => m.CurrentMsm);
         }
 
@@ -254,7 +240,7 @@ namespace TenzoMeterGUI.View
                     MessageBoxIcon.Error);
                 return;
             }
-            if (CurrentMsm.Data.IsSomeData == false)
+            if (CurrentMsm.Data.HasSomeData == false)
             {
                 if (System.Windows.Forms.MessageBox.Show(@"Измерение не проведено, закрыть окно?", @"Предупреждение",
                     MessageBoxButtons.YesNo,
@@ -268,7 +254,7 @@ namespace TenzoMeterGUI.View
                     return;
                 }
             }
-            if (CurrentMsm.Data.IsBaseData == false)
+            if (CurrentMsm.Data.HasBaseData == false)
             {
                 await Task.Factory.StartNew(() =>
                 {
@@ -318,6 +304,7 @@ namespace TenzoMeterGUI.View
 
         private void CMDCancelMsm_Func()
         {
+            PreClosed();
             StopRecord();
             CurrentMsm = null;
             EndDialog(false);
@@ -422,7 +409,6 @@ namespace TenzoMeterGUI.View
             AppSettings.SetValue("SavePath", SavePath);
             AppSettings.SetValue("DoPostScript", DoPostScript);
             AppSettings.SetValue("ScriptPath", ScriptPath);
-
 
             AppSettings.SetValue("DataTime", CurrentMsm.MsmTime);
         }

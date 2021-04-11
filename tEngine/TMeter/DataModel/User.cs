@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.ComponentModel;
 using System.Diagnostics;
 using System.Globalization;
 using System.IO;
@@ -17,17 +18,6 @@ namespace tEngine.TMeter.DataModel
         public const string FOLDER_KEY = "LastUserFolder";
         private List<Measurement> mMsms;
 
-        public string BirthDateString
-        {
-            get
-            {
-                string date = BirthDate.ToString("dd");
-                string month = BirthDate.ToString("MMMM", new CultureInfo("ru-ru"));
-                string year = BirthDate.ToString("yyyy");
-                return date + "/" + month + "/" + year;
-            }
-        }
-
         public string FilePath { get; set; }
         public bool IsNotSaveChanges { get; set; }
 
@@ -38,24 +28,9 @@ namespace tEngine.TMeter.DataModel
 
         public User() => Init();
 
-        public User(User user)
-        {
-            Init();
-            LoadFromArray(user.ToByteArray());
-            
-            
-            /*var pinfo = user.GetType().GetProperties();
-            pinfo.ToList().ForEach( info => {
-                if( info.CanRead && info.CanWrite ) {
-                    info.SetValue( this, info.GetValue( user, null ), null );
-                }
-            } );
-            mMsms = user.mMsms;*/
-        }
-
         public void AddMsm(Measurement msm)
         {
-            msm.UserAssociated(this);
+            msm.Owner=this;
             mMsms.Add(msm);
             IsNotSaveChanges = true;
         }
@@ -67,24 +42,6 @@ namespace tEngine.TMeter.DataModel
                 dinfo.Create();
             return dinfo.GetFiles().Where(finfo => finfo.Extension.Equals(Constants.USER_EXT));
         }
-
-        public Measurement GetMsm(Guid msmId)
-        {
-            IEnumerable<Measurement> msms = mMsms.Where(msm => msm.ID.Equals(msmId));
-            Measurement[] enumerable = msms as Measurement[] ?? msms.ToArray();
-            return enumerable.Any() ? enumerable[0] : null;
-        }
-
-        public Measurement GetMsm(int index)
-        {
-            if (mMsms.Count > index)
-                return mMsms[index];
-            return null;
-        }
-
-        public int GetMsmCount() => mMsms.Count;
-
-        public IEnumerable<Measurement> GetMsms() => mMsms;
 
         public static User GetTestUser(string name = "Имя", int msmCount = 10)
         {
@@ -144,12 +101,6 @@ namespace tEngine.TMeter.DataModel
             IsNotSaveChanges = true;
         }
 
-        public void RemoveMsm(Guid msmId)
-        {
-            Measurement msm = GetMsm(msmId);
-            RemoveMsm(msm);
-        }
-
         public bool Restore()
         {
             byte[] bytes;
@@ -161,36 +112,11 @@ namespace tEngine.TMeter.DataModel
             return false;
         }
 
-        public bool Save()
-        {
-            string filepath = string.IsNullOrEmpty(FilePath) ? DefaultPath(this) : FilePath;
-            return Save(filepath);
-        }
-
-        public bool Save(string filePath)
-        {
-            try
-            {
-                //var settings = new JsonSerializerSettings {ContractResolver = new JSONContractResolver()};
-                //var json = JsonConvert.SerializeObject( this, settings );
-                //FileIO.WriteText( filePath, json );
-
-                FileIO.WriteBytes(filePath, ToByteArray());
-            }
-            catch (Exception ex)
-            {
-                Debug.Assert(false, ex.Message);
-            }
-            return true;
-        }
-
         public bool SaveDefaultPath()
         {
             string filepath = DefaultPath(this);
             return Save(filepath);
         }
-
-        public string ToString(bool longName = false) => longName ? UserLong() : UserShort();
 
         public string UserLong()
         {
@@ -207,9 +133,9 @@ namespace tEngine.TMeter.DataModel
             return str;
         }
 
+
         private string DefaultPath(User user)
         {
-            // var cDirectory = AppSettings.GetValue( User.FOLDER_KEY, Constants.AppDataFolder );
             string filepath = Constants.UsersFolder.CorrectSlash();
             filepath += user.ID + Constants.USER_EXT;
             return filepath;
@@ -221,6 +147,26 @@ namespace tEngine.TMeter.DataModel
             BirthDate = DateTime.Now;
             mMsms = new List<Measurement>();
             FilePath = DefaultPath(this);
+        }
+
+        private Measurement GetMsm(Guid msmId)
+        {
+            IEnumerable<Measurement> msms = mMsms.Where(msm => msm.ID.Equals(msmId));
+            Measurement[] enumerable = msms as Measurement[] ?? msms.ToArray();
+            return enumerable.Any() ? enumerable[0] : null;
+        }
+
+        private bool Save(string filePath)
+        {
+            try
+            {
+                FileIO.WriteBytes(filePath, ToByteArray());
+            }
+            catch (Exception ex)
+            {
+                Debug.Assert(false, ex.Message);
+            }
+            return true;
         }
 
         #region JSON
@@ -286,6 +232,58 @@ namespace tEngine.TMeter.DataModel
             return result;
         }
 
+        #endregion
+
+        #region No References
+        public bool Save()
+        {
+            string filepath = string.IsNullOrEmpty(FilePath) ? DefaultPath(this) : FilePath;
+            return Save(filepath);
+        }
+
+        public void RemoveMsm(Guid msmId)
+        {
+            Measurement msm = GetMsm(msmId);
+            RemoveMsm(msm);
+        }
+
+        public Measurement GetMsm(int index)
+        {
+            if (mMsms.Count > index)
+                return mMsms[index];
+            return null;
+        }
+
+        public int GetMsmCount() => mMsms.Count;
+
+        public IEnumerable<Measurement> GetMsms() => mMsms;
+
+        public User(User user)
+        {
+            Init();
+            LoadFromArray(user.ToByteArray());
+
+
+            /*var pinfo = user.GetType().GetProperties();
+            pinfo.ToList().ForEach( info => {
+                if( info.CanRead && info.CanWrite ) {
+                    info.SetValue( this, info.GetValue( user, null ), null );
+                }
+            } );
+            mMsms = user.mMsms;*/
+        }
+
+
+        public string BirthDateString
+        {
+            get
+            {
+                string date = BirthDate.ToString("dd");
+                string month = BirthDate.ToString("MMMM", new CultureInfo("ru-ru"));
+                string year = BirthDate.ToString("yyyy");
+                return date + "/" + month + "/" + year;
+            }
+        }
         #endregion
     }
 }

@@ -12,20 +12,17 @@ using tEngine.TMeter;
 
 namespace TenzoMeterGUI.View
 {
-    /// <summary>
-    /// Interaction logic for Markers.xaml
-    /// </summary>
     public partial class Markers : Window
     {
         private const int INTEGRATE_COUNT = 15;
         private static Device mDevice;
         private static Markers mWindow;
+        private DispatcherTimer dispetcherTimer;
         private Queue<int> mLeft = new Queue<int>();
-        private object mLock = new object();
         private Queue<int> mRight = new Queue<int>();
-        private DispatcherTimer mTimerDraw;
+        private object mLock = new object();
 
-        public static bool IsWindow
+        public static bool WindowNotNull
         {
             get { return mWindow != null; }
         }
@@ -84,19 +81,17 @@ namespace TenzoMeterGUI.View
         {
             mWindow = null;
         }
+
         public static Markers GetWindow()
         {
-            if (!IsWindow)
+            if (!WindowNotNull)
             {
                 mWindow = new Markers();
             }
             return mWindow;
         }
 
-        public void UpdateSettings()
-        {
-            MarkersArea.UpdateArea();
-        }
+        public void UpdateSettings() => MarkersArea.UpdateArea();
 
         internal Markers()
         {
@@ -104,13 +99,14 @@ namespace TenzoMeterGUI.View
             mDevice.Stop();
 
             InitializeComponent();
-            tgb.IsChecked = mDevice.DemoMode;
+            //Тестовая кнопка
+            //tgb.IsChecked = mDevice.DemoMode;
 
             WindowManager.UpdateWindowPos(GetType().Name, this);
-            mTimerDraw = new DispatcherTimer();
-            mTimerDraw.Tick += TimerDrawOnTick;
-            mTimerDraw.Interval = new TimeSpan(0, 0, 0, 0, 1000 / 25);
-            mTimerDraw.Start();
+            dispetcherTimer = new DispatcherTimer();
+            dispetcherTimer.Tick += TimerDrawOnTick;
+            dispetcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 40);
+            dispetcherTimer.Start();
 
             mDevice.AddListener(HandCallBack);
         }
@@ -128,29 +124,20 @@ namespace TenzoMeterGUI.View
             return;
         }
 
-        private void TimerDrawOnTick(object sender, EventArgs eventArgs)
-        {
-            MarkersArea.DrawPart(LeftHand, RightHand);
-        }
+        private void TimerDrawOnTick(object sender, EventArgs eventArgs) => MarkersArea.DrawPart(LeftHand, RightHand);
 
-        public void ReDraw()
-        {
-            MarkersArea.DrawPart(LeftHand, RightHand);
-        }
+        public void ReDraw() => MarkersArea.DrawPart(LeftHand, RightHand);
 
         private void Window_OnClosing(object sender, CancelEventArgs e)
         {
             mDevice.RemoveListener(HandCallBack);
             mDevice.Stop();
-            mTimerDraw.Stop();
+            dispetcherTimer.Stop();
             mWindow = null;
             WindowManager.SaveWindowPos(GetType().Name, this);
         }
 
-        private void Markers_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            mDevice.Start();
-        }
+        private void Markers_OnLoaded(object sender, RoutedEventArgs e) => mDevice.Start();
 
         private void ToggleButton_Click(object sender, RoutedEventArgs e)
         {

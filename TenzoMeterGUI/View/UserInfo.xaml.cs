@@ -207,30 +207,29 @@ namespace TenzoMeterGUI.View
             {
                 msg = "Необходимо заполнить поле \"Фамилия\"";
             }
-            else if (string.IsNullOrWhiteSpace(FName))
-            {
-                msg = "Необходимо заполнить поле \"Отчество\"";
-            }
             else
             {
                 Name = Name.Trim(' ');
                 SName = SName.Trim(' ');
-                FName = FName.Trim(' ');
+                if(!string.IsNullOrEmpty(FName))
+                    FName = FName.Trim(' ');
                 Regex validSymbols = new Regex(@"[*. \-_a-zA-Z0-9а-яА-Я]*");
                 string nameBad = validSymbols.Replace(Name, "");
                 string snameBad = validSymbols.Replace(SName, "");
-                string fnameBad = validSymbols.Replace(FName, "");
+                if (!string.IsNullOrWhiteSpace(FName))
+                {
+                    string fnameBad = validSymbols.Replace(FName, "");
+                    if (fnameBad.Length > 0)
+                        msg = $"Поле \"Отчество\" содержит недопустимые символы: {fnameBad}";
+                }
+
                 if (nameBad.Length > 0)
                 {
-                    msg = string.Format("Поле \"Имя\" содержит недопустимые символы: {0}", nameBad);
+                    msg = $"Поле \"Имя\" содержит недопустимые символы: {nameBad}";
                 }
                 else if (snameBad.Length > 0)
                 {
-                    msg = string.Format("Поле \"Фамилия\" содержит недопустимые символы: {0}", snameBad);
-                }
-                else if (fnameBad.Length > 0)
-                {
-                    msg = string.Format("Поле \"Отчество\" содержит недопустимые символы: {0}", fnameBad);
+                    msg = $"Поле \"Фамилия\" содержит недопустимые символы: {snameBad}";
                 }
             }
 

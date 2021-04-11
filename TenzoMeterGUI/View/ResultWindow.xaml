@@ -108,8 +108,8 @@
                                                       ToolTip="{Binding Content, RelativeSource={RelativeSource Self}}" />
                             </GridViewColumn>
                             <GridViewColumn
-                                DisplayMemberBinding="{Binding Data.IsSpectrum, Converter={converters:BooleanToSign}}"
-                                uc:GridViewSort.PropertyName="Data.IsSpectrum">
+                                DisplayMemberBinding="{Binding Data.HasSpectrum, Converter={converters:BooleanToSign}}"
+                                uc:GridViewSort.PropertyName="Data.HasSpectrum">
                                 <GridViewColumnHeader Content="Анализ"
                                                       ToolTip="{Binding Content, RelativeSource={RelativeSource Self}}" />
                             </GridViewColumn>

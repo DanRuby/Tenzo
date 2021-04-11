@@ -186,7 +186,8 @@ namespace TenzoMeterGUI.View
         {
             if (user == null) return false;
             user.SaveDefaultPath();
-            UserList.Add(user);
+            if(!UserList.Contains(user))
+                UserList.Add(user);
             return true;
         }
 
@@ -221,23 +222,24 @@ namespace TenzoMeterGUI.View
             if (uid.ShowDialog() == true)
             {
                 ShowBagel = true;
-                await Task<object>.Factory.StartNew(() =>
-                {
-                    if (uid.Result != null)
-                    {
-                        AddUserToBase(uid.Result);
-                        ResetList(uid.Result);
-                        IEnumerable<UserWorkSpace> windows =
-                            WindowManager.GetOpenWindows<UserWorkSpace>()
-                                .Select(window => (UserWorkSpace)window)
-                                .Where(uws => uws.ID.Equals(SelectedUser.ID));
-                        if (windows.Any())
-                        {
-                            windows.First().CopyUserInfo(uid.Result);
-                        }
-                    }
-                    return null;
-                });
+               // await Task<object>.Factory.StartNew(() =>
+                // {
+                     if (uid.Result != null)
+                     {
+                         AddUserToBase(uid.Result);
+                         ResetList(uid.Result);
+                         IEnumerable<UserWorkSpace> windows =
+                             WindowManager.GetOpenWindows<UserWorkSpace>()
+                                 .Select(window => (UserWorkSpace)window)
+                                 .Where(uws => uws.ID.Equals(SelectedUser.ID));
+                         if (windows.Any())
+                         {
+                             windows.First().CopyUserInfo(uid.Result);
+                         }
+                     }
+                    // return null;
+                 //});
+               
                 ShowBagel = false;
             }
 

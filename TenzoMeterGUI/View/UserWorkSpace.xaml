@@ -35,10 +35,10 @@
             <GridViewColumn DisplayMemberBinding="{Binding MsmTime}" uc:GridViewSort.PropertyName="MsmTime">
                 <GridViewColumnHeader Content="Время, с" ToolTip="{Binding Content, RelativeSource={RelativeSource Self}}"/>
             </GridViewColumn>
-            <!--<GridViewColumn DisplayMemberBinding="{Binding Data.IsBaseData}" uc:GridViewSort.PropertyName="Data.IsBaseData">
+            <!--<GridViewColumn DisplayMemberBinding="{Binding Data.HasBaseData}" uc:GridViewSort.PropertyName="Data.HasBaseData">
                 <GridViewColumnHeader Content="Первичный анализ" ToolTip="{Binding Content, RelativeSource={RelativeSource Self}}"/>
             </GridViewColumn>-->
-            <GridViewColumn DisplayMemberBinding="{Binding Data.IsSpectrum, Converter={converters:BooleanToSign}}" uc:GridViewSort.PropertyName="Data.IsSpectrum">
+            <GridViewColumn DisplayMemberBinding="{Binding Data.HasSpectrum, Converter={converters:BooleanToSign}}" uc:GridViewSort.PropertyName="Data.HasSpectrum">
                 <GridViewColumnHeader Content="Анализ" ToolTip="{Binding Content, RelativeSource={RelativeSource Self}}"/>
             </GridViewColumn>
             <GridViewColumn DisplayMemberBinding="{Binding CreateTime, StringFormat='{}{0:dd/MM/yyyy HH:mm }'}" uc:GridViewSort.PropertyName="CreateTime">
@@ -92,7 +92,7 @@
                     </Button.Content>
                 </Button>
 
-                <Button ToolTip="Закрыть окно" Command="{Binding CMDExit}"
+               <!-- <Button ToolTip="Закрыть окно" Command="{Binding CMDExit}"
                         HorizontalAlignment="Right" DockPanel.Dock="Right">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
@@ -100,17 +100,17 @@
                             <TextBlock Text="Закрыть" />
                         </StackPanel>
                     </Button.Content>
-                </Button>
+                </Button> 
                 <Button ToolTip="Сохранить изменения" Command="{Binding CMDSaveOpenUser}"
                         IsEnabled="{Binding IsNotSaveChanges}"
-                        HorizontalAlignment="Right" DockPanel.Dock="Right">
+                        HorizontalAlignment="Right" DockPanel.Dock="Right" Width="100">
                     <Button.Content>
                         <StackPanel Orientation="Horizontal">
                             <Image Source="/TenzoMeterGUI;component/icons/save.png" Stretch="None" />
-                            <TextBlock Text="Сохранить" />
+                            <TextBlock Text="Сохранить" /> 
                         </StackPanel>
                     </Button.Content>
-                </Button>
+                </Button>-->
             </DockPanel>
         </Grid>
         <Grid>
@@ -151,6 +151,16 @@
                             <Button Width="70" Height="25" ToolTip="Просмотр результатов" IsEnabled="{Binding IsMsm}" Command="{Binding CMDResultShow}">
                                 <Button.Content>
                                     <TextBlock Text="Результаты"/>
+                                </Button.Content>
+                            </Button>
+                            <Button ToolTip="Сохранить изменения" Command="{Binding CMDSaveOpenUser}"
+                        IsEnabled="{Binding IsNotSaveChanges}"
+                        HorizontalAlignment="Right" DockPanel.Dock="Right" Width="100" Height="25">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <Image Source="/TenzoMeterGUI;component/icons/save.png" Stretch="None" />
+                                        <TextBlock Text="Сохранить" />
+                                    </StackPanel>
                                 </Button.Content>
                             </Button>
                         </StackPanel>

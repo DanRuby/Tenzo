@@ -104,7 +104,7 @@ namespace tEngine.Helpers
         static AppSettings()
         {
             ConstantsClass.Add(Project.Meter, typeof(TMeter.Constants));
-            ConstantsClass.Add(Project.Actual, typeof(TActual.Constants));
+            //ConstantsClass.Add(Project.Actual, typeof(TActual.Constants));
         }
     }
 }

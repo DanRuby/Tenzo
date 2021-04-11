@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 
 namespace tEngine.TMeter
 {
@@ -30,7 +29,7 @@ namespace tEngine.TMeter
         }
     }
 
-    public class Constants1 : IConstants
+   /* public class Constants1 : IConstants
     {
         private static readonly string mAppDataFolder =
             Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TenzoMeter";
@@ -121,5 +120,5 @@ namespace tEngine.TMeter
                 if (hidden) dinfo.Attributes |= FileAttributes.Hidden;
             }
         }
-    }
+    }*/
 }

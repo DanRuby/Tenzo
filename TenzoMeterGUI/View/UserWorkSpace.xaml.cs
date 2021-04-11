@@ -58,8 +58,6 @@ namespace TenzoMeterGUI.View
         {
             mDataContext.User = user;
             return;
-            // полное копирование User
-            //mDataContext.User = new User(user);
         }
 
         public void UpdateAllProperties()
@@ -80,6 +78,16 @@ namespace TenzoMeterGUI.View
             if (mDataContext != null)
             {
                 mDataContext.PreClosed();
+                if (mDataContext.IsNotSaveChanges)
+                {
+                    MessageBoxResult answer = MessageBox.Show(string.Format("Имеются несохраненные изменения в: {0}. Сохранить?",
+                       mDataContext.User.UserLong()),"Предупреждение",
+                       MessageBoxButton.YesNoCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
+
+                    if (answer == MessageBoxResult.Cancel)
+                        e.Cancel = true;
+                    else mDataContext.CMDExit.DoExecute(answer);
+                }    
             }
             WindowManager.SaveWindowPos(GetType().Name, this);
             GC.Collect();
@@ -114,6 +122,32 @@ namespace TenzoMeterGUI.View
         public Command CMDShowMarkersSettings { get; private set; }
         public Command CMDSpectrumCalc { get; private set; }
         public Command CMDUpdateOxy { get; private set; }
+
+        public UserWorkSpaceVM()
+        {
+            CMDExportCSV = new Command(CMDExportCSV_Func);
+            CMDResultShow = new Command(CMDResultShow_Func);
+            CMDOxyPanelLoaded = new Command(CMDOxyPanelLoaded_Func);
+            CMDCreateTextFile = new Command(CMDCreateTextFile_Func);
+            CMDNewMsm = new Command(CMDNewMsm_Func);
+            CMDEditSelectedMsm = new Command(CMDEditSelectedMsm_Func);
+            CMDResetMsmList = new Command(CMDResetMsmList_Func);
+            CMDRemoveSelectedMsm = new Command(CMDRemoveSelectedMsm_Func);
+            CMDSaveOpenUser = new Command(CMDSaveOpenUser_Func);
+            CMDExit = new Command(CMDExit_Func);
+            CMDShowMarkers = new Command(CMDShowMarkers_Func);
+            CMDShowMarkersSettings = new Command(CMDShowMarkersSettings_Func);
+            CMDFocusChanged = new Command(CMDFocusChanged_Func);
+            CMDSpectrumCalc = new Command(CMDSpectrumCalc_Func);
+            CMDOxyLoad = new Command(CMDOxyLoad_Func);
+            CMDOxyUnload = new Command(CMDOxyUnload_Func);
+            CMDUpdateOxy = new Command(CMDUpdateOxy_Func);
+
+            if (IsDesignMode)
+            {
+                User = User.GetTestUser();
+            }
+        }
 
         public ObservableCollection<DataToShow> DataToShowList
         {
@@ -163,7 +197,7 @@ namespace TenzoMeterGUI.View
 
         public bool IsMarkersShow
         {
-            get { return Markers.IsWindow; }
+            get { return Markers.WindowNotNull; }
         }
 
         public bool IsMsm
@@ -240,34 +274,10 @@ namespace TenzoMeterGUI.View
 
         public string WindowTitle
         {
-            get { return User.ToString(true) + (IsNotSaveChanges ? "*" : ""); }
+            get { return User.UserLong() + (IsNotSaveChanges ? "*" : ""); }
         }
 
-        public UserWorkSpaceVM()
-        {
-            CMDExportCSV = new Command(CMDExportCSV_Func);
-            CMDResultShow = new Command(CMDResultShow_Func);
-            CMDOxyPanelLoaded = new Command(CMDOxyPanelLoaded_Func);
-            CMDCreateTextFile = new Command(CMDCreateTextFile_Func);
-            CMDNewMsm = new Command(CMDNewMsm_Func);
-            CMDEditSelectedMsm = new Command(CMDEditSelectedMsm_Func);
-            CMDResetMsmList = new Command(CMDResetMsmList_Func);
-            CMDRemoveSelectedMsm = new Command(CMDRemoveSelectedMsm_Func);
-            CMDSaveOpenUser = new Command(CMDSaveOpenUser_Func);
-            CMDExit = new Command(CMDExit_Func);
-            CMDShowMarkers = new Command(CMDShowMarkers_Func);
-            CMDShowMarkersSettings = new Command(CMDShowMarkersSettings_Func);
-            CMDFocusChanged = new Command(CMDFocusChanged_Func);
-            CMDSpectrumCalc = new Command(CMDSpectrumCalc_Func);
-            CMDOxyLoad = new Command(CMDOxyLoad_Func);
-            CMDOxyUnload = new Command(CMDOxyUnload_Func);
-            CMDUpdateOxy = new Command(CMDUpdateOxy_Func);
-
-            if (IsDesignMode)
-            {
-                User = User.GetTestUser();
-            }
-        }
+      
 
         public void OpenMsm(Measurement msm)
         {
@@ -335,35 +345,22 @@ namespace TenzoMeterGUI.View
             wnd.Show();
         }
 
-        private async void CMDExit_Func()
+        private async void CMDExit_Func(object param)
         {
-            if (IsNotSaveChanges)
-            {
-                MessageBoxResult answer =
-                    MessageBox.Show(
-                        string.Format("Имеются несохраненные изменения в: {0}. Сохранить?", User.UserLong()),
-                        "Предупреждение",
-                        MessageBoxButton.YesNoCancel, MessageBoxImage.Warning, MessageBoxResult.Cancel);
+                MessageBoxResult answer = (MessageBoxResult)param;
                 if (answer == MessageBoxResult.Yes)
                 {
                     CMDSaveOpenUser_Func();
                 }
-                else if (answer == MessageBoxResult.Cancel)
-                {
-                    return;
-                }
-                else if (answer == MessageBoxResult.No)
+                else 
                 {
                     IsBusy = true;
                     await Task.Factory.StartNew(() => { User.Restore(); });
                     IsBusy = false;
                 }
-            }
-            if (Parent != null)
-                Parent.Close();
         }
 
-        private void CMDExportCSV_Func()
+            private void CMDExportCSV_Func()
         {
             using (SaveFileDialog sfd = new SaveFileDialog())
             {
@@ -484,7 +481,7 @@ namespace TenzoMeterGUI.View
 
         private void CMDShowMarkers_Func()
         {
-            if (!Markers.IsWindow)
+            if (!Markers.WindowNotNull)
             {
                 Markers wnd = Markers.GetWindow();
                 wnd.Closed += (sender, args) => { NotifyPropertyChanged(m => m.IsMarkersShow); };
@@ -501,7 +498,7 @@ namespace TenzoMeterGUI.View
             MarkersSet ms = new MarkersSet();
             if (ms.ShowDialog() == true)
             {
-                bool needClose = !Markers.IsWindow;
+                bool needClose = !Markers.WindowNotNull;
 
                 Markers wnd = Markers.GetWindow();
                 wnd.UpdateSettings();
@@ -513,7 +510,8 @@ namespace TenzoMeterGUI.View
         private void CMDSpectrumCalc_Func()
         {
             Measurement first = User.Msms.First(msm => SelectedMsm.ID.Equals(msm.ID));
-            if (first == null) return;
+            if (first == null) 
+                return;
             IsBusy = true;
             first.Data.SpectrumAnalys(null, (data, b) =>
             {

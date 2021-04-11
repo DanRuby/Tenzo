@@ -135,13 +135,8 @@
     <Compile Include="Converters\ValueCorrect.cs" />
     <Compile Include="Helpers\CustomGrid.cs" />
     <Compile Include="NewStyles\CommonStyles.cs" />
-    <Compile Include="ViewModel\CreatorMsmVM.cs" />
-    <Compile Include="ViewModel\CreatorRschVM.cs" />
     <Compile Include="View\Markers.xaml.cs">
       <DependentUpon>Markers.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="View\MarkersControl.xaml.cs">
-      <DependentUpon>MarkersControl.xaml</DependentUpon>
     </Compile>
     <Compile Include="View\MsmCreator.xaml.cs">
       <DependentUpon>MsmCreator.xaml</DependentUpon>
@@ -160,9 +155,6 @@
     </Compile>
     <Compile Include="View\UserWorkSpace.xaml.cs">
       <DependentUpon>UserWorkSpace.xaml</DependentUpon>
-    </Compile>
-    <Compile Include="WPFComponents\UserLine.xaml.cs">
-      <DependentUpon>UserLine.xaml</DependentUpon>
     </Compile>
     <Page Include="NewStyles\CommonStyles.xaml">
       <SubType>Designer</SubType>
@@ -184,10 +176,6 @@
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
-    <Page Include="Styles\ListViews\RschListView.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Styles\ToolBarButtons.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
@@ -200,19 +188,11 @@
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
-    <Page Include="Styles\ListBoxes\RschStyles.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
     <Page Include="Styles\MenuStyles.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\Markers.xaml">
-      <Generator>MSBuild:Compile</Generator>
-      <SubType>Designer</SubType>
-    </Page>
-    <Page Include="View\MarkersControl.xaml">
       <Generator>MSBuild:Compile</Generator>
       <SubType>Designer</SubType>
     </Page>
@@ -237,10 +217,6 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
     <Page Include="View\UserWorkSpace.xaml">
-      <SubType>Designer</SubType>
-      <Generator>MSBuild:Compile</Generator>
-    </Page>
-    <Page Include="WPFComponents\UserLine.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>
     </Page>
@@ -271,9 +247,7 @@
     </None>
     <AppDesigner Include="Properties\" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Styles\TabItems\" />
-  </ItemGroup>
+  <ItemGroup />
   <ItemGroup>
     <BootstrapperPackage Include=".NETFramework,Version=v4.0">
       <Visible>False</Visible>

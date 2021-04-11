@@ -18,7 +18,6 @@ namespace tEngine.DataModel
         Right
     }
 
-
     [DataContract]
     public class TData
     {
@@ -67,28 +66,28 @@ namespace tEngine.DataModel
             }
         }
 
-        public bool IsBaseData
+        public bool HasBaseData
         {
             get
             {
-                return mHandsData[0].IsConstant && mHandsData[1].IsConstant &&
-                       mHandsData[0].IsTremor && mHandsData[1].IsTremor;
+                return mHandsData[0].HasConstant && mHandsData[1].HasConstant &&
+                       mHandsData[0].HasTremor && mHandsData[1].HasTremor;
             }
         }
 
-        public bool IsCorrelation
+        public bool HasCorrelation
         {
-            get { return mHandsData[0].IsCorrelation && mHandsData[1].IsCorrelation; }
+            get { return mHandsData[0].HasCorrelation && mHandsData[1].HasCorrelation; }
         }
 
-        public bool IsSomeData
+        public bool HasSomeData
         {
             get { return !(mHands[0].Const.IsNullOrEmpty() || mHands[1].Const.IsNullOrEmpty()); }
         }
 
-        public bool IsSpectrum
+        public bool HasSpectrum
         {
-            get { return mHandsData[0].IsSpectrum && mHandsData[1].IsSpectrum; }
+            get { return mHandsData[0].HasSpectrum && mHandsData[1].HasSpectrum; }
         }
 
         public HAND_DATA Left
@@ -186,8 +185,6 @@ namespace tEngine.DataModel
             }
         }
 
-        public int DataLength() => mHands[0].GetLength();
-
         public IList<DataPoint> GetConst(Hands hand)
         {
             int index = (hand == Hands.Left) ? 0 : 1;
@@ -219,44 +216,6 @@ namespace tEngine.DataModel
         }
 
         /// <summary>
-        /// Возвращает спектр на заданном диапазоне частот (из имеющихся)
-        /// </summary>
-        /// <param name="hand"></param>
-        /// <param name="minimum">Нижняя граница, Гц</param>
-        /// <param name="maximum">Верхняя граница, Гц</param>
-        /// <returns></returns>
-        public IList<DataPoint> GetSpectrumByHz(Hands hand, double minimum, double maximum)
-        {
-            int start = -1;
-            int end = -1;
-            int index = (hand == Hands.Left) ? 0 : 1;
-            if (mHandsData[index].Spectrum.Data == null)
-                return null;
-
-            if (double.IsNaN(minimum) == false)
-            {
-                IOrderedEnumerable<DataPoint> sortedValues = mHandsData[index].Spectrum.Data.OrderBy(dp => dp.X);
-                IEnumerable<DataPoint> goodValues = sortedValues.Where(dp => dp.X >= minimum);
-                DataPoint first = goodValues.Any() ? goodValues.First() : sortedValues.FirstOrDefault();
-
-
-                Debug.Assert(first.IsDefined());
-                start = mHandsData[index].Spectrum.Data.IndexOf(first);
-            }
-            if (double.IsNaN(maximum) == false)
-            {
-                IOrderedEnumerable<DataPoint> sortedValues = mHandsData[index].Spectrum.Data.OrderBy(dp => dp.X);
-                IEnumerable<DataPoint> goodValues = sortedValues.Where(dp => dp.X >= maximum);
-                DataPoint last = goodValues.Any() ? goodValues.Last() : sortedValues.LastOrDefault();
-
-                Debug.Assert(last.IsDefined());
-                end = mHandsData[index].Spectrum.Data.IndexOf(last);
-            }
-            return GetSpectrum(hand).Where((dp, i) => i > start && i < end).ToList();
-        }
-
-
-        /// <summary>
         /// Возвращает амплитуду тремора
         /// </summary>
         /// <param name="hand"></param>
@@ -277,19 +236,6 @@ namespace tEngine.DataModel
         {
             int index = (hand == Hands.Left) ? 0 : 1;
             return mHands[index].Tremor;
-        }
-
-        /// <summary>
-        /// Возвращает процент тремора от средней постоянной
-        /// </summary>
-        /// <param name="hand"></param>
-        /// <returns></returns>
-        public double GetTremorPercent(Hands hand)
-        {
-            int index = (hand == Hands.Left) ? 0 : 1;
-            double tremor = GetTremorAmplitude(hand);
-            double force = mHandsData[index].Constant.Mean;
-            return tremor * 100.0 / force;
         }
 
         public bool LoadFromArray(byte[] array)
@@ -510,6 +456,44 @@ namespace tEngine.DataModel
             }
             return true;
         }
+        #region No References
+        /// <summary>
+        /// Возвращает спектр на заданном диапазоне частот (из имеющихся)
+        /// </summary>
+        /// <param name="hand"></param>
+        /// <param name="minimum">Нижняя граница, Гц</param>
+        /// <param name="maximum">Верхняя граница, Гц</param>
+        /// <returns></returns>
+        public IList<DataPoint> GetSpectrumByHz(Hands hand, double minimum, double maximum)
+        {
+            int start = -1;
+            int end = -1;
+            int index = (hand == Hands.Left) ? 0 : 1;
+            if (mHandsData[index].Spectrum.Data == null)
+                return null;
+
+            if (double.IsNaN(minimum) == false)
+            {
+                IOrderedEnumerable<DataPoint> sortedValues = mHandsData[index].Spectrum.Data.OrderBy(dp => dp.X);
+                IEnumerable<DataPoint> goodValues = sortedValues.Where(dp => dp.X >= minimum);
+                DataPoint first = goodValues.Any() ? goodValues.First() : sortedValues.FirstOrDefault();
+
+
+                Debug.Assert(first.IsDefined());
+                start = mHandsData[index].Spectrum.Data.IndexOf(first);
+            }
+            if (double.IsNaN(maximum) == false)
+            {
+                IOrderedEnumerable<DataPoint> sortedValues = mHandsData[index].Spectrum.Data.OrderBy(dp => dp.X);
+                IEnumerable<DataPoint> goodValues = sortedValues.Where(dp => dp.X >= maximum);
+                DataPoint last = goodValues.Any() ? goodValues.Last() : sortedValues.LastOrDefault();
+
+                Debug.Assert(last.IsDefined());
+                end = mHandsData[index].Spectrum.Data.IndexOf(last);
+            }
+            return GetSpectrum(hand).Where((dp, i) => i > start && i < end).ToList();
+        }
+
 
         #region Закоменченные методы
         //private void CalculateBaseParam() {
@@ -593,7 +577,20 @@ namespace tEngine.DataModel
         //        mSpectrumParameters["spectrum_d2-" + Hands.Right] = df_rigth2[1];
         //    }
         //}
-        #endregion
+        #endregion Закоменченные методы
+
+        /// <summary>
+        /// Возвращает процент тремора от средней постоянной
+        /// </summary>
+        /// <param name="hand"></param>
+        /// <returns></returns>
+        public double GetTremorPercent(Hands hand)
+        {
+            int index = (hand == Hands.Left) ? 0 : 1;
+            double tremor = GetTremorAmplitude(hand);
+            double force = mHandsData[index].Constant.Mean;
+            return tremor * 100.0 / force;
+        }
 
         /// <summary>
         /// Возвращает часть коллекции в заданном диапазоне, с заданным разрешением
@@ -687,6 +684,7 @@ namespace tEngine.DataModel
             return result;
         }
 
+        #endregion No References
         private enum DataMode
         {
             First,
@@ -695,12 +693,9 @@ namespace tEngine.DataModel
 
         #region TaskPool
 
-        #region Queue
-
         private const int INDEX_ID = 0;
         private const int INDEX_TASK = 1;
         private const int INDEX_CTS = 2;
-
 
         [NonSerialized]
         private static List<object[]> TaskPoolQueue = new List<object[]>();
@@ -759,169 +754,8 @@ namespace tEngine.DataModel
             }
         }
 
-        #endregion
-
-        ///// <summary>
-        ///// id -> [ Task, CancellationTokenSource ]
-        ///// </summary>
-        ///// 
-        //[NonSerialized]
-        //private static Dictionary<Guid, object[]> TaskPool = new Dictionary<Guid, object[]>();
-
-        //[NonSerialized]
-        //private static Dictionary<Guid, object[]> TaskPoolFinal = new Dictionary<Guid, object[]>();
-
         private static readonly object mLock = new object();
 
-
-        //private static void AddTask( Guid id, Task taska, CancellationTokenSource cts, bool final = false ) {
-        //    if( final ) {
-        //        TaskPoolFinal.Add( id, new object[] {taska, cts} );
-        //    } else {
-        //        TaskPool.Add( id, new object[] {taska, cts} );
-        //    }
-        //}
-
-        //private static void RemoveTask( Guid id ) {
-        //    if( TaskPool.ContainsKey( id ) ) {
-        //        TaskPool.Remove( id );
-        //    } else if( TaskPoolFinal.ContainsKey( id ) ) {
-        //        TaskPoolFinal.Remove( id );
-        //    }
-        //}
-
-        //public static CancellationTokenSource GetCancellationTokenSource( Guid id ) {
-        //    if( TaskPool.ContainsKey( id ) )
-        //        return TaskPool[id][1] as CancellationTokenSource;
-        //    else if( TaskPoolFinal.ContainsKey( id ) )
-        //        return TaskPoolFinal[id][1] as CancellationTokenSource;
-        //    return null;
-        //}
-
-        //public static Task GetTask( Guid id ) {
-        //    if( TaskPool.ContainsKey( id ) )
-        //        return TaskPool[id][0] as Task;
-        //    else if( TaskPoolFinal.ContainsKey( id ) )
-        //        return TaskPoolFinal[id][0] as Task;
-        //    return null;
-        //}
-
-        //public static Guid AddFinal( Action action ) {
-        //    var id = Guid.NewGuid();
-        //    var cts = new CancellationTokenSource();
-        //    var lastTaskID = TaskPool.Last().Key;
-
-        //    var taska = Task.Factory.StartNew( ( param ) => {
-        //        var cancelTok = (CancellationToken) param;
-        //        while( !cancelTok.IsCancellationRequested ) {
-        //            if( TaskPool.Count == 0 ) {
-        //                if( action != null )
-        //                    action();
-        //                break;
-        //            }
-        //            Thread.Sleep( 20 );
-        //        }
-        //        RemoveTask( id );
-        //    }, cts.Token, cts.Token );
-        //    AddTask( id, taska, cts, true );
-        //    return id;
-        //}
-
         #endregion
-    }
-
-    public class HAND_DATA
-    {
-        public STDATA Constant { get; set; }
-        public STDATA Correlation { get; set; }
-
-        public bool IsConstant
-        {
-            get { return Constant.IsData; }
-        }
-
-        public bool IsCorrelation
-        {
-            get { return Correlation.IsData; }
-        }
-
-        public bool IsSpectrum
-        {
-            get { return Spectrum.IsData; }
-        }
-
-        public bool IsTremor
-        {
-            get { return Tremor.IsData; }
-        }
-
-        public STDATA Spectrum { get; set; }
-        public STDATA Tremor { get; set; }
-
-        public HAND_DATA()
-        {
-            Constant = new STDATA();
-            Correlation = new STDATA();
-            Spectrum = new STDATA();
-            Tremor = new STDATA();
-        }
-
-        public void Clear()
-        {
-            Constant.Clear();
-            Correlation.Clear();
-            Spectrum.Clear();
-            Tremor.Clear();
-        }
-    }
-
-    public class STDATA
-    {
-        private List<DataPoint> mData;
-        public int Count { get; set; }
-
-        public List<DataPoint> Data
-        {
-            get { return mData; }
-            set
-            {
-                mData = value;
-                if (mData != null)
-                {
-                    Count = mData.Count;
-                    if (Count > 0)
-                    {
-                        Mean = mData.Average(point => point.Y);
-                        Min = mData.Min(point => point.Y);
-                        Max = mData.Max(point => point.Y);
-                    }
-                    else
-                    {
-                        Mean = 0;
-                        Min = 0;
-                        Max = 0;
-                    }
-                }
-            }
-        }
-
-        public bool IsData
-        {
-            get { return Data != null && Count > 0; }
-        }
-
-        public double Max { get; private set; }
-        public double Mean { get; private set; }
-        public double Min { get; private set; }
-
-        public STDATA()
-        {
-            Data = new List<DataPoint>();
-        }
-
-        public void Clear()
-        {
-            Data = new List<DataPoint>();
-        }
     }
 }

@@ -37,15 +37,11 @@ namespace tEngine
     public class CommonConstants : BConstants
     {
         public const int DEVICE_ID = 33;
-        public new static string AppDataFolder { get; set; }
-        public new static string ApplicationFolder { get; set; }
 
         public CommonConstants()
         {
             AppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\Tenzo";
             ApplicationFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.Tenzo";
-            base.AppDataFolder = AppDataFolder;
-            base.ApplicationFolder = ApplicationFolder;
             CreateDirectory(AppDataFolder);
             CreateDirectory(ApplicationFolder, true);
         }

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Globalization;
 using System.Windows.Data;
-using tEngine.TActual.DataModel;
+//using tEngine.TActual.DataModel;
 
 namespace tEngine.MVVM.Converters
 {

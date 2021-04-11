@@ -22,9 +22,6 @@ using MessageBox = System.Windows.Forms.MessageBox;
 
 namespace TenzoMeterGUI.View
 {
-    /// <summary>
-    ///     Interaction logic for PdfSave.xaml
-    /// </summary>
     public partial class PdfSave : Window
     {
         private readonly PdfSaveVM mDataContext;
@@ -37,10 +34,7 @@ namespace TenzoMeterGUI.View
             DataContext = mDataContext;
         }
 
-        public void SetPrintData(User user, List<Measurement> msms, List<ResultWindowVM.PlotSetResult> settings)
-        {
-            mDataContext.SetPrintData(user, msms, settings);
-        }
+        public void SetPrintData(User user, List<Measurement> msms, List<ResultWindowVM.PlotSetResult> settings) => mDataContext.SetPrintData(user, msms, settings);
 
         private void Window_OnClosing(object sender, CancelEventArgs e)
         {
@@ -50,18 +44,12 @@ namespace TenzoMeterGUI.View
                 {
                     DialogResult = mDataContext.DialogResult;
                 }
-                catch (Exception ex)
-                {
-                    Debug.Assert(false, ex.Message);
-                }
+                catch (Exception){ }
             }
             WindowManager.SaveWindowPos(GetType().Name, this);
         }
 
-        private void PdfSave_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            pve.InitModel();
-        }
+        private void PdfSave_OnLoaded(object sender, RoutedEventArgs e) => pve.InitModel();
     }
 
     public class PdfSaveVM : Observed<PdfSaveVM>
@@ -70,11 +58,7 @@ namespace TenzoMeterGUI.View
         private List<Measurement> mMsms;
         private List<ResultWindowVM.PlotSetResult> mSettings;
         private User mUser;
-        public Command CMDBrowse { get; private set; }
-        public Command CMDCancel { get; private set; }
-        public Command CMDDrawPlot { get; private set; }
-        public Command CMDSave { get; private set; }
-
+      
         public string FileName
         {
             get { return mFileName; }
@@ -96,6 +80,11 @@ namespace TenzoMeterGUI.View
         {
             get { return !(FileName.IsNullOrEmpty() || mMsms.IsNullOrEmpty()); }
         }
+
+        public Command CMDBrowse { get; private set; }
+        public Command CMDCancel { get; private set; }
+        public Command CMDDrawPlot { get; private set; }
+        public Command CMDSave { get; private set; }
 
         public PdfSaveVM()
         {
@@ -119,13 +108,14 @@ namespace TenzoMeterGUI.View
 
         public Document GenerateDataToPrint(User user, List<Measurement> msms, List<ResultWindowVM.PlotSetResult> settings)
         {
-            if (msms.IsNullOrEmpty()) return null;
+            if (msms.IsNullOrEmpty()) 
+                return null;
 
             Document doc = new Document();
             Section section = doc.AddSection();
 
-            section.AddParagraph().AddFormattedText(string.Format("ФИО: {0}", user.UserLong()), TextFormat.Bold);
-            section.AddParagraph().AddFormattedText(string.Format("{0}", user.Comment), new Font
+            section.AddParagraph().AddFormattedText($"ФИО: {user.UserLong()}", TextFormat.Bold);
+            section.AddParagraph().AddFormattedText($"{user.Comment}", new Font
             {
                 Size = 12,
                 Bold = false
@@ -223,20 +213,15 @@ namespace TenzoMeterGUI.View
             }
         }
 
-        private void CMDCancel_Func()
-        {
-            EndDialog(false);
-        }
+        private void CMDCancel_Func() => EndDialog(false);
 
         private void CMDDrawPlot_Func()
         {
             PlotViewEx pve = (Parent as PdfSave).pve;
-            //pve.InitModel();
 
             Measurement msm = mMsms[0];
             pve.Clear();
             pve.AddLineSeries(msm.Data.GetConst(Hands.Left), thickness: 2);
-            //pve.PlotModel.AcceptSettings( mSettings[0] );
             pve.ShowPlot = true;
             pve.ReDraw();
             pve.ShowPlot = false;
@@ -244,7 +229,6 @@ namespace TenzoMeterGUI.View
 
         private void CMDSave_Func()
         {
-            // todo файл на доступность для записи
             if (new DirectoryInfo(FileName.CutFileName()).Exists == false)
             {
                 MessageBox.Show(@"Неверно задан путь к месту сохранения", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
@@ -257,7 +241,6 @@ namespace TenzoMeterGUI.View
             AppSettings.SetValue("PDF_PrintCorr", PrintCorr);
             AppSettings.SetValue("PDF_OpenDoc", OpenDoc);
             AppSettings.SetValue("PDF_FileName", FileName);
-
 
             Document doc = GenerateDataToPrint(mUser, mMsms, mSettings);
 

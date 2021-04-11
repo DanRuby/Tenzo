@@ -283,7 +283,7 @@ namespace TenzoMeterGUI.View
         public void CreatePDF()
         {
             if (Msms.IsNullOrEmpty()) return;
-            User user = Msms.First().GetOwner();
+            User user = Msms.First().Owner;
 
             PdfSave wnd = WindowManager.NewWindow<PdfSave>();
             wnd.SetPrintData(user, MsmsToDraw.Cast<Measurement>().ToList(), mSettings.Select(psr =>

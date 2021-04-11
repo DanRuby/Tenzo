@@ -213,7 +213,7 @@ namespace tEngine.Recorder
         /// Д: как понимаю симуляция синуса для демоверсии
         /// </summary>
 
-        #region FakeData
+        #region TestData
 
         private static int FakeFirst = 0;
         private static ushort FakePackID = 0;
@@ -257,27 +257,7 @@ namespace tEngine.Recorder
             }
         }
 
-        #endregion FakeData
+        #endregion TestData
 
-        //Д: по идее это не нужно
-
-        #region Function From *DLL_NAME*
-
-        //[DllImport( DLL_NAME, CallingConvention = CallingConvention.Cdecl )]
-        //private static extern bool DLLIsConnect();
-
-        //[DllImport( DLL_NAME, CallingConvention = CallingConvention.Cdecl )]
-        //private static extern bool USBInit();
-
-        //[DllImport( DLL_NAME, CallingConvention = CallingConvention.Cdecl )]
-        //private static extern bool USBIsConnect();
-
-        //[DllImport( DLL_NAME, CallingConvention = CallingConvention.Cdecl )]
-        //private static extern bool USBReadData( IntPtr buffer, int size );
-
-        //[DllImport( DLL_NAME, CallingConvention = CallingConvention.Cdecl )]
-        //private static extern bool USBWriteData( IntPtr buffer, int size );
-
-        #endregion Function From *DLL_NAME*
     }
 }

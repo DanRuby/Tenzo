@@ -33,7 +33,6 @@ D:\GithubRepositories\Tenzo\bin\Release\lib\TenzoDevice_d.dll
 D:\GithubRepositories\Tenzo\bin\Release\tEngine.dll.config
 D:\GithubRepositories\Tenzo\bin\Release\tEngine.dll
 D:\GithubRepositories\Tenzo\bin\Release\tEngine.pdb
-D:\GithubRepositories\Tenzo\tEngine\obj\x86\Release\tEngine.csprojAssemblyReference.cache
 D:\GithubRepositories\Tenzo\tEngine\obj\x86\Release\Markers\UIMarkers.baml
 D:\GithubRepositories\Tenzo\tEngine\obj\x86\Release\UControls\RangeSlider.baml
 D:\GithubRepositories\Tenzo\tEngine\obj\x86\Release\Markers\MarkersSet.g.cs
@@ -58,3 +57,4 @@ D:\GithubRepositories\Tenzo\tEngine\obj\x86\Release\tEngine.csproj.CoreCompileIn
 D:\GithubRepositories\Tenzo\tEngine\obj\x86\Release\tEngine.csproj.CopyComplete
 D:\GithubRepositories\Tenzo\tEngine\obj\x86\Release\tEngine.dll
 D:\GithubRepositories\Tenzo\tEngine\obj\x86\Release\tEngine.pdb
+D:\GithubRepositories\Tenzo\tEngine\obj\x86\Release\tEngine.csprojAssemblyReference.cache

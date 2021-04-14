@@ -6,6 +6,7 @@ using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Runtime.Serialization;
 using System.Text;
 using tEngine.Helpers;
@@ -13,10 +14,12 @@ using tEngine.Helpers;
 namespace tEngine.TMeter.DataModel
 {
     [DataContract]
-    public class User
+    public class User:INotifyPropertyChanged
     {
         public const string FOLDER_KEY = "LastUserFolder";
         private List<Measurement> mMsms;
+
+    
 
         public string FilePath { get; set; }
         public bool IsNotSaveChanges { get; set; }
@@ -32,6 +35,8 @@ namespace tEngine.TMeter.DataModel
         {
             msm.Owner=this;
             mMsms.Add(msm);
+            RaisePropertyChanged(() => Msms);
+            RaisePropertyChanged(() => Msms.Count);
             IsNotSaveChanges = true;
         }
 
@@ -98,6 +103,8 @@ namespace tEngine.TMeter.DataModel
         public void RemoveMsm(Measurement msm)
         {
             mMsms.Remove(msm);
+            RaisePropertyChanged(()=>Msms);
+            RaisePropertyChanged(() => Msms.Count);
             IsNotSaveChanges = true;
         }
 
@@ -169,25 +176,90 @@ namespace tEngine.TMeter.DataModel
             return true;
         }
 
+        #region INotifyProoperty implementation
+        public event PropertyChangedEventHandler PropertyChanged;
+
+        void RaisePropertyChanged<T>(Expression<Func<T>> raiser)
+        {
+            var e = PropertyChanged;
+            if (e != null)
+            {
+                var propName = ((MemberExpression)raiser.Body).Member.Name;
+                e(this, new PropertyChangedEventArgs(propName));
+            }
+        }
+        public void NotifyMeasurmentChanged()
+        {
+            RaisePropertyChanged(() => Msms);
+            RaisePropertyChanged(() => Msms.Count);
+        }
+        #endregion
+
+        private string name;
+        private string sName;
+        private string fName;
+        private DateTime birthDate;
+        private string comment;
+
         #region JSON
 
         [DataMember]
-        public string Name { get; set; }
-
+        public string Name 
+        { 
+            get => name; 
+            set 
+            {
+                name = value;
+                RaisePropertyChanged(() => Name); 
+            } 
+        }
         [DataMember]
-        public string SName { get; set; }
-
+        public string SName
+        {
+            get => sName; 
+            set
+            {
+                sName = value;
+                RaisePropertyChanged(() => sName);
+            }
+        }
+      
         [DataMember]
-        public string FName { get; set; }
+        public string FName
+        {
+            get => fName; 
+            set
+            {
+                fName = value;
+                RaisePropertyChanged(() => FName);
+            }
+        }
 
         [DataMember]
         public Guid ID { get; private set; }
 
+        
         [DataMember]
-        public DateTime BirthDate { get; set; }
-
+        public DateTime BirthDate
+        {
+            get => birthDate; 
+            set
+            {
+                birthDate = value;
+                RaisePropertyChanged(() => BirthDate);
+            }
+        }
+        
         [DataMember]
-        public string Comment { get; set; }
+        public string Comment
+        {
+            get => comment; 
+            set
+            {
+                comment= value;
+                RaisePropertyChanged(() => Comment);
+            }
+        }
 
         #endregion
 

@@ -27,9 +27,9 @@ namespace TenzoMeterGUI.View
 
         public UserBase()
         {
+            mDataContext = new UserBaseVM() { Parent = this };
             InitializeComponent();
             WindowManager.UpdateWindowPos(GetType().Name, this);
-            mDataContext = new UserBaseVM() { Parent = this };
             DataContext = mDataContext;
         }
 
@@ -153,7 +153,7 @@ namespace TenzoMeterGUI.View
             get
             {
                 if (mUserList == null)
-                    mUserList = new ObservableCollection<User>(OpenUserList());
+                  mUserList = new ObservableCollection<User>(OpenUserList());
                 return mUserList;
             }
         }
@@ -184,10 +184,15 @@ namespace TenzoMeterGUI.View
 
         private bool AddUserToBase(User user)
         {
-            if (user == null) return false;
+            if (user == null) 
+                return false;
             user.SaveDefaultPath();
-            if(!UserList.Contains(user))
-                UserList.Add(user);
+            var found = UserList.FirstOrDefault(x => x.ID == user.ID);
+            if (found!=null)
+            {
+                int i = UserList.IndexOf(found);
+                UserList[i] = user;
+            }else UserList.Add(user);
             return true;
         }
 

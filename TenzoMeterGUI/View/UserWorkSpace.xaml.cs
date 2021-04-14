@@ -356,6 +356,7 @@ namespace TenzoMeterGUI.View
                 {
                     IsBusy = true;
                     await Task.Factory.StartNew(() => { User.Restore(); });
+                User.NotifyMeasurmentChanged();
                     IsBusy = false;
                 }
         }

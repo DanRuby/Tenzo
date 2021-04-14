@@ -26,7 +26,8 @@
             <Setter Property="IsReadOnly" Value="True" />
             <Setter Property="BorderThickness" Value="0" />
         </Style>
-        <GridView x:Key="UserList"  
+        
+        <GridView x:Key="List"  
                   x:Shared="False" AllowsColumnReorder="False" 
                   d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type={x:Type dataModel:User}}">
             <GridViewColumn DisplayMemberBinding="{Binding SName}" uc:GridViewSort.PropertyName="SName">
@@ -45,6 +46,7 @@
                 <GridViewColumnHeader Content="Измерений" ToolTip="Проведено измерений для пользователя"/>
             </GridViewColumn>
         </GridView>
+
     </Window.Resources>
 
     <Grid Background="{StaticResource Color_Back2}">
@@ -81,7 +83,7 @@
                                 </Button.Content>
                             </Button>
                         </StackPanel>
-                        <ListView ItemsSource="{Binding UserList}" View="{StaticResource UserList}" 
+                        <ListView View="{StaticResource List}" ItemsSource="{Binding UserList}" 
                                   SelectedItem="{Binding SelectedUser}" SelectedIndex="{Binding SelectedUserIndex}"
                                   IsSynchronizedWithCurrentItem="True"
                                   uc:GridViewSort.AutoSort="True">

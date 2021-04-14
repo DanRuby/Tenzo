@@ -5,8 +5,6 @@ VisualStudioVersion = 16.0.30104.148
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tEngine", "tEngine\tEngine.csproj", "{D4F88012-C043-4293-A84A-521ACF5FEA98}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tEngine.Test", "tEngine.Test\tEngine.Test.csproj", "{A249A114-D06D-43F9-B600-B866F468D87B}"
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TenzoMeterGUI", "TenzoMeterGUI\TenzoMeterGUI.csproj", "{57D1CB3E-45B9-48F5-96A5-CA90BF7ABF86}"
 EndProject
 Global
@@ -37,22 +35,6 @@ Global
 		{D4F88012-C043-4293-A84A-521ACF5FEA98}.Release|Win32.Build.0 = Release|x86
 		{D4F88012-C043-4293-A84A-521ACF5FEA98}.Release|x86.ActiveCfg = Release|x86
 		{D4F88012-C043-4293-A84A-521ACF5FEA98}.Release|x86.Build.0 = Release|x86
-		{A249A114-D06D-43F9-B600-B866F468D87B}.Debug|Any CPU.ActiveCfg = Debug|x86
-		{A249A114-D06D-43F9-B600-B866F468D87B}.Debug|Any CPU.Build.0 = Debug|x86
-		{A249A114-D06D-43F9-B600-B866F468D87B}.Debug|Mixed Platforms.ActiveCfg = Debug|x86
-		{A249A114-D06D-43F9-B600-B866F468D87B}.Debug|Mixed Platforms.Build.0 = Debug|x86
-		{A249A114-D06D-43F9-B600-B866F468D87B}.Debug|Win32.ActiveCfg = Debug|x86
-		{A249A114-D06D-43F9-B600-B866F468D87B}.Debug|Win32.Build.0 = Debug|x86
-		{A249A114-D06D-43F9-B600-B866F468D87B}.Debug|x86.ActiveCfg = Debug|x86
-		{A249A114-D06D-43F9-B600-B866F468D87B}.Debug|x86.Build.0 = Debug|x86
-		{A249A114-D06D-43F9-B600-B866F468D87B}.Release|Any CPU.ActiveCfg = Release|x86
-		{A249A114-D06D-43F9-B600-B866F468D87B}.Release|Any CPU.Build.0 = Release|x86
-		{A249A114-D06D-43F9-B600-B866F468D87B}.Release|Mixed Platforms.ActiveCfg = Release|x86
-		{A249A114-D06D-43F9-B600-B866F468D87B}.Release|Mixed Platforms.Build.0 = Release|x86
-		{A249A114-D06D-43F9-B600-B866F468D87B}.Release|Win32.ActiveCfg = Release|x86
-		{A249A114-D06D-43F9-B600-B866F468D87B}.Release|Win32.Build.0 = Release|x86
-		{A249A114-D06D-43F9-B600-B866F468D87B}.Release|x86.ActiveCfg = Release|x86
-		{A249A114-D06D-43F9-B600-B866F468D87B}.Release|x86.Build.0 = Release|x86
 		{57D1CB3E-45B9-48F5-96A5-CA90BF7ABF86}.Debug|Any CPU.ActiveCfg = Debug|x86
 		{57D1CB3E-45B9-48F5-96A5-CA90BF7ABF86}.Debug|Any CPU.Build.0 = Debug|x86
 		{57D1CB3E-45B9-48F5-96A5-CA90BF7ABF86}.Debug|Mixed Platforms.ActiveCfg = Debug|x86

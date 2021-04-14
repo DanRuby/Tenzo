@@ -57,7 +57,12 @@ namespace tEngine.Markers
         public int Grid
         {
             get { return mArea.Grid; }
-            set { mArea.Grid = value; }
+            set 
+            {
+                if (value > 0)
+                    mArea.Grid = value;
+                else mArea.Grid = 1;
+            }
         }
 
         public Color GridColor
@@ -75,13 +80,23 @@ namespace tEngine.Markers
         public int M1Height
         {
             get { return mArea.Marker1.Height; }
-            set { mArea.Marker1.Height = value; }
+            set 
+            {
+                if (value > 0)
+                    mArea.Marker1.Height = value;
+                else mArea.Marker1.Height = 1;
+            }
         }
 
         public int M1Width
         {
             get { return mArea.Marker1.Width; }
-            set { mArea.Marker1.Width = value; }
+            set 
+            {
+                if (value > 0)
+                    mArea.Marker1.Width = value;
+                else mArea.Marker1.Width = 1;
+            }
         }
 
         public Color M2Color
@@ -93,13 +108,23 @@ namespace tEngine.Markers
         public int M2Height
         {
             get { return mArea.Marker2.Height; }
-            set { mArea.Marker2.Height = value; }
+            set 
+            {
+                if (value > 0)
+                    mArea.Marker2.Height = value;
+                else mArea.Marker2.Height = 1;
+            }
         }
 
         public int M2Width
         {
             get { return mArea.Marker2.Width; }
-            set { mArea.Marker2.Width = value; }
+            set 
+            {
+                if (value > 0)
+                    mArea.Marker2.Width= value;
+                else mArea.Marker2.Width = 1;
+            }
         }
 
         public int Maximum

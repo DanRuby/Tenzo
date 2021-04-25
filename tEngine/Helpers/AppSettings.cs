@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using Newtonsoft.Json;
-
+using tEngine.TMeter;
 
 namespace tEngine.Helpers
 {
@@ -11,22 +11,19 @@ namespace tEngine.Helpers
     /// </summary>
     public class AppSettings
     {
-        public enum Project
+       /* public enum Project
         {
             Empty,
             Meter,
             Actual
-        }
+        }*/
 
-        private static readonly Dictionary<Project, Type> ConstantsClass = new Dictionary<Project, Type>();
-        private static BConstants mConstants = null;
+        //private static readonly Dictionary<Project, Type> ConstantsClass = new Dictionary<Project, Type>();
+        private static Constants mConstants = null;
         private static Dictionary<string, string> Settings = new Dictionary<string, string>();
         private static bool WasOpen = false;
 
-        public static BConstants Constants
-        {
-            get { return mConstants; }
-        }
+        public static Constants Constants => mConstants;
 
         public static T GetValue<T>(string key, T defValue = default(T))
         {
@@ -47,10 +44,10 @@ namespace tEngine.Helpers
             }
         }
 
-        public static void Init(Project project = Project.Empty)
+        public static void Init()
         {
-            Type tp = ConstantsClass.ContainsKey(project) ? ConstantsClass[project] : typeof(CommonConstants);
-            mConstants = Activator.CreateInstance(tp) as BConstants;
+            //Type tp = ConstantsClass.ContainsKey(project) ? ConstantsClass[project] : typeof(CommonConstants);
+            mConstants = new Constants();//Activator.CreateInstance(tp) as BConstants;
             Open();
         }
 
@@ -103,7 +100,7 @@ namespace tEngine.Helpers
 
         static AppSettings()
         {
-            ConstantsClass.Add(Project.Meter, typeof(TMeter.Constants));
+            //ConstantsClass.Add(Project.Meter, typeof(TMeter.Constants));
             //ConstantsClass.Add(Project.Actual, typeof(TActual.Constants));
         }
     }

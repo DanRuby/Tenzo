@@ -254,14 +254,14 @@ namespace tEngine.PlotCreator
 
         public Action<PlotSet> AcceptSettingsAction
         {
-            get { return mDataContext.AcceptSettingsAction; }
-            set { mDataContext.AcceptSettingsAction = value; }
+            get => mDataContext.AcceptSettingsAction;
+            set => mDataContext.AcceptSettingsAction = value;
         }
 
         public PlotSet PlotSet
         {
-            get { return mDataContext.PlotSet; }
-            set { mDataContext.PlotSet = value; }
+            get => mDataContext.PlotSet;
+            set => mDataContext.PlotSet = value;
         }
 
         public PlotSettings()
@@ -327,7 +327,7 @@ namespace tEngine.PlotCreator
 
         public PlotModelEx PlotModel
         {
-            get { return mPlotModel; }
+            get => mPlotModel;
             set
             {
                 mPlotModel = value;
@@ -338,7 +338,7 @@ namespace tEngine.PlotCreator
 
         public PlotSet PlotSet
         {
-            get { return mPlotSet; }
+            get => mPlotSet;
             set
             {
                 mPlotSet = value;

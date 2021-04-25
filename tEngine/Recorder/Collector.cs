@@ -221,7 +221,7 @@ namespace tEngine.Recorder
 
         public static ushort FakeRequestId
         {
-            set { FakeRequestID = value; }
+            set => FakeRequestID = value;
         }
 
         private static short FakeSin(int param)

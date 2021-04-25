@@ -30,10 +30,7 @@ namespace tEngine.MVVM
         /// <summary>
         ///     Gets the cancel command.
         /// </summary>
-        public Command CancelCommand
-        {
-            get { return mCancelCommand; }
-        }
+        public Command CancelCommand => mCancelCommand;
 
         /// <summary>
         ///     Gets or sets a value indicating whether this instance is cancellation requested.
@@ -43,7 +40,7 @@ namespace tEngine.MVVM
         /// </value>
         public bool IsCancellationRequested
         {
-            get { return mIsCancellationRequested; }
+            get => mIsCancellationRequested;
             set
             {
                 if (mIsCancellationRequested != value)
@@ -62,7 +59,7 @@ namespace tEngine.MVVM
         /// </value>
         public bool IsExecuting
         {
-            get { return mIsExecuting; }
+            get => mIsExecuting;
             set
             {
                 if (mIsExecuting != value)

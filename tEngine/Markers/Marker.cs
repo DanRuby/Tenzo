@@ -23,7 +23,7 @@ namespace tEngine.Markers
 
         public Color Color
         {
-            get { return mColor; }
+            get => mColor;
             set
             {
                 mColor = value;
@@ -33,7 +33,7 @@ namespace tEngine.Markers
 
         public int Height
         {
-            get { return mHeight; }
+            get => mHeight;
             set
             {
                 mHeight = value;
@@ -43,7 +43,7 @@ namespace tEngine.Markers
 
         public int Width
         {
-            get { return mWidth; }
+            get => mWidth;
             set
             {
                 mWidth = value;

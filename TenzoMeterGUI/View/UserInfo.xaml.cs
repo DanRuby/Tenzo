@@ -25,14 +25,11 @@ namespace TenzoMeterGUI.View
 
         public bool EditMode
         {
-            get { return mDataContext != null && mDataContext.EditMode; }
+            get => mDataContext != null && mDataContext.EditMode;
             set { if (mDataContext != null) mDataContext.EditMode = value; }
         }
 
-        public User Result
-        {
-            get { return mDataContext == null ? null : mDataContext.GetUser(); }
-        }
+        public User Result => mDataContext == null ? null : mDataContext.GetUser();
 
         public UserInfo()
         {
@@ -91,13 +88,11 @@ namespace TenzoMeterGUI.View
 
         public bool EditMode
         {
-            get { return mEditMode; }
-            set
-            {
+            get => mEditMode;
+            set =>
                 //mEditMode = value;
                 // всегда можно редактировать
                 mEditMode = true;
-            }
         }
 
         public string FileTitle
@@ -117,7 +112,7 @@ namespace TenzoMeterGUI.View
 
         public bool IsEditableName
         {
-            get { return mIsEditableName; }
+            get => mIsEditableName;
             set
             {
                 // Сохранение того что уже набрано/собрано
@@ -260,7 +255,7 @@ namespace TenzoMeterGUI.View
 
         public DateTime BirthDate
         {
-            get { return mUser.BirthDate; }
+            get => mUser.BirthDate;
             set
             {
                 mUser.BirthDate = value;
@@ -270,7 +265,7 @@ namespace TenzoMeterGUI.View
 
         public string Comment
         {
-            get { return mUser.Comment; }
+            get => mUser.Comment;
             set
             {
                 mUser.Comment = value;
@@ -280,7 +275,7 @@ namespace TenzoMeterGUI.View
 
         public string FName
         {
-            get { return mUser.FName; }
+            get => mUser.FName;
             set
             {
                 mUser.FName = value;
@@ -291,7 +286,7 @@ namespace TenzoMeterGUI.View
 
         public string Name
         {
-            get { return mUser.Name; }
+            get => mUser.Name;
             set
             {
                 mUser.Name = value;
@@ -302,7 +297,7 @@ namespace TenzoMeterGUI.View
 
         public string SName
         {
-            get { return mUser.SName; }
+            get => mUser.SName;
             set
             {
                 mUser.SName = value;

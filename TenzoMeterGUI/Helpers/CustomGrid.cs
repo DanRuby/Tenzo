@@ -37,8 +37,8 @@ namespace TenzoMeterGUI.Helpers
 
         public bool ShowCustomGridLines
         {
-            get { return (bool)GetValue(ShowCustomGridLinesProperty); }
-            set { SetValue(ShowCustomGridLinesProperty, value); }
+            get => (bool)GetValue(ShowCustomGridLinesProperty);
+            set => SetValue(ShowCustomGridLinesProperty, value);
         }
 
         public static readonly DependencyProperty ShowCustomGridLinesProperty =
@@ -47,8 +47,8 @@ namespace TenzoMeterGUI.Helpers
 
         public Brush GridLineBrush
         {
-            get { return (Brush)GetValue(GridLineBrushProperty); }
-            set { SetValue(GridLineBrushProperty, value); }
+            get => (Brush)GetValue(GridLineBrushProperty);
+            set => SetValue(GridLineBrushProperty, value);
         }
 
         public static readonly DependencyProperty GridLineBrushProperty =
@@ -57,8 +57,8 @@ namespace TenzoMeterGUI.Helpers
 
         public double GridLineThickness
         {
-            get { return (double)GetValue(GridLineThicknessProperty); }
-            set { SetValue(GridLineThicknessProperty, value); }
+            get => (double)GetValue(GridLineThicknessProperty);
+            set => SetValue(GridLineThicknessProperty, value);
         }
 
         public static readonly DependencyProperty GridLineThicknessProperty =

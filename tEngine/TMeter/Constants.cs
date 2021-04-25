@@ -1,31 +1,43 @@
 ﻿using System;
+using System.IO;
 
 namespace tEngine.TMeter
 {
-    public class Constants : BConstants
+    public class Constants //: BConstants
     {
         public const int DEVICE_ID = 11;
-        public const string RSCH_EXT = ".tmr";
+//        public const string RSCH_EXT = ".tmr";
         public const string USER_EXT = ".tmu";
-        public new static string AppDataFolder { get; set; }
+        public  static string AppDataFolder { get; set; }
         public static string AppImageFolder { get; set; }
-        public new static string ApplicationFolder { get; set; }
-
-        public static string UsersFolder
-        {
-            get { return AppDataFolder + @"\Users"; }
-        }
+        public  static string ApplicationFolder { get; set; }
+        public string AppSettings => ApplicationFolder + "\\app.settings";
+        public string MarkersSettings => ApplicationFolder + "\\mark.settings";
+        public static string UsersFolder => AppDataFolder + @"\Users";
 
         public Constants()
         {
             AppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TenzoMeter";
             ApplicationFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.TenzoMeter";
             AppImageFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TenzoMeter\\Images";
-            base.AppDataFolder = AppDataFolder;
-            base.ApplicationFolder = ApplicationFolder;
+            //base.AppDataFolder = AppDataFolder;
+            //base.ApplicationFolder = ApplicationFolder;
             CreateDirectory(AppDataFolder);
             CreateDirectory(ApplicationFolder, true);
             CreateDirectory(AppImageFolder);
+        }
+
+
+        private static void CreateDirectory(string path, bool hidden = false)
+        {
+            DirectoryInfo dinfo = new DirectoryInfo(path);
+            if (dinfo.Exists == false)
+            {
+                dinfo.Create();
+            }
+            dinfo.Attributes = FileAttributes.Directory;
+            if (hidden)
+                dinfo.Attributes |= FileAttributes.Hidden;
         }
     }
 

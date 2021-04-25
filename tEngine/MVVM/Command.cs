@@ -51,7 +51,7 @@ namespace tEngine.MVVM
         /// </value>
         public bool CanExecute
         {
-            get { return mCanExecute; }
+            get => mCanExecute;
             set
             {
                 if (mCanExecute != value)

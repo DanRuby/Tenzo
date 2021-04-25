@@ -173,10 +173,7 @@ namespace tEngine.PlotCreator
             InvalidatePlot(true);
         }
 
-        public Guid ID
-        {
-            get { return mID; }
-        }
+        public Guid ID => mID;
 
         public void ResetModel()
         {

@@ -31,10 +31,7 @@ namespace TenzoMeterGUI.View
     {
         private UserWorkSpaceVM mDataContext;
 
-        public Guid ID
-        {
-            get { return mDataContext.User.ID; }
-        }
+        public Guid ID => mDataContext.User.ID;
 
         public UserWorkSpace()
         {
@@ -175,14 +172,11 @@ namespace TenzoMeterGUI.View
         }
 
         // для отладки
-        public int IndexInList
-        {
-            get { return Msms.IndexOf(SelectedMsm); }
-        }
+        public int IndexInList => Msms.IndexOf(SelectedMsm);
 
         public bool IsBusy
         {
-            get { return mIsBusy; }
+            get => mIsBusy;
             set
             {
                 mIsBusy = value;
@@ -190,24 +184,15 @@ namespace TenzoMeterGUI.View
             }
         }
 
-        public new bool IsDesignMode
-        {
-            get { return true; }
-        }
+        public new bool IsDesignMode => true;
 
-        public bool IsMarkersShow
-        {
-            get { return Markers.WindowNotNull; }
-        }
+        public bool IsMarkersShow => Markers.WindowNotNull;
 
-        public bool IsMsm
-        {
-            get { return SelectedMsm != null; }
-        }
+        public bool IsMsm => SelectedMsm != null;
 
         public bool IsNotSaveChanges
         {
-            get { return User.IsNotSaveChanges; }
+            get => User.IsNotSaveChanges;
             set
             {
                 User.IsNotSaveChanges = value;
@@ -216,16 +201,13 @@ namespace TenzoMeterGUI.View
             }
         }
 
-        public ObservableCollection<Measurement> Msms
-        {
-            get { return User.Msms; }
-        }
+        public ObservableCollection<Measurement> Msms => User.Msms;
 
         public bool SelectByIndex { get; set; }
 
         public Measurement SelectedMsm
         {
-            get { return mSelectedMsm; }
+            get => mSelectedMsm;
             set
             {
                 mSelectedMsm = value;
@@ -248,7 +230,7 @@ namespace TenzoMeterGUI.View
 
         public int SelectedMsmIndex
         {
-            get { return mSelectedMsmIndex; }
+            get => mSelectedMsmIndex;
             set
             {
                 mSelectedMsmIndex = value;
@@ -259,7 +241,7 @@ namespace TenzoMeterGUI.View
 
         public User User
         {
-            get { return mUser; }
+            get => mUser;
             set
             {
                 mUser = value;
@@ -272,12 +254,9 @@ namespace TenzoMeterGUI.View
             }
         }
 
-        public string WindowTitle
-        {
-            get { return User.UserLong() + (IsNotSaveChanges ? "*" : ""); }
-        }
+        public string WindowTitle => User.UserLong() + (IsNotSaveChanges ? "*" : "");
 
-      
+
 
         public void OpenMsm(Measurement msm)
         {
@@ -289,12 +268,12 @@ namespace TenzoMeterGUI.View
 
         public void PreClosed()
         {
-            TData.CancelCalc();
+            MeasurementData.CancelCalc();
         }
 
         public int R2Pixels(int percent)
         {
-            TData data = SelectedMsm.Data;
+            MeasurementData data = SelectedMsm.Data;
 
             int max = data.Count;
             int min = (int)(max / 10.0 > MINIMUM_POINTS ? MINIMUM_POINTS : max / 10.0);
@@ -525,7 +504,7 @@ namespace TenzoMeterGUI.View
                     IsNotSaveChanges = true;
                 }));
             }, true);
-            TData.StartCalc();
+            MeasurementData.StartCalc();
         }
 
         private Task CMDSpectrumCalc_Func_Async()
@@ -537,7 +516,7 @@ namespace TenzoMeterGUI.View
             {
                 bool exit = false;
                 first.Data.SpectrumAnalys(null, (data, b) => { exit = true; }, true);
-                TData.StartCalc();
+                MeasurementData.StartCalc();
                 while (exit == false)
                 {
                     Thread.Sleep(10);
@@ -609,7 +588,7 @@ namespace TenzoMeterGUI.View
             {
                 pve.Clear();
 
-                TData data = (SelectedMsm != null) ? SelectedMsm.Data : new TData();
+                MeasurementData data = (SelectedMsm != null) ? SelectedMsm.Data : new MeasurementData();
 
                 if (command.Equals("all_tremor"))
                 {

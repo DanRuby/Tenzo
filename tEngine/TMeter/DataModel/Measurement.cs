@@ -11,20 +11,17 @@ namespace tEngine.TMeter.DataModel
     [DataContract]
     public class Measurement
     {
-        private TData mData = new TData();
+        private MeasurementData mData = new MeasurementData();
 
-        public TData Data
-        {
-            get { return mData; }
-        }
+        public MeasurementData Data => mData;
 
         /// <summary>
         /// Длительность измерения, сек
         /// </summary>
         public double MsmTime
         {
-            get { return mData.Time; }
-            set { mData.Time = value; }
+            get => mData.Time;
+            set => mData.Time = value;
         }
 
         public User Owner { get; set; }
@@ -147,7 +144,7 @@ namespace tEngine.TMeter.DataModel
             FileIO.WriteText(filePath, sb.ToString());
         }
 
-        public void SetData(TData data)
+        public void SetData(MeasurementData data)
         {
             if (data != null)
                 mData = data;

@@ -48,13 +48,13 @@ namespace tEngine.UControls
 
         public PlotModelEx PlotModel
         {
-            get { return mPlotModel; }
-            set { mPlotModel = value; }
+            get => mPlotModel;
+            set => mPlotModel = value;
         }
 
         public PlotView PlotView
         {
-            get { return mPlotView; }
+            get => mPlotView;
             set
             {
                 mPlotView = value;
@@ -69,8 +69,8 @@ namespace tEngine.UControls
 
         public bool ShowPlot
         {
-            get { return (bool)GetValue(ShowPlotProperty); }
-            set { SetValue(ShowPlotProperty, value); }
+            get => (bool)GetValue(ShowPlotProperty);
+            set => SetValue(ShowPlotProperty, value);
         }
 
         public static readonly DependencyProperty ShowMenuProperty = DependencyProperty.Register(
@@ -78,19 +78,19 @@ namespace tEngine.UControls
 
         public Visibility ShowMenu
         {
-            get { return (Visibility)GetValue(ShowMenuProperty); }
-            set { SetValue(ShowMenuProperty, value); }
+            get => (Visibility)GetValue(ShowMenuProperty);
+            set => SetValue(ShowMenuProperty, value);
         }
 
         public string Title
         {
-            get { return (string)GetValue(TitleProperty); }
-            set { SetValue(TitleProperty, value); }
+            get => (string)GetValue(TitleProperty);
+            set => SetValue(TitleProperty, value);
         }
 
         private PlotSet PlotSet
         {
-            get { return mPlotSet; }
+            get => mPlotSet;
             set
             {
                 mPlotSet = value;

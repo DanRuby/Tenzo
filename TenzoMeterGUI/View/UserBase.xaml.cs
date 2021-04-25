@@ -66,10 +66,7 @@ namespace TenzoMeterGUI.View
         private bool mShowBagel;
         private ObservableCollection<User> mUserList;
 
-        public bool CanUserOpen
-        {
-            get { return (SelectedUser != null) && CMDOpenUser.CanExecute; }
-        }
+        public bool CanUserOpen => (SelectedUser != null) && CMDOpenUser.CanExecute;
 
         public Command CMDAddNew { get; private set; }
         public Command CMDEditSelected { get; private set; }
@@ -108,7 +105,7 @@ namespace TenzoMeterGUI.View
 
         public User SelectedUser
         {
-            get { return mSelectedUser; }
+            get => mSelectedUser;
             set
             {
                 mSelectedUser = value;
@@ -119,7 +116,7 @@ namespace TenzoMeterGUI.View
 
         public int SelectedUserIndex
         {
-            get { return mSelectedUserIndex; }
+            get => mSelectedUserIndex;
             set
             {
                 mSelectedUserIndex = value;
@@ -129,7 +126,7 @@ namespace TenzoMeterGUI.View
 
         public bool ShowBagel
         {
-            get { return mShowBagel; }
+            get => mShowBagel;
             set
             {
                 mShowBagel = value;

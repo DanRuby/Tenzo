@@ -26,10 +26,7 @@ namespace TenzoMeterGUI.View
         private MsmCreatorVM mDataContext;
         public bool? NotDialogButResult { get; set; }
 
-        public Measurement Result
-        {
-            get { return mDataContext == null ? null : mDataContext.CurrentMsm; }
-        }
+        public Measurement Result => mDataContext == null ? null : mDataContext.CurrentMsm;
 
         public MsmCreator()
         {
@@ -78,8 +75,8 @@ namespace TenzoMeterGUI.View
 
         public int BeginPoint
         {
-            get { return CurrentMsm.Data.BeginPoint; }
-            set { CurrentMsm.Data.BeginPoint = value; }
+            get => CurrentMsm.Data.BeginPoint;
+            set => CurrentMsm.Data.BeginPoint = value;
         }
 
         public Command CMDAcceptMsm { get; private set; }
@@ -120,7 +117,7 @@ namespace TenzoMeterGUI.View
 
         public bool DoPostSave
         {
-            get { return mDoPostSave; }
+            get => mDoPostSave;
             set
             {
                 mDoPostSave = value;
@@ -130,7 +127,7 @@ namespace TenzoMeterGUI.View
 
         public bool DoPostScript
         {
-            get { return mDoPostScript; }
+            get => mDoPostScript;
             set
             {
                 mDoPostScript = value;
@@ -140,15 +137,15 @@ namespace TenzoMeterGUI.View
 
         public int EndPoint
         {
-            get { return CurrentMsm.Data.EndPoint; }
-            set { CurrentMsm.Data.EndPoint = value; }
+            get => CurrentMsm.Data.EndPoint;
+            set => CurrentMsm.Data.EndPoint = value;
         }
 
         public string HandsData { get; set; }
 
         public bool IsMsmRun
         {
-            get { return mIsMsmRun; }
+            get => mIsMsmRun;
             set
             {
                 mIsMsmRun = value;
@@ -158,16 +155,13 @@ namespace TenzoMeterGUI.View
 
         public bool IsPauseBeforeStart { get; set; }
 
-        public int Maximum
-        {
-            get { return CurrentMsm.Data.CountBase; }
-        }
+        public int Maximum => CurrentMsm.Data.CountBase;
 
         public double Progress { get; set; }
 
         public string SavePath
         {
-            get { return mSavePath; }
+            get => mSavePath;
             set
             {
                 mSavePath = value;
@@ -177,7 +171,7 @@ namespace TenzoMeterGUI.View
 
         public string ScriptPath
         {
-            get { return mScriptPath; }
+            get => mScriptPath;
             set
             {
                 mScriptPath = value;
@@ -187,7 +181,7 @@ namespace TenzoMeterGUI.View
 
         public bool SelectionEnable
         {
-            get { return mSelectionEnable && CurrentMsm.Data.HasSomeData; }
+            get => mSelectionEnable && CurrentMsm.Data.HasSomeData;
             set
             {
                 mSelectionEnable = value;
@@ -195,12 +189,9 @@ namespace TenzoMeterGUI.View
             }
         }
 
-        public DispatcherTimer TimerProgress
-        {
-            get { return mTimerProgress; }
-        }
+        public DispatcherTimer TimerProgress => mTimerProgress;
 
-       
+
 
         public void PostSave()
         {
@@ -260,7 +251,7 @@ namespace TenzoMeterGUI.View
                 {
                     bool exit = false;
                     CurrentMsm.Data.BaseAnalys(null, (data, b) => { exit = true; });
-                    TData.StartCalc();
+                    MeasurementData.StartCalc();
                     while (exit == false)
                     {
                         Thread.Sleep(10);
@@ -394,7 +385,7 @@ namespace TenzoMeterGUI.View
                     Parent.Dispatcher.BeginInvoke(DispatcherPriority.Normal,
                         new Action(() => { MessageBox.Show("Измерение завершено!"); }));
                 });
-                TData.StartCalc();
+                MeasurementData.StartCalc();
                 return;
             }
             CurrentTime = time.ToString(@"mm\:ss\.ff");

@@ -51,7 +51,7 @@ namespace tEngine.Recorder
         #region additional public fields
         public bool DemoMode
         {
-            get { return mDemoMode; }
+            get => mDemoMode;
             set
             {
                 mDemoMode = value;
@@ -62,7 +62,7 @@ namespace tEngine.Recorder
 
         public DeviceStates DeviceState
         {
-            get { return mDeviceState; }
+            get => mDeviceState;
             private set
             {
                 lock (mLock)

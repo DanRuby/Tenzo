@@ -4,25 +4,25 @@ using OxyPlot;
 
 namespace tEngine.DataModel
 {
-    public class STDATA
+    public class Graph
     {
-        private List<DataPoint> mData;
+        private List<DataPoint> dataPoints;
         public int Count { get; set; }
 
-        public List<DataPoint> Data
+        public List<DataPoint> DataPoints
         {
-            get { return mData; }
+            get => dataPoints;
             set
             {
-                mData = value;
-                if (mData != null)
+                dataPoints = value;
+                if (dataPoints != null)
                 {
-                    Count = mData.Count;
+                    Count = dataPoints.Count;
                     if (Count > 0)
                     {
-                        Mean = mData.Average(point => point.Y);
-                        Min = mData.Min(point => point.Y);
-                        Max = mData.Max(point => point.Y);
+                        Mean = dataPoints.Average(point => point.Y);
+                        Min = dataPoints.Min(point => point.Y);
+                        Max = dataPoints.Max(point => point.Y);
                     }
                     else
                     {
@@ -34,23 +34,20 @@ namespace tEngine.DataModel
             }
         }
 
-        public bool HasData
-        {
-            get { return Data != null && Count > 0; }
-        }
+        public bool HasData => DataPoints != null && Count > 0;
 
         public double Max { get; private set; }
         public double Mean { get; private set; }
         public double Min { get; private set; }
 
-        public STDATA()
+        public Graph()
         {
-            Data = new List<DataPoint>();
+            DataPoints = new List<DataPoint>();
         }
 
         public void Clear()
         {
-            Data = new List<DataPoint>();
+            DataPoints = new List<DataPoint>();
         }
     }
 }

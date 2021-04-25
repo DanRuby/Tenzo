@@ -6,20 +6,14 @@ namespace tEngine
     /// <summary>
     /// Базовый класс констант
     /// </summary>
-    public abstract class BConstants
+    /*public abstract class BConstants
     {
         public string AppDataFolder { get; set; }
         public string ApplicationFolder { get; set; }
 
-        public string AppSettings
-        {
-            get { return ApplicationFolder + "\\app.settings"; }
-        }
+        public string AppSettings => ApplicationFolder + "\\app.settings";
 
-        public string MarkersSettings
-        {
-            get { return ApplicationFolder + "\\mark.settings"; }
-        }
+        public string MarkersSettings => ApplicationFolder + "\\mark.settings";
 
         protected static void CreateDirectory(string path, bool hidden = false)
         {
@@ -32,9 +26,9 @@ namespace tEngine
             if (hidden)
                 dinfo.Attributes |= FileAttributes.Hidden;
         }
-    }
+    }*/
 
-    public class CommonConstants : BConstants
+   /* public class CommonConstants : BConstants
     {
         public const int DEVICE_ID = 33;
 
@@ -45,5 +39,5 @@ namespace tEngine
             CreateDirectory(AppDataFolder);
             CreateDirectory(ApplicationFolder, true);
         }
-    }
+    }*/
 }

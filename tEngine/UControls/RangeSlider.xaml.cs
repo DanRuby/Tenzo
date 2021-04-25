@@ -27,26 +27,26 @@ namespace tEngine.UControls
 
         public double LowerValue
         {
-            get { return (double)GetValue(LowerValueProperty); }
-            set { SetValue(LowerValueProperty, value); }
+            get => (double)GetValue(LowerValueProperty);
+            set => SetValue(LowerValueProperty, value);
         }
 
         public double Maximum
         {
-            get { return (double)GetValue(MaximumProperty); }
-            set { SetValue(MaximumProperty, value); }
+            get => (double)GetValue(MaximumProperty);
+            set => SetValue(MaximumProperty, value);
         }
 
         public double Minimum
         {
-            get { return (double)GetValue(MinimumProperty); }
-            set { SetValue(MinimumProperty, value); }
+            get => (double)GetValue(MinimumProperty);
+            set => SetValue(MinimumProperty, value);
         }
 
         public double UpperValue
         {
-            get { return (double)GetValue(UpperValueProperty); }
-            set { SetValue(UpperValueProperty, value); }
+            get => (double)GetValue(UpperValueProperty);
+            set => SetValue(UpperValueProperty, value);
         }
 
         public RangeSlider()

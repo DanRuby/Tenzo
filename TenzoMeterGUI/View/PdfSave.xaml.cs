@@ -61,7 +61,7 @@ namespace TenzoMeterGUI.View
       
         public string FileName
         {
-            get { return mFileName; }
+            get => mFileName;
             set
             {
                 mFileName = value;
@@ -76,10 +76,7 @@ namespace TenzoMeterGUI.View
         public bool PrintSpectrum { get; set; }
         public bool PrintTremor { get; set; }
 
-        public bool CanSave
-        {
-            get { return !(FileName.IsNullOrEmpty() || mMsms.IsNullOrEmpty()); }
-        }
+        public bool CanSave => !(FileName.IsNullOrEmpty() || mMsms.IsNullOrEmpty());
 
         public Command CMDBrowse { get; private set; }
         public Command CMDCancel { get; private set; }

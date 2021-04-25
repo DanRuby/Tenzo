@@ -29,14 +29,11 @@ namespace tEngine.UControls
 
         public bool Show
         {
-            get { return (bool)GetValue(ShowProperty); }
-            set { SetValue(ShowProperty, value); }
+            get => (bool)GetValue(ShowProperty);
+            set => SetValue(ShowProperty, value);
         }
 
-        public Visibility IsShow
-        {
-            get { return Show ? Visibility.Visible : Visibility.Collapsed; }
-        }
+        public Visibility IsShow => Show ? Visibility.Visible : Visibility.Collapsed;
 
         public WaitBagel()
         {

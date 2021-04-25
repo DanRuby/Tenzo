@@ -12,10 +12,7 @@ namespace tEngine.MVVM
         [XmlIgnore]
         //Д: XmlIgnore должно хватать + варнинг на нижний аттрибут
         //[field: NonSerialized]
-        public static bool IsDesignMode
-        {
-            get { return (LicenseManager.UsageMode == LicenseUsageMode.Designtime); }
-        }
+        public static bool IsDesignMode => (LicenseManager.UsageMode == LicenseUsageMode.Designtime);
     }
 
     [Serializable]
@@ -23,10 +20,7 @@ namespace tEngine.MVVM
     {
         [XmlIgnore]
         // [field: NonSerialized]
-        public bool IsDesignMode
-        {
-            get { return (LicenseManager.UsageMode == LicenseUsageMode.Designtime); }
-        }
+        public bool IsDesignMode => (LicenseManager.UsageMode == LicenseUsageMode.Designtime);
 
         [field: NonSerialized]
         public event PropertyChangedEventHandler PropertyChanged;

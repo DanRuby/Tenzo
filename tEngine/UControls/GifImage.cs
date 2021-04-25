@@ -17,20 +17,20 @@ namespace tEngine.UControls
         /// </summary>
         public bool AutoStart
         {
-            get { return (bool)GetValue(AutoStartProperty); }
-            set { SetValue(AutoStartProperty, value); }
+            get => (bool)GetValue(AutoStartProperty);
+            set => SetValue(AutoStartProperty, value);
         }
 
         public int FrameIndex
         {
-            get { return (int)GetValue(FrameIndexProperty); }
-            set { SetValue(FrameIndexProperty, value); }
+            get => (int)GetValue(FrameIndexProperty);
+            set => SetValue(FrameIndexProperty, value);
         }
 
         public string GifSource
         {
-            get { return (string)GetValue(GifSourceProperty); }
-            set { SetValue(GifSourceProperty, value); }
+            get => (string)GetValue(GifSourceProperty);
+            set => SetValue(GifSourceProperty, value);
         }
 
         /// <summary>

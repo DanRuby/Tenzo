@@ -15,15 +15,9 @@ namespace tEngine.Markers
     {
         private MArea mArea = new MArea();
 
-        public int Maximum
-        {
-            get { return mArea.Maximum; }
-        }
+        public int Maximum => mArea.Maximum;
 
-        public int Minimum
-        {
-            get { return mArea.Minimum; }
-        }
+        public int Minimum => mArea.Minimum;
 
         public UIMarkers()
         {

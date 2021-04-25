@@ -119,7 +119,7 @@ namespace TenzoMeterGUI.View
 
         public bool AutoScale
         {
-            get { return mSettings[(int)ShowMode].AutoScale; }
+            get => mSettings[(int)ShowMode].AutoScale;
             set
             {
                 mSettings[(int)ShowMode].AutoScale = value;
@@ -139,7 +139,7 @@ namespace TenzoMeterGUI.View
 
         public bool IsBusy
         {
-            get { return mIsBusy; }
+            get => mIsBusy;
             set
             {
                 mIsBusy = value;
@@ -147,15 +147,9 @@ namespace TenzoMeterGUI.View
             }
         }
 
-        public Visibility LeftShow
-        {
-            get
-            {
-                return (ShowHand == EShowHand.Left || ShowHand == EShowHand.Both)
+        public Visibility LeftShow => (ShowHand == EShowHand.Left || ShowHand == EShowHand.Both)
                     ? Visibility.Visible
                     : Visibility.Collapsed;
-            }
-        }
 
         public ObservableCollection<MsmIndex> Msms
         {
@@ -168,14 +162,11 @@ namespace TenzoMeterGUI.View
             }
         }
 
-        public ObservableCollection<MsmIndex> MsmsToDraw
-        {
-            get { return new ObservableCollection<MsmIndex>(Msms.Where(msm => msm.IsShow)); }
-        }
+        public ObservableCollection<MsmIndex> MsmsToDraw => new ObservableCollection<MsmIndex>(Msms.Where(msm => msm.IsShow));
 
         public bool Normalize
         {
-            get { return mSettings[(int)ShowMode].Normalize; }
+            get => mSettings[(int)ShowMode].Normalize;
             set
             {
                 mSettings[(int)ShowMode].Normalize = value;
@@ -185,8 +176,8 @@ namespace TenzoMeterGUI.View
 
         public PlotSetResult PlotSet
         {
-            get { return mSettings[(int)ShowMode]; }
-            set { mSettings[(int)ShowMode] = value; }
+            get => mSettings[(int)ShowMode];
+            set => mSettings[(int)ShowMode] = value;
         }
 
         public string PlotType
@@ -208,19 +199,13 @@ namespace TenzoMeterGUI.View
             }
         }
 
-        public Visibility RightShow
-        {
-            get
-            {
-                return (ShowHand == EShowHand.Right || ShowHand == EShowHand.Both)
+        public Visibility RightShow => (ShowHand == EShowHand.Right || ShowHand == EShowHand.Both)
                     ? Visibility.Visible
                     : Visibility.Collapsed;
-            }
-        }
 
         public EShowHand ShowHand
         {
-            get { return mShowHand; }
+            get => mShowHand;
             set
             {
                 mShowHand = value;
@@ -231,7 +216,7 @@ namespace TenzoMeterGUI.View
 
         public EShowMode ShowMode
         {
-            get { return mShowMode; }
+            get => mShowMode;
             set
             {
                 mShowMode = value;
@@ -276,7 +261,7 @@ namespace TenzoMeterGUI.View
                 SetMsmCollection(new[]
                 {Measurement.GetTestMsm( title: "тест1" ), Measurement.GetTestMsm( title: "тест2" ), Measurement.GetTestMsm( title: "тест3" )});
                 mMsms.ForEach(msm => msm.Data.BaseAnalys(null, null));
-                TData.StartCalc();
+                MeasurementData.StartCalc();
             }
         }
 

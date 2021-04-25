@@ -15,7 +15,7 @@ namespace TenzoMeterGUI
 
         private void App_OnStartup(object sender, StartupEventArgs e)
         {
-            AppSettings.Init(AppSettings.Project.Meter);
+            AppSettings.Init();
         }
 
         private void Application_Exit(object sender, ExitEventArgs e)

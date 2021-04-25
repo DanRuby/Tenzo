@@ -30,20 +30,20 @@ namespace tEngine.UControls
 
         public int BeginPoint
         {
-            get { return (int)GetValue(BeginPointProperty); }
-            set { SetValue(BeginPointProperty, value); }
+            get => (int)GetValue(BeginPointProperty);
+            set => SetValue(BeginPointProperty, value);
         }
 
-        public TData Data
+        public MeasurementData Data
         {
-            get { return (TData)GetValue(DataProperty); }
-            set { SetValue(DataProperty, value); }
+            get => (MeasurementData)GetValue(DataProperty);
+            set => SetValue(DataProperty, value);
         }
 
         public int EndPoint
         {
-            get { return (int)GetValue(EndPointProperty); }
-            set { SetValue(EndPointProperty, value); }
+            get => (int)GetValue(EndPointProperty);
+            set => SetValue(EndPointProperty, value);
         }
 
         public List<DataPoint> LeftHandConst
@@ -76,8 +76,8 @@ namespace tEngine.UControls
 
         public int Maximum
         {
-            get { return (int)GetValue(MaximumProperty); }
-            set { SetValue(MaximumProperty, value); }
+            get => (int)GetValue(MaximumProperty);
+            set => SetValue(MaximumProperty, value);
         }
 
         public List<DataPoint> RightHandConst
@@ -245,12 +245,12 @@ namespace tEngine.UControls
             }));
 
         public static readonly DependencyProperty DataProperty = DependencyProperty.Register(
-            "Data", typeof(TData), typeof(SelectablePlot), new PropertyMetadata(new TData(), (obj, args) =>
+            "Data", typeof(MeasurementData), typeof(SelectablePlot), new PropertyMetadata(new MeasurementData(), (obj, args) =>
             {
                 SelectablePlot plot = obj as SelectablePlot;
                 if (args.NewValue == null)
                 {
-                    plot.Data = new TData();
+                    plot.Data = new MeasurementData();
                     return;
                 }
                 plot.mNeedInvalidate = false;

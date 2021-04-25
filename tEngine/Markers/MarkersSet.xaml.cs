@@ -50,14 +50,14 @@ namespace tEngine.Markers
 
         public Color Color
         {
-            get { return mArea.Color; }
-            set { mArea.Color = value; }
+            get => mArea.Color;
+            set => mArea.Color = value;
         }
 
         public int Grid
         {
-            get { return mArea.Grid; }
-            set 
+            get => mArea.Grid;
+            set
             {
                 if (value > 0)
                     mArea.Grid = value;
@@ -67,20 +67,20 @@ namespace tEngine.Markers
 
         public Color GridColor
         {
-            get { return mArea.GridColor; }
-            set { mArea.GridColor = value; }
+            get => mArea.GridColor;
+            set => mArea.GridColor = value;
         }
 
         public Color M1Color
         {
-            get { return mArea.Marker1.Color; }
-            set { mArea.Marker1.Color = value; }
+            get => mArea.Marker1.Color;
+            set => mArea.Marker1.Color = value;
         }
 
         public int M1Height
         {
-            get { return mArea.Marker1.Height; }
-            set 
+            get => mArea.Marker1.Height;
+            set
             {
                 if (value > 0)
                     mArea.Marker1.Height = value;
@@ -90,8 +90,8 @@ namespace tEngine.Markers
 
         public int M1Width
         {
-            get { return mArea.Marker1.Width; }
-            set 
+            get => mArea.Marker1.Width;
+            set
             {
                 if (value > 0)
                     mArea.Marker1.Width = value;
@@ -101,14 +101,14 @@ namespace tEngine.Markers
 
         public Color M2Color
         {
-            get { return mArea.Marker2.Color; }
-            set { mArea.Marker2.Color = value; }
+            get => mArea.Marker2.Color;
+            set => mArea.Marker2.Color = value;
         }
 
         public int M2Height
         {
-            get { return mArea.Marker2.Height; }
-            set 
+            get => mArea.Marker2.Height;
+            set
             {
                 if (value > 0)
                     mArea.Marker2.Height = value;
@@ -118,49 +118,49 @@ namespace tEngine.Markers
 
         public int M2Width
         {
-            get { return mArea.Marker2.Width; }
-            set 
+            get => mArea.Marker2.Width;
+            set
             {
                 if (value > 0)
-                    mArea.Marker2.Width= value;
+                    mArea.Marker2.Width = value;
                 else mArea.Marker2.Width = 1;
             }
         }
 
         public int Maximum
         {
-            get { return mArea.Maximum; }
-            set { mArea.Maximum = value; }
+            get => mArea.Maximum;
+            set => mArea.Maximum = value;
         }
 
         public int Minimum
         {
-            get { return mArea.Minimum; }
-            set { mArea.Minimum = value; }
+            get => mArea.Minimum;
+            set => mArea.Minimum = value;
         }
 
         public bool ShowAxis
         {
-            get { return mArea.ShowAxis; }
-            set { mArea.ShowAxis = value; }
+            get => mArea.ShowAxis;
+            set => mArea.ShowAxis = value;
         }
 
         public bool ShowGrid
         {
-            get { return mArea.ShowGrid; }
-            set { mArea.ShowGrid = value; }
+            get => mArea.ShowGrid;
+            set => mArea.ShowGrid = value;
         }
 
         public bool ShowMarker1
         {
-            get { return mArea.ShowMarker1; }
-            set { mArea.ShowMarker1 = value; }
+            get => mArea.ShowMarker1;
+            set => mArea.ShowMarker1 = value;
         }
 
         public bool ShowMarker2
         {
-            get { return mArea.ShowMarker2; }
-            set { mArea.ShowMarker2 = value; }
+            get => mArea.ShowMarker2;
+            set => mArea.ShowMarker2 = value;
         }
 
         public MarkersSetVM()

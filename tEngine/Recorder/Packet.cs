@@ -17,26 +17,26 @@ namespace tEngine.Recorder
 
         public byte Command
         {
-            get { return Buffer.Command; }
-            set { Buffer.Command = value; }
+            get => Buffer.Command;
+            set => Buffer.Command = value;
         }
 
         public byte ControlSum
         {
-            get { return Buffer.ControlSum; }
-            set { Buffer.ControlSum = value; }
+            get => Buffer.ControlSum;
+            set => Buffer.ControlSum = value;
         }
 
         public ushort PackId
         {
-            get { return Buffer.PackID; }
-            set { Buffer.PackID = value; }
+            get => Buffer.PackID;
+            set => Buffer.PackID = value;
         }
 
         public ushort RequestId
         {
-            get { return Buffer.RequestID; }
-            set { Buffer.RequestID = value; }
+            get => Buffer.RequestID;
+            set => Buffer.RequestID = value;
         }
 
         public bool IsValid { get; set; }

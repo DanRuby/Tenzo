@@ -22,10 +22,7 @@ namespace TenzoMeterGUI.View
         private Queue<int> mRight = new Queue<int>();
         private object mLock = new object();
 
-        public static bool WindowNotNull
-        {
-            get { return mWindow != null; }
-        }
+        public static bool WindowNotNull => mWindow != null;
 
         public int LeftHand
         {

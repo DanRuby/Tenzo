@@ -98,15 +98,13 @@
     <Reference Include="WindowsBase" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="BConstants.cs" />
-    <Compile Include="DataModel\HAND_DATA.cs" />
-    <Compile Include="DataModel\STDATA.cs" />
+    <Compile Include="DataModel\HandGraphs.cs" />
+    <Compile Include="DataModel\Graph.cs" />
     <Compile Include="Helpers\BytesPacker.cs" />
     <Compile Include="Helpers\FixedSizedQueue.cs" />
     <Compile Include="Helpers\LINQExtention.cs" />
     <Compile Include="Helpers\ImageHelper.cs" />
     <Compile Include="Helpers\StringExtetion.cs" />
-    <Compile Include="IConstants.cs" />
     <Compile Include="Markers\Drawer.cs" />
     <Compile Include="Markers\MArea.cs" />
     <Compile Include="Markers\Marker.cs" />
@@ -135,7 +133,7 @@
     <Compile Include="Helpers\FileIO.cs" />
     <Compile Include="Helpers\JSONContractResolver.cs" />
     <Compile Include="DataModel\Hand.cs" />
-    <Compile Include="DataModel\TData.cs" />
+    <Compile Include="DataModel\MeasurementData.cs" />
     <Compile Include="Helpers\AppSettings.cs" />
     <Compile Include="TMeter\Constants.cs" />
     <Compile Include="Helpers\Logger.cs" />

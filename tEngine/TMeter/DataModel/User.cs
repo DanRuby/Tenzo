@@ -24,10 +24,7 @@ namespace tEngine.TMeter.DataModel
         public string FilePath { get; set; }
         public bool IsNotSaveChanges { get; set; }
 
-        public ObservableCollection<Measurement> Msms
-        {
-            get { return new ObservableCollection<Measurement>(mMsms); }
-        }
+        public ObservableCollection<Measurement> Msms => new ObservableCollection<Measurement>(mMsms);
 
         public User() => Init();
 

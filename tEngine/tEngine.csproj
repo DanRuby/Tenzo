@@ -108,8 +108,7 @@
     <Compile Include="Markers\Drawer.cs" />
     <Compile Include="Markers\MArea.cs" />
     <Compile Include="Markers\Marker.cs" />
-    <Compile Include="Markers\Marker1.cs" />
-    <Compile Include="Markers\Marker2.cs" />
+    <Compile Include="Markers\MarkerWithHole.cs" />
     <Compile Include="Markers\MarkersSet.xaml.cs">
       <DependentUpon>MarkersSet.xaml</DependentUpon>
     </Compile>

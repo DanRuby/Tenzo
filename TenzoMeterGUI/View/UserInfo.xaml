@@ -34,7 +34,7 @@
             <Setter Property="VerticalContentAlignment" Value="Center" />
             <Setter Property="HorizontalAlignment" Value="Stretch" />
             <Setter Property="Height" Value="27" />
-            <Setter Property="IsReadOnly" Value="{Binding EditMode, Converter={StaticResource BooleanInverse}}" />
+            <!--<Setter Property="IsReadOnly" Value="{Binding EditMode, Converter={StaticResource BooleanInverse}}" />-->
         </Style>
         <Style TargetType="{x:Type DatePicker}" BasedOn="{StaticResource KeyTab}">
             <Setter Property="VerticalContentAlignment" Value="Center" />

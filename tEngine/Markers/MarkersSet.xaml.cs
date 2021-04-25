@@ -73,57 +73,57 @@ namespace tEngine.Markers
 
         public Color M1Color
         {
-            get => mArea.Marker1.Color;
-            set => mArea.Marker1.Color = value;
+            get => mArea.MarkerLeftHand.Color;
+            set => mArea.MarkerLeftHand.Color = value;
         }
 
         public int M1Height
         {
-            get => mArea.Marker1.Height;
+            get => mArea.MarkerLeftHand.Height;
             set
             {
                 if (value > 0)
-                    mArea.Marker1.Height = value;
-                else mArea.Marker1.Height = 1;
+                    mArea.MarkerLeftHand.Height = value;
+                else mArea.MarkerLeftHand.Height = 1;
             }
         }
 
         public int M1Width
         {
-            get => mArea.Marker1.Width;
+            get => mArea.MarkerLeftHand.Width;
             set
             {
                 if (value > 0)
-                    mArea.Marker1.Width = value;
-                else mArea.Marker1.Width = 1;
+                    mArea.MarkerLeftHand.Width = value;
+                else mArea.MarkerLeftHand.Width = 1;
             }
         }
 
         public Color M2Color
         {
-            get => mArea.Marker2.Color;
-            set => mArea.Marker2.Color = value;
+            get => mArea.MarkerRightHand.Color;
+            set => mArea.MarkerRightHand.Color = value;
         }
 
         public int M2Height
         {
-            get => mArea.Marker2.Height;
+            get => mArea.MarkerRightHand.Height;
             set
             {
                 if (value > 0)
-                    mArea.Marker2.Height = value;
-                else mArea.Marker2.Height = 1;
+                    mArea.MarkerRightHand.Height = value;
+                else mArea.MarkerRightHand.Height = 1;
             }
         }
 
         public int M2Width
         {
-            get => mArea.Marker2.Width;
+            get => mArea.MarkerRightHand.Width;
             set
             {
                 if (value > 0)
-                    mArea.Marker2.Width = value;
-                else mArea.Marker2.Width = 1;
+                    mArea.MarkerRightHand.Width = value;
+                else mArea.MarkerRightHand.Width = 1;
             }
         }
 
@@ -153,14 +153,14 @@ namespace tEngine.Markers
 
         public bool ShowMarker1
         {
-            get => mArea.ShowMarker1;
-            set => mArea.ShowMarker1 = value;
+            get => mArea.ShowMarkerLeft;
+            set => mArea.ShowMarkerLeft = value;
         }
 
         public bool ShowMarker2
         {
-            get => mArea.ShowMarker2;
-            set => mArea.ShowMarker2 = value;
+            get => mArea.ShowMarkerRight;
+            set => mArea.ShowMarkerRight = value;
         }
 
         public MarkersSetVM()

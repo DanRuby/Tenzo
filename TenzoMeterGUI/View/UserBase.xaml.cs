@@ -46,9 +46,9 @@ namespace TenzoMeterGUI.View
                 {
                     DialogResult = mDataContext.DialogResult;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    //Debug.Assert( false, ex.Message );
+                    Debug.Assert( false, ex.Message );
                 }
             }
             Device.AbortAll();
@@ -196,7 +196,7 @@ namespace TenzoMeterGUI.View
         private void CMDAddNew_Func()
         {
             UserInfo uid = new UserInfo();
-            uid.EditMode = true;
+            //uid.EditMode = true;
             if (uid.ShowDialog() == true)
             {
                 if (uid.Result != null)
@@ -214,7 +214,7 @@ namespace TenzoMeterGUI.View
             UserInfo uid = new UserInfo();
             await Task<object>.Factory.StartNew(() =>
             {
-                uid.EditMode = false;
+                //uid.EditMode = false;
                 uid.SetUser(SelectedUser);
                 return null;
             });

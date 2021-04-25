@@ -3,12 +3,12 @@ using System.Windows.Media.Imaging;
 
 namespace tEngine.Markers
 {
-    public class Marker2 : Marker
+    public class MarkerWithHole : Marker
     {
         public int? Hole { get; set; }
 
 
-        public Marker2()
+        public MarkerWithHole()
         {
             Color = Colors.Red;
             Width = 40;

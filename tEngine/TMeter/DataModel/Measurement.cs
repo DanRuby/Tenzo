@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Text;
@@ -110,35 +109,13 @@ namespace tEngine.TMeter.DataModel
             {
                 if (i < length / 2)
                 {
-                    sb.AppendLine(string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10}",
-                        Time[i],
-                        Hz[i],
-                        Delta[i],
-                        LConstant[i],
-                        LTremor[i],
-                        LSpectrum[i],
-                        LCorrelation[i],
-                        RConstant[i],
-                        RTremor[i],
-                        RSpectrum[i],
-                        RCorrelation[i]
-                        ));
+                    sb.AppendLine($"{Time[i]};{Hz[i]};{Delta[i]};{LConstant[i]};{LTremor[i]};{LSpectrum[i]};{LCorrelation[i]};" +
+                        $"{RConstant[i]};{RTremor[i]};{RSpectrum[i]};{RCorrelation[i]}");
                 }
                 else
                 {
-                    sb.AppendLine(string.Format("{0};{1};{2};{3};{4};{5};{6};{7};{8};{9};{10}",
-                        Time[i],
-                        "\"\"",
-                        Delta[i],
-                        LConstant[i],
-                        LTremor[i],
-                        "\"\"",
-                        LCorrelation[i],
-                        RConstant[i],
-                        RTremor[i],
-                        "\"\"",
-                        RCorrelation[i]
-                        ));
+                    sb.AppendLine($"{Time[i]};{"\"\""};{Delta[i]};{LConstant[i]};{LTremor[i]};{"\"\""};{LCorrelation[i]};" +
+                        $"{RConstant[i]};{RTremor[i]};{"\"\""};{RCorrelation[i]}");
                 }
             }
             FileIO.WriteText(filePath, sb.ToString());

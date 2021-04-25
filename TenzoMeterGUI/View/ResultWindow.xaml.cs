@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows;
@@ -22,6 +23,22 @@ using UIElement = System.Windows.UIElement;
 
 namespace TenzoMeterGUI.View
 {
+    public enum EShowHand
+    {
+        Both,
+        Left,
+        Right
+    }
+
+    public enum EShowMode
+    {
+        Const,
+        Tremor,
+        Spectrum,
+        Correlation
+    }
+
+
     /// <summary>
     ///     Interaction logic for ResultWindow.xaml
     /// </summary>
@@ -37,30 +54,15 @@ namespace TenzoMeterGUI.View
             DataContext = mDataContext;
         }
 
-        public void SetMsmCollection(IList<Measurement> msms)
-        {
-            mDataContext.SetMsmCollection(msms);
-        }
+        public void SetMsmCollection(IList<Measurement> msms) => mDataContext.SetMsmCollection(msms);
 
-        private void ColorSelect_OnClick(object sender, RoutedEventArgs e)
-        {
-            mDataContext.CMDColorSelect.DoExecute((sender as Button));
-        }
+        private void ColorSelect_OnClick(object sender, RoutedEventArgs e) => mDataContext.CMDColorSelect.DoExecute((sender as Button));
 
-        private void OxyListItem_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            mDataContext.CMDOxyLoad.DoExecute(sender);
-        }
+        private void OxyListItem_OnLoaded(object sender, RoutedEventArgs e) => mDataContext.CMDOxyLoad.DoExecute(sender);
 
-        private void OxyListItem_OnUnloaded(object sender, RoutedEventArgs e)
-        {
-            mDataContext.CMDOxyUnload.DoExecute(sender);
-        }
+        private void OxyListItem_OnUnloaded(object sender, RoutedEventArgs e) => mDataContext.CMDOxyUnload.DoExecute(sender);
 
-        private void PlotsPanel_OnLoaded(object sender, RoutedEventArgs e)
-        {
-            mDataContext.CMDOnLoad.DoExecute(null);
-        }
+        private void PlotsPanel_OnLoaded(object sender, RoutedEventArgs e) => mDataContext.CMDOnLoad.DoExecute(null);
 
         private void SimpleTextBox_OnKeyDown(object sender, KeyEventArgs e)
         {
@@ -82,29 +84,16 @@ namespace TenzoMeterGUI.View
                 {
                     DialogResult = mDataContext.DialogResult;
                 }
-                catch (Exception)
+                catch (Exception ex)
                 {
-                    // Debug.Assert( false, ex.Message );
+                     Debug.Assert( false, ex.Message );
                 }
             }
             WindowManager.SaveWindowPos(GetType().Name, this);
         }
     }
 
-    public enum EShowHand
-    {
-        Both,
-        Left,
-        Right
-    }
 
-    public enum EShowMode
-    {
-        Const,
-        Tremor,
-        Spectrum,
-        Correlation
-    }
 
     public class ResultWindowVM : Observed<ResultWindowVM>
     {
@@ -136,6 +125,40 @@ namespace TenzoMeterGUI.View
         public Command CMDOxyUnload { get; private set; }
         public Command CMDResetScale { get; private set; }
         public Command CMDSetShow { get; private set; }
+
+        public ResultWindowVM()
+        {
+            for (int i = 0; i < Enum.GetNames(typeof(EShowMode)).Length; i++)
+            {
+                mSettings[i] = new PlotSetResult();
+                mSettings[i].AxesOX.AutoScale = false;
+                mSettings[i].AxesOX.DecimalCount = 1;
+
+                mSettings[i].AxesOY.AutoScale = false;
+                mSettings[i].AxesOX.DecimalCount = 1;
+
+                mSettings[i].AutoScale = true;
+                mSettings[i].Normalize = false;
+            }
+
+            CMDCreatePdf = new Command(CMDCreatePdf_Func);
+            CMDSetShow = new Command(CMDSetShow_Func);
+            CMDOnLoad = new Command(CMDOnLoad_Func);
+            CMDOptimizeScale = new Command(CMDOptimizeScale_Func);
+            CMDResetScale = new Command(CMDResetScale_Func);
+            CMDColorSelect = new Command(CMDColorSelect_Func);
+            CMDOxyLoad = new Command(CMDOxyLoad_Func);
+            CMDOxyUnload = new Command(CMDOxyUnLoad_Func);
+            CMDButton = new Command(CMDButton_Func);
+
+            if (IsDesignMode)
+            {
+                SetMsmCollection(new[]
+                {Measurement.GetTestMsm( title: "тест1" ), Measurement.GetTestMsm( title: "тест2" ), Measurement.GetTestMsm( title: "тест3" )});
+                mMsms.ForEach(msm => msm.Data.BaseAnalys(null, null));
+                MeasurementData.StartCalc();
+            }
+        }
 
         public bool IsBusy
         {
@@ -231,40 +254,6 @@ namespace TenzoMeterGUI.View
             }
         }
 
-        public ResultWindowVM()
-        {
-            for (int i = 0; i < Enum.GetNames(typeof(EShowMode)).Length; i++)
-            {
-                mSettings[i] = new PlotSetResult();
-                mSettings[i].AxesOX.AutoScale = false;
-                mSettings[i].AxesOX.DecimalCount = 1;
-
-                mSettings[i].AxesOY.AutoScale = false;
-                mSettings[i].AxesOX.DecimalCount = 1;
-
-                mSettings[i].AutoScale = true;
-                mSettings[i].Normalize = false;
-            }
-
-            CMDCreatePdf = new Command(CMDCreatePdf_Func);
-            CMDSetShow = new Command(CMDSetShow_Func);
-            CMDOnLoad = new Command(CMDOnLoad_Func);
-            CMDOptimizeScale = new Command(CMDOptimizeScale_Func);
-            CMDResetScale = new Command(CMDResetScale_Func);
-            CMDColorSelect = new Command(CMDColorSelect_Func);
-            CMDOxyLoad = new Command(CMDOxyLoad_Func);
-            CMDOxyUnload = new Command(CMDOxyUnLoad_Func);
-            CMDButton = new Command(CMDButton_Func);
-
-            if (IsDesignMode)
-            {
-                SetMsmCollection(new[]
-                {Measurement.GetTestMsm( title: "тест1" ), Measurement.GetTestMsm( title: "тест2" ), Measurement.GetTestMsm( title: "тест3" )});
-                mMsms.ForEach(msm => msm.Data.BaseAnalys(null, null));
-                MeasurementData.StartCalc();
-            }
-        }
-
         public void CreatePDF()
         {
             if (Msms.IsNullOrEmpty()) return;
@@ -285,7 +274,7 @@ namespace TenzoMeterGUI.View
             NotifyPropertyChanged(m => m.Msms);
         }
 
-        private async void CMDButton_Func() => OxyDraw();
+        private void CMDButton_Func() => OxyDraw();
 
         /// <summary>
         ///     Принимает саму кнопку
@@ -305,10 +294,7 @@ namespace TenzoMeterGUI.View
             }
         }
 
-        private void CMDCreatePdf_Func()
-        {
-            CreatePDF();
-        }
+        private void CMDCreatePdf_Func() => CreatePDF();
 
         /// <summary>
         ///     запускается при загрузке всех графиков

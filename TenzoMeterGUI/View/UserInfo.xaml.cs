@@ -23,11 +23,11 @@ namespace TenzoMeterGUI.View
     {
         private UserInfoVM mDataContext;
 
-        public bool EditMode
-        {
-            get => mDataContext != null && mDataContext.EditMode;
-            set { if (mDataContext != null) mDataContext.EditMode = value; }
-        }
+        //public bool EditMode
+        //{
+        //    get => mDataContext != null && mDataContext.EditMode;
+        //    set { if (mDataContext != null) mDataContext.EditMode = value; }
+        //}
 
         public User Result => mDataContext == null ? null : mDataContext.GetUser();
 
@@ -79,21 +79,21 @@ namespace TenzoMeterGUI.View
         private string mFileTitle;
         private bool mIsEditableName;
         private User mUser;
-        private bool mEditMode;
+        //private bool mEditMode;
         public Command CMDBrowse { get; private set; }
         public Command CMDCancel { get; private set; }
         public Command CMDCreate { get; private set; }
         public string CurrentDir { get; set; }
         public Stack<string> DirPaths { get; set; }
 
-        public bool EditMode
-        {
-            get => mEditMode;
-            set =>
-                //mEditMode = value;
-                // всегда можно редактировать
-                mEditMode = true;
-        }
+        //public bool EditMode
+        //{
+        //    get => mEditMode;
+        //    set =>
+        //        //mEditMode = value;
+        //        // всегда можно редактировать
+        //        mEditMode = true;
+        //}
 
         public string FileTitle
         {
@@ -129,7 +129,7 @@ namespace TenzoMeterGUI.View
             CMDCancel = new Command(Cancel);
             CMDBrowse = new Command(Browse);
 
-            EditMode = false;
+            //EditMode = false;
 
             DirPaths = AppSettings.GetValue("LastDirPaths", DirPaths ?? new Stack<string>());
             DirPaths.Push(Constants.AppDataFolder);
@@ -240,11 +240,11 @@ namespace TenzoMeterGUI.View
 
         private void Create()
         {
-            if (EditMode)
-            {
+           // if (EditMode)
+            //{
                 if (CheckValid() == false)
                     return;
-            }
+            //}
             DirPaths.Push(CurrentDir);
             AppSettings.SetValue("LastDirPaths", new Stack<string>(DirPaths.Distinct()));
             mUser.FilePath = CurrentDir + @"\" + FileTitle + Constants.USER_EXT;

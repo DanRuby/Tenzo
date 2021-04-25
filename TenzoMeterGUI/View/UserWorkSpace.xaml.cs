@@ -41,31 +41,21 @@ namespace TenzoMeterGUI.View
             DataContext = mDataContext;
         }
 
-        public void OpenMsm(Measurement msm)
-        {
-            mDataContext.OpenMsm(msm);
-        }
+        public void OpenMsm(Measurement msm) => mDataContext.OpenMsm(msm);
 
         public void CopyUserInfo(User user)
         {
             Cloner.CopyAllProperties(mDataContext.User, user);
             mDataContext.UpdateAllProperties();
         }
-        public void SetUser(User user)
-        {
-            mDataContext.User = user;
-            return;
-        }
+        public void SetUser(User user) => mDataContext.User = user;
 
-        public void UpdateAllProperties()
-        {
-            mDataContext.UpdateAllProperties();
-        }
+        public void UpdateAllProperties() => mDataContext.UpdateAllProperties();
 
         private void PlotViewEx2_OnLoaded(object sender, RoutedEventArgs e)
         {
             PlotViewEx2.Clear();
-            System.Collections.Generic.List<DataPoint> data = Enumerable.Range(0, 100).Select(i => new DataPoint(i, Math.Sqrt(i))).ToList();
+            List<DataPoint> data = Enumerable.Range(0, 100).Select(i => new DataPoint(i, Math.Sqrt(i))).ToList();
             PlotViewEx2.AddLineSeries(data, color: null, thickness: 2);
             PlotViewEx2.ReDraw();
         }

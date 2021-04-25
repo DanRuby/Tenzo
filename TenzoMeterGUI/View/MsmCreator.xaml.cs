@@ -92,7 +92,6 @@ namespace TenzoMeterGUI.View
             CMDCancelMsm = new Command(CMDCancelMsm_Func);
             CMDStartMsm = new Command(CMDStartMsm_Func);
 
-
             DoPostSave = AppSettings.GetValue("DoPostSave", false);
             SavePath = AppSettings.GetValue("SavePath", "");
             DoPostScript = AppSettings.GetValue("DoPostScript", false);
@@ -191,8 +190,6 @@ namespace TenzoMeterGUI.View
 
         public DispatcherTimer TimerProgress => mTimerProgress;
 
-
-
         public void PostSave()
         {
             if (DoPostSave)
@@ -201,7 +198,10 @@ namespace TenzoMeterGUI.View
                 {
                     CurrentMsm.Msm2CSV(SavePath);
                 }
-                catch { }
+                catch(Exception ex) 
+                {
+                    Debug.WriteLine(ex.Message);
+                }
             }
         }
 
@@ -213,7 +213,10 @@ namespace TenzoMeterGUI.View
                 {
                     Process.Start(ScriptPath);
                 }
-                catch { }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
             }
         }
 
@@ -227,23 +230,14 @@ namespace TenzoMeterGUI.View
         {
             if (CurrentMsm.Title.IsNullOrEmpty())
             {
-                System.Windows.Forms.MessageBox.Show(@"Введите название измерения", @"Ошибка", MessageBoxButtons.OK,
-                    MessageBoxIcon.Error);
+                System.Windows.Forms.MessageBox.Show(@"Введите название измерения", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
             if (CurrentMsm.Data.HasSomeData == false)
             {
-                if (System.Windows.Forms.MessageBox.Show(@"Измерение не проведено, закрыть окно?", @"Предупреждение",
-                    MessageBoxButtons.YesNo,
-                    MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Yes)
-                {
+                if (System.Windows.Forms.MessageBox.Show(@"Измерение не проведено, закрыть окно?", @"Предупреждение", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Yes)
                     EndDialog(true);
-                    return;
-                }
-                else
-                {
-                    return;
-                }
+                return;
             }
             if (CurrentMsm.Data.HasBaseData == false)
             {
@@ -400,7 +394,6 @@ namespace TenzoMeterGUI.View
             AppSettings.SetValue("SavePath", SavePath);
             AppSettings.SetValue("DoPostScript", DoPostScript);
             AppSettings.SetValue("ScriptPath", ScriptPath);
-
             AppSettings.SetValue("DataTime", CurrentMsm.MsmTime);
         }
     }

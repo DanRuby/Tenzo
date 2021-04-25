@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Media;
@@ -28,10 +27,10 @@ namespace tEngine.Markers
         public Color GridColor { get; set; }
 
         [DataMember(Name = "M1")]
-        public Marker1 Marker1 { get; set; }
+        public Marker MarkerLeftHand { get; set; }
 
         [DataMember(Name = "M2")]
-        public Marker2 Marker2 { get; set; }
+        public MarkerWithHole MarkerRightHand { get; set; }
 
         [DataMember]
         public int Maximum { get; set; }
@@ -46,10 +45,10 @@ namespace tEngine.Markers
         public bool ShowGrid { get; set; }
 
         [DataMember(Name = "ShowM1")]
-        public bool ShowMarker1 { get; set; }
+        public bool ShowMarkerLeft { get; set; }
 
         [DataMember(Name = "ShowM2")]
-        public bool ShowMarker2 { get; set; }
+        public bool ShowMarkerRight { get; set; }
 
         public MArea()
         {
@@ -80,12 +79,19 @@ namespace tEngine.Markers
         {
             ShowGrid = true;
             ShowAxis = true;
-            ShowMarker1 = true;
-            ShowMarker2 = true;
+            ShowMarkerLeft = true;
+            ShowMarkerRight = true;
             Minimum = -10000;
             Maximum = 35000;
-            Marker2 = new Marker2();
-            Marker1 = new Marker1();
+
+            MarkerRightHand = new MarkerWithHole();
+            MarkerLeftHand = new Marker() 
+            {
+                Color = Colors.Blue,
+                Width = 60,
+                Height = 6
+            };
+
             GridColor = Colors.LightGray;
             Grid = 3000;
             Color = Colors.Azure;
@@ -132,16 +138,16 @@ namespace tEngine.Markers
             Minimum = set.Minimum;
             ShowAxis = set.ShowAxis;
             ShowGrid = set.ShowGrid;
-            Marker1 = set.Marker1;
-            Marker2 = set.Marker2;
+            MarkerLeftHand = set.MarkerLeftHand;
+            MarkerRightHand = set.MarkerRightHand;
             GridColor = set.GridColor;
-            ShowMarker1 = set.ShowMarker1;
-            ShowMarker2 = set.ShowMarker2;
+            ShowMarkerLeft = set.ShowMarkerLeft;
+            ShowMarkerRight = set.ShowMarkerRight;
 
-            Marker2.Hole = Marker1.Height;
+            MarkerRightHand.Hole = MarkerLeftHand.Height;
 
-            Marker1.UpdateSource();
-            Marker2.UpdateSource();
+            MarkerLeftHand.UpdateSource();
+            MarkerRightHand.UpdateSource();
         }
 
         private void CopyBacground()
@@ -153,7 +159,7 @@ namespace tEngine.Markers
         private void CopyMarkers()
         {
             Rect rect = new Rect();
-            rect.Width = Marker1.Width > Marker2.Width ? Marker1.Width : Marker2.Width;
+            rect.Width = MarkerLeftHand.Width > MarkerRightHand.Width ? MarkerLeftHand.Width : MarkerRightHand.Width;
             rect.X = (mDest.PixelWidth - rect.Width) / 2;
             rect.Y = 0;
             rect.Height = mDest.PixelHeight;
@@ -190,13 +196,13 @@ namespace tEngine.Markers
             int y1Last = RelToAbsY(mLastLeft);
             int y2Last = RelToAbsY(mLastRight);
 
-            HideMarker(mSource, y1Last, Marker1.Width + 10, Marker1.Height + 10);
-            HideMarker(mSource, y2Last, Marker2.Width + 10, Marker2.Height * 2 + (Marker2.Hole ?? 0) + 10);
+            HideMarker(mSource, y1Last, MarkerLeftHand.Width + 10, MarkerLeftHand.Height + 10);
+            HideMarker(mSource, y2Last, MarkerRightHand.Width + 10, MarkerRightHand.Height * 2 + (MarkerRightHand.Hole ?? 0) + 10);
 
-            if (ShowMarker1)
-                Marker1.Draw(mSource, y1);
-            if (ShowMarker2)
-                Marker2.Draw(mSource, y2);
+            if (ShowMarkerLeft)
+                MarkerLeftHand.Draw(mSource, y1);
+            if (ShowMarkerRight)
+                MarkerRightHand.Draw(mSource, y2);
 
             mLastLeft = left;
             mLastRight = right;

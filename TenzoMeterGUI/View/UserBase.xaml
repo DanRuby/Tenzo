@@ -26,7 +26,7 @@
             <Setter Property="IsReadOnly" Value="True" />
             <Setter Property="BorderThickness" Value="0" />
         </Style>
-        
+
         <GridView x:Key="List"  
                   x:Shared="False" AllowsColumnReorder="False" 
                   d:DataContext="{d:DesignInstance IsDesignTimeCreatable=True, Type={x:Type dataModel:User}}">
@@ -76,7 +76,7 @@
                                     <Image Source="/TenzoMeterGUI;component/icons/remove.png" Stretch="None"  />
                                 </Button.Content>
                             </Button>
-                            <Button Content="Rst" ToolTip="Обновить список" Command="{Binding CMDResetList}" Visibility="Visible"/>
+                            <!--<Button Content="Rst" ToolTip="Обновить список" Command="{Binding CMDResetList}" Visibility="Visible"/>-->
                             <Button ToolTip="Редактировать информацию" Command="{Binding CMDEditSelected}" IsEnabled="{Binding CanUserOpen}">
                                 <Button.Content>
                                     <Image Source="/TenzoMeterGUI;component/icons/edit.png" Stretch="None" />
@@ -123,9 +123,9 @@
                                              VerticalAlignment="Top" VerticalContentAlignment="Top" VerticalScrollBarVisibility="Auto"/>
                                 </DockPanel>
                             </StackPanel>
-                            <Button DockPanel.Dock="Bottom" Margin="0,5,0,0" Content="Открыть" HorizontalAlignment="Right"
+                            <Button DockPanel.Dock="Bottom" Margin="0,5,21,0" Content="Перейти к измерениям пациента" HorizontalAlignment="Right"
                                     IsEnabled="{Binding CanUserOpen}"
-                                    Command="{Binding CMDOpenUser}"/>
+                                    Command="{Binding CMDOpenUser}" Width="190"/>
                             <DockPanel>
                                 <TextBlock DockPanel.Dock="Top" Text="Список проведенных измерений:"/>
                                 <ListView x:Name="MsmList" ItemsSource="{Binding SelectedUser.Msms}" SelectedValue="{Binding SelectedMsm}">

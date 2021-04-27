@@ -35,7 +35,7 @@ namespace tEngine.TMeter.DataModel
             LoadFromArray(msm.ToByteArray());
         }
 
-        public void AddData(Hand left, Hand right) => mData.AddHands(left, right);
+        public void AddData(HandRawData left, HandRawData right) => mData.AddHands(left, right);
 
         public void Copy(Measurement msm)
         {
@@ -71,10 +71,10 @@ namespace tEngine.TMeter.DataModel
                     .Select(i => (short)(200 + dataTremor[i]))
                     .ToList();
             testMsm.AddData(
-                new Hand() { Const = dataConst, Tremor = dataTremor },
-                new Hand()
+                new HandRawData() { Constant = dataConst, Tremor = dataTremor },
+                new HandRawData()
                 {
-                    Const = dataConst.Select(s => (short)(s + 10)).ToList(),
+                    Constant = dataConst.Select(s => (short)(s + 10)).ToList(),
                     Tremor = dataTremor.Select(s => (short)(s + 10)).ToList()
                 });
 
@@ -118,7 +118,7 @@ namespace tEngine.TMeter.DataModel
                         $"{RConstant[i]};{RTremor[i]};{"\"\""};{RCorrelation[i]}");
                 }
             }
-            FileIO.WriteText(filePath, sb.ToString());
+            FileIO.WriteString(filePath, sb.ToString());
         }
 
         public void SetData(MeasurementData data)

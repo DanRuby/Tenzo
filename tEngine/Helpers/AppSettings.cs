@@ -7,7 +7,7 @@ using tEngine.TMeter;
 namespace tEngine.Helpers
 {
     /// <summary>
-    /// Д: Класс который сохраняет и загружает настройки проектов
+    /// Сохраняет и загружает настройки программы
     /// </summary>
     public class AppSettings
     {
@@ -23,8 +23,18 @@ namespace tEngine.Helpers
         private static Dictionary<string, string> Settings = new Dictionary<string, string>();
         private static bool WasOpen = false;
 
+        /// <summary>
+        /// Константы приложения
+        /// </summary>
         public static Constants Constants => mConstants;
 
+        /// <summary>
+        /// Получить значение настройки типа Т
+        /// </summary>
+        /// <typeparam name="T">Тип возвращаемого значения</typeparam>
+        /// <param name="key">Настройка</param>
+        /// <param name="defValue"></param>
+        /// <returns></returns>
         public static T GetValue<T>(string key, T defValue = default(T))
         {
             try
@@ -44,6 +54,9 @@ namespace tEngine.Helpers
             }
         }
 
+        /// <summary>
+        /// Инициализировать настройки
+        /// </summary>
         public static void Init()
         {
             //Type tp = ConstantsClass.ContainsKey(project) ? ConstantsClass[project] : typeof(CommonConstants);
@@ -51,14 +64,17 @@ namespace tEngine.Helpers
             Open();
         }
 
-        public static void Open()
+        /// <summary>
+        /// Считать данные из файла
+        /// </summary>
+        private static void Open()
         {
             if (WasOpen == false)
             {
                 try
                 {
                     string jsonText;
-                    bool result = FileIO.ReadText(mConstants.AppSettings, out jsonText);
+                    bool result = FileIO.ReadString(mConstants.AppSettings, out jsonText);
                     if (result)
                     {
                         Settings = JsonConvert.DeserializeObject<Dictionary<string, string>>(jsonText);
@@ -74,22 +90,35 @@ namespace tEngine.Helpers
             WasOpen = true;
         }
 
+        /// <summary>
+        /// Удалить настройку
+        /// </summary>
+        /// <param name="key">Настройка</param>
         public static void RemoveSet(string key)
         {
             if (Settings.ContainsKey(key))
                 Settings.Remove(key);
         }
 
+        /// <summary>
+        /// Сохранить настройки
+        /// </summary>
         public static void Save()
         {
             if (mConstants == null)
                 return;
             JsonSerializerSettings settings = new JsonSerializerSettings() { ContractResolver = new JSONContractResolver() };
             string jsonString = JsonConvert.SerializeObject(Settings, settings);
-            FileIO.WriteText(mConstants.AppSettings, jsonString);
+            FileIO.WriteString(mConstants.AppSettings, jsonString);
             WasOpen = false;
         }
 
+        /// <summary>
+        /// Установить значение настройки
+        /// </summary>
+        /// <typeparam name="T">Тип устанавливаемого значения</typeparam>
+        /// <param name="key">Настройка</param>
+        /// <param name="value">Значение</param>
         public static void SetValue<T>(string key, T value)
         {
             string jsonString = JsonConvert.SerializeObject(value);

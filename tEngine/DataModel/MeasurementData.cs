@@ -14,26 +14,29 @@ namespace tEngine.DataModel
 {
     public enum Hands
     {
-        Left,
-        Right
+        Left=0,
+        Right=1
     }
 
+    /// <summary>
+    /// Инкапсуляция данных измерения
+    /// </summary>
     [DataContract]
     public class MeasurementData
     {
         private readonly Mutex mMutex = new Mutex();
-        private Hand[] mHands = new Hand[2] { new Hand(), new Hand() };
+        private HandRawData[] mHands = new HandRawData[2] { new HandRawData(), new HandRawData() };
         private List<HandGraphs> mHandsData = new List<HandGraphs>() { new HandGraphs(), new HandGraphs() };
         private double mTime;
 
         [DataMember]
         public int BeginPoint
         {
-            get => mHands[0].BeginPoint;
+            get => mHands[(int)Hands.Left].BeginPoint;
             set
             {
-                mHands[0].BeginPoint = value;
-                mHands[1].BeginPoint = value;
+                mHands[(int)Hands.Left].BeginPoint = value;
+                mHands[(int)Hands.Right].BeginPoint = value;
                 ClearData();
             }
         }
@@ -41,37 +44,37 @@ namespace tEngine.DataModel
         /// <summary>
         /// Количество выделенных измерений доступных для анализа
         /// </summary>
-        public int Count => mHandsData[0].Constant.Count;
+        public int Count => mHandsData[(int)Hands.Left].Constant.Count;
 
         /// <summary>
         /// Количество имеющихся изерений
         /// </summary>
-        public int CountBase => mHands[0].Const.Count;
+        public int CountBase => mHands[(int)Hands.Left].Constant.Count;
 
         [DataMember]
         public int EndPoint
         {
-            get => mHands[0].EndPoint;
+            get => mHands[(int)Hands.Left].EndPoint;
             set
             {
-                mHands[0].EndPoint = value;
-                mHands[1].EndPoint = value;
+                mHands[(int)Hands.Left].EndPoint = value;
+                mHands[(int)Hands.Right].EndPoint = value;
                 ClearData();
             }
         }
 
-        public bool HasBaseData => mHandsData[0].HasConstant && mHandsData[1].HasConstant &&
-                       mHandsData[0].HasTremor && mHandsData[1].HasTremor;
+        public bool HasBaseData => mHandsData[(int)Hands.Left].HasConstant && mHandsData[(int)Hands.Right].HasConstant &&
+                       mHandsData[(int)Hands.Left].HasTremor && mHandsData[(int)Hands.Right].HasTremor;
 
-        public bool HasCorrelation => mHandsData[0].HasCorrelation && mHandsData[1].HasCorrelation;
+        public bool HasCorrelation => mHandsData[(int)Hands.Left].HasAutoCorrelation && mHandsData[(int)Hands.Right].HasAutoCorrelation;
 
-        public bool HasSomeData => !(mHands[0].Const.IsNullOrEmpty() || mHands[1].Const.IsNullOrEmpty());
+        public bool HasSomeData => !(mHands[(int)Hands.Left].Constant.IsNullOrEmpty() || mHands[(int)Hands.Right].Constant.IsNullOrEmpty());
 
-        public bool HasSpectrum => mHandsData[0].HasSpectrum && mHandsData[1].HasSpectrum;
+        public bool HasSpectrum => mHandsData[(int)Hands.Left].HasSpectrum && mHandsData[(int)Hands.Right].HasSpectrum;
 
-        public HandGraphs Left => mHandsData[0];
+        public HandGraphs Left => mHandsData[(int)Hands.Left];
 
-        public HandGraphs Right => mHandsData[1];
+        public HandGraphs Right => mHandsData[(int)Hands.Right];
 
         /// <summary>
         /// Время в секундах
@@ -85,15 +88,15 @@ namespace tEngine.DataModel
 
         public MeasurementData() => Time = AppSettings.GetValue("DataTime", 30.0);
 
-        public void AddHands(Hand left, Hand right)
+        public void AddHands(HandRawData left, HandRawData right)
         {
-            mHands[0] += left;
-            mHands[1] += right;
+            mHands[(int)Hands.Left] += left;
+            mHands[(int)Hands.Right] += right;
         }
 
         /// <summary>
         /// Добавляет в очередь поток базовой обработки. 
-        /// Запуск через TData.StartCalc(). Финальная функция через TData.AddTaskFinal()
+        /// Запуск через StartCalc(). Финальная функция через AddTaskFinal()
         /// </summary>
         /// <returns></returns>
         public Guid BaseAnalys(Action<double, double> percentCallBack, Action<MeasurementData, bool> finalCallBack)
@@ -155,35 +158,15 @@ namespace tEngine.DataModel
             }
         }
 
-        public IList<DataPoint> GetConst(Hands hand)
-        {
-            int index = (hand == Hands.Left) ? 0 : 1;
-            return mHandsData[index].Constant.DataPoints;
-        }
+        public IList<DataPoint> GetConst(Hands hand) => mHandsData[(int)hand].Constant.DataPoints;
 
-        public IEnumerable<short> GetConstBase(Hands hand)
-        {
-            int index = (hand == Hands.Left) ? 0 : 1;
-            return mHands[index].Const;
-        }
+        public IEnumerable<short> GetConstBase(Hands hand) => mHands[(int)hand].Constant;
 
-        public IList<DataPoint> GetCorrelation(Hands hand)
-        {
-            int index = (hand == Hands.Left) ? 0 : 1;
-            return mHandsData[index].Correlation.DataPoints;
-        }
+        public IList<DataPoint> GetCorrelation(Hands hand) => mHandsData[(int)hand].AutoCorrelation.DataPoints;
 
-        public IList<DataPoint> GetSpectrum(Hands hand)
-        {
-            int index = (hand == Hands.Left) ? 0 : 1;
-            return mHandsData[index].Spectrum.DataPoints;
-        }
+        public IList<DataPoint> GetSpectrum(Hands hand) => mHandsData[(int)hand].Spectrum.DataPoints;
 
-        public IList<DataPoint> GetTremor(Hands hand)
-        {
-            int index = (hand == Hands.Left) ? 0 : 1;
-            return mHandsData[index].Tremor.DataPoints;
-        }
+        public IList<DataPoint> GetTremor(Hands hand) => mHandsData[(int)hand].Tremor.DataPoints;
 
         /// <summary>
         /// Возвращает амплитуду тремора
@@ -192,8 +175,7 @@ namespace tEngine.DataModel
         /// <returns></returns>
         public double GetTremorAmplitude(Hands hand)
         {
-            int index = (hand == Hands.Left) ? 0 : 1;
-            double interval = mHandsData[index].Tremor.Max - mHandsData[index].Tremor.Min;
+            double interval = mHandsData[(int)hand].Tremor.Max - mHandsData[(int)hand].Tremor.Min;
             return Math.Abs(interval);
         }
 
@@ -202,65 +184,9 @@ namespace tEngine.DataModel
         /// </summary>
         /// <param name="hand"></param>
         /// <returns></returns>
-        public IEnumerable<short> GetTremorBase(Hands hand)
-        {
-            int index = (hand == Hands.Left) ? 0 : 1;
-            return mHands[index].Tremor;
-        }
+        public IEnumerable<short> GetTremorBase(Hands hand) => mHands[(int)hand].Tremor;
 
-        public bool LoadFromArray(byte[] array)
-        {
-            byte[][] handsData = BytesPacker.UnpackBytes(array);
-
-            if (handsData.Length >= 2)
-            {
-                bool h1 = mHands[0].LoadFromArray(handsData[0]);
-                bool h2 = mHands[1].LoadFromArray(handsData[1]);
-                if ((h1 || h2) == false)
-                    return false;
-            }
-
-            if (handsData.Length >= 8)
-            {
-                IEnumerable<DataPoint> const0 = handsData[2].GetCollectionDataPoint();
-                IEnumerable<DataPoint> const1 = handsData[3].GetCollectionDataPoint();
-                IEnumerable<DataPoint> tremor0 = handsData[4].GetCollectionDataPoint();
-                IEnumerable<DataPoint> tremor1 = handsData[5].GetCollectionDataPoint();
-                IEnumerable<DataPoint> spectrum0 = handsData[6].GetCollectionDataPoint();
-                IEnumerable<DataPoint> spectrum1 = handsData[7].GetCollectionDataPoint();
-
-                if (const0 != null && const1 != null &&
-                    tremor0 != null && tremor1 != null)
-                {
-                    mHandsData[0].Constant.DataPoints = const0.ToList();
-                    mHandsData[1].Constant.DataPoints = const1.ToList();
-                    mHandsData[0].Tremor.DataPoints = tremor0.ToList();
-                    mHandsData[1].Tremor.DataPoints = tremor1.ToList();
-                    if (spectrum0 != null && spectrum1 != null)
-                    {
-                        mHandsData[0].Spectrum.DataPoints = spectrum0.ToList();
-                        mHandsData[1].Spectrum.DataPoints = spectrum1.ToList();
-                    }
-                }
-            }
-            if (handsData.Length >= 9)
-            {
-                MeasurementData obj = BytesPacker.LoadJSONObj<MeasurementData>(handsData[8]);
-                Time = obj.Time;
-            }
-
-            if (handsData.Length >= 11)
-            {
-                IEnumerable<DataPoint> corr0 = handsData[9].GetCollectionDataPoint();
-                IEnumerable<DataPoint> corr1 = handsData[10].GetCollectionDataPoint();
-                if (corr0 != null && corr1 != null)
-                {
-                    mHandsData[0].Correlation.DataPoints = corr0.ToList();
-                    mHandsData[1].Correlation.DataPoints = corr1.ToList();
-                }
-            }
-            return true;
-        }
+      
 
         public Guid SpectrumAnalys(Action<double, double> percentCallBack, Action<MeasurementData, bool> finalCallBack,
             bool corr = false)
@@ -283,7 +209,7 @@ namespace tEngine.DataModel
                 lock (mLock)
                 {
                     mHandsData.ForEach(hd => hd.Spectrum.Clear());
-                    mHandsData.ForEach(hd => hd.Correlation.Clear());
+                    mHandsData.ForEach(hd => hd.AutoCorrelation.Clear());
                 }
 
                 bool result = Async_SpectrumAnalys((CancellationToken)param, percentAction, corr);
@@ -292,7 +218,7 @@ namespace tEngine.DataModel
                     lock (mLock)
                     {
                         mHandsData.ForEach(hd => hd.Spectrum.Clear());
-                        mHandsData.ForEach(hd => hd.Correlation.Clear());
+                        mHandsData.ForEach(hd => hd.AutoCorrelation.Clear());
                     }
                 }
                 if (finalCallBack != null)
@@ -303,25 +229,6 @@ namespace tEngine.DataModel
 
             AddTaskQueue(id, taska, cts);
             return id;
-        }
-
-        public byte[] ToByteArray()
-        {
-            byte[] hand1 = mHands[0].ToByteArray();
-            byte[] hand2 = mHands[1].ToByteArray();
-            byte[] const1 = mHandsData[0].Constant.DataPoints.ToByteArray();
-            byte[] const2 = mHandsData[1].Constant.DataPoints.ToByteArray();
-            byte[] tremor1 = mHandsData[0].Tremor.DataPoints.ToByteArray();
-            byte[] tremor2 = mHandsData[1].Tremor.DataPoints.ToByteArray();
-            byte[] spectrum1 = mHandsData[0].Spectrum.DataPoints.ToByteArray();
-            byte[] spectrum2 = mHandsData[1].Spectrum.DataPoints.ToByteArray();
-            byte[] corr1 = mHandsData[0].Correlation.DataPoints.ToByteArray();
-            byte[] corr2 = mHandsData[1].Correlation.DataPoints.ToByteArray();
-            byte[] json = BytesPacker.JSONObj(this);
-            byte[] handsData = BytesPacker.PackBytes(hand1, hand2, const1, const2, tremor1, tremor2, spectrum1, spectrum2,
-                json, corr1, corr2);
-
-            return handsData;
         }
 
         /// <summary>
@@ -340,7 +247,7 @@ namespace tEngine.DataModel
 
             for (int i = 0; i < 2; i++)
             {
-                IEnumerable<short> cd = mHands[i].Const.Where((s, index) => (index >= BeginPoint && index <= EndPoint));
+                IEnumerable<short> cd = mHands[i].Constant.Where((s, index) => (index >= BeginPoint && index <= EndPoint));
                 IEnumerable<short> td = mHands[i].Tremor.Where((s, index) => (index >= BeginPoint && index <= EndPoint));
                 List<short> constData = cd.Any() ? cd.ToList() : null;
                 List<short> tremorData = td.Any() ? td.ToList() : null;
@@ -353,7 +260,7 @@ namespace tEngine.DataModel
                 }
 
                 // временной шаг, считаем что все промежутки между отсчетами равны
-                double dt = Time / mHands[i].GetLength();
+                double dt = Time / mHands[i].Constant.Count;
 
                 percent[i] = 10;
                 percentAction(percent[0], percent[1]);
@@ -418,7 +325,7 @@ namespace tEngine.DataModel
                     IEnumerable<DataPoint> first =
                         den.Skip(secondCount)
                             .Select((complex, x) => new DataPoint(dt * (x - firstCount), complex.Magnitude));
-                    mHandsData[i].Correlation.DataPoints = first.Concat(second).ToList();
+                    mHandsData[i].AutoCorrelation.DataPoints = first.Concat(second).ToList();
                 }
 
                 percent[i] = 100;
@@ -426,6 +333,147 @@ namespace tEngine.DataModel
             }
             return true;
         }
+
+        public bool LoadFromArray(byte[] array)
+        {
+            byte[][] handsData = BytesPacker.UnpackBytes(array);
+
+            if (handsData.Length >= 2)
+            {
+                bool h1 = mHands[(int)Hands.Left].LoadFromArray(handsData[(int)Hands.Left]);
+                bool h2 = mHands[(int)Hands.Right].LoadFromArray(handsData[(int)Hands.Right]);
+                if ((h1 || h2) == false)
+                    return false;
+            }
+
+            if (handsData.Length >= 8)
+            {
+                IEnumerable<DataPoint> const0 = handsData[2].GetCollectionDataPoint();
+                IEnumerable<DataPoint> const1 = handsData[3].GetCollectionDataPoint();
+                IEnumerable<DataPoint> tremor0 = handsData[4].GetCollectionDataPoint();
+                IEnumerable<DataPoint> tremor1 = handsData[5].GetCollectionDataPoint();
+                IEnumerable<DataPoint> spectrum0 = handsData[6].GetCollectionDataPoint();
+                IEnumerable<DataPoint> spectrum1 = handsData[7].GetCollectionDataPoint();
+
+                if (const0 != null && const1 != null &&
+                    tremor0 != null && tremor1 != null)
+                {
+                    mHandsData[(int)Hands.Left].Constant.DataPoints = const0.ToList();
+                    mHandsData[(int)Hands.Right].Constant.DataPoints = const1.ToList();
+                    mHandsData[(int)Hands.Left].Tremor.DataPoints = tremor0.ToList();
+                    mHandsData[(int)Hands.Right].Tremor.DataPoints = tremor1.ToList();
+                    if (spectrum0 != null && spectrum1 != null)
+                    {
+                        mHandsData[(int)Hands.Left].Spectrum.DataPoints = spectrum0.ToList();
+                        mHandsData[(int)Hands.Right].Spectrum.DataPoints = spectrum1.ToList();
+                    }
+                }
+            }
+            if (handsData.Length >= 9)
+            {
+                MeasurementData obj = BytesPacker.LoadJSONObj<MeasurementData>(handsData[8]);
+                Time = obj.Time;
+            }
+
+            if (handsData.Length >= 11)
+            {
+                IEnumerable<DataPoint> corr0 = handsData[9].GetCollectionDataPoint();
+                IEnumerable<DataPoint> corr1 = handsData[10].GetCollectionDataPoint();
+                if (corr0 != null && corr1 != null)
+                {
+                    mHandsData[(int)Hands.Left].AutoCorrelation.DataPoints = corr0.ToList();
+                    mHandsData[(int)Hands.Right].AutoCorrelation.DataPoints = corr1.ToList();
+                }
+            }
+            return true;
+        }
+
+        public byte[] ToByteArray()
+        {
+            byte[] hand1 = mHands[(int)Hands.Left].ToByteArray();
+            byte[] hand2 = mHands[(int)Hands.Right].ToByteArray();
+            byte[] const1 = mHandsData[(int)Hands.Left].Constant.DataPoints.ToByteArray();
+            byte[] const2 = mHandsData[(int)Hands.Right].Constant.DataPoints.ToByteArray();
+            byte[] tremor1 = mHandsData[(int)Hands.Left].Tremor.DataPoints.ToByteArray();
+            byte[] tremor2 = mHandsData[(int)Hands.Right].Tremor.DataPoints.ToByteArray();
+            byte[] spectrum1 = mHandsData[(int)Hands.Left].Spectrum.DataPoints.ToByteArray();
+            byte[] spectrum2 = mHandsData[(int)Hands.Right].Spectrum.DataPoints.ToByteArray();
+            byte[] corr1 = mHandsData[(int)Hands.Left].AutoCorrelation.DataPoints.ToByteArray();
+            byte[] corr2 = mHandsData[(int)Hands.Right].AutoCorrelation.DataPoints.ToByteArray();
+            byte[] json = BytesPacker.JSONObj(this);
+            byte[] handsData = BytesPacker.PackBytes(hand1, hand2, const1, const2, tremor1, tremor2, spectrum1, spectrum2,
+                json, corr1, corr2);
+
+            return handsData;
+        }
+
+        #region TaskPool
+
+        private const int INDEX_ID = 0;
+        private const int INDEX_TASK = 1;
+        private const int INDEX_CTS = 2;
+
+        [NonSerialized]
+        private static List<object[]> TaskPoolQueue = new List<object[]>();
+
+        public static void AddTaskQueue(Guid id, Task taska, CancellationTokenSource cts)
+        {
+            lock (mLock)
+            {
+                if (TaskPoolQueue.Any())
+                    ((Task)TaskPoolQueue.Last()[INDEX_TASK]).ContinueWith(t => { taska.Start(); });
+                TaskPoolQueue.Add(new object[] { id, taska, cts });
+            }
+        }
+
+
+        public static Guid AddTaskFinal(Task taska, CancellationTokenSource cts)
+        {
+            Guid id = Guid.NewGuid();
+            taska.ContinueWith(task => { RemoveTaskQueue(id); });
+            AddTaskQueue(id, taska, cts);
+            return id;
+        }
+
+        private static Guid mCurrentPack = Guid.Empty;
+
+        public static void StartCalc()
+        {
+            lock (mLock)
+            {
+                if (TaskPoolQueue.Any())
+                    ((Task)TaskPoolQueue.First()[INDEX_TASK]).Start();
+            }
+        }
+
+
+        public static void CancelCalc()
+        {
+            lock (mLock)
+            {
+                foreach (object[] task in TaskPoolQueue)
+                {
+                    ((CancellationTokenSource)task[INDEX_CTS]).Cancel();
+                }
+            }
+        }
+
+        private static void RemoveTaskQueue(Guid id)
+        {
+            lock (mLock)
+            {
+                object[] first = TaskPoolQueue.First(objects => objects[INDEX_ID].Equals(id));
+                if (first != null)
+                {
+                    TaskPoolQueue.Remove(first);
+                }
+            }
+        }
+
+        private static readonly object mLock = new object();
+
+        #endregion
+
         #region No References
         /// <summary>
         /// Возвращает спектр на заданном диапазоне частот (из имеющихся)
@@ -660,72 +708,5 @@ namespace tEngine.DataModel
         }
 
         #endregion No References
-
-        #region TaskPool
-
-        private const int INDEX_ID = 0;
-        private const int INDEX_TASK = 1;
-        private const int INDEX_CTS = 2;
-
-        [NonSerialized]
-        private static List<object[]> TaskPoolQueue = new List<object[]>();
-
-        public static void AddTaskQueue(Guid id, Task taska, CancellationTokenSource cts)
-        {
-            lock (mLock)
-            {
-                if (TaskPoolQueue.Any())
-                    ((Task)TaskPoolQueue.Last()[INDEX_TASK]).ContinueWith(t => { taska.Start(); });
-                TaskPoolQueue.Add(new object[] { id, taska, cts });
-            }
-        }
-
-
-        public static Guid AddTaskFinal(Task taska, CancellationTokenSource cts)
-        {
-            Guid id = Guid.NewGuid();
-            taska.ContinueWith(task => { RemoveTaskQueue(id); });
-            AddTaskQueue(id, taska, cts);
-            return id;
-        }
-
-        private static Guid mCurrentPack = Guid.Empty;
-
-        public static void StartCalc()
-        {
-            lock (mLock)
-            {
-                if (TaskPoolQueue.Any())
-                    ((Task)TaskPoolQueue.First()[INDEX_TASK]).Start();
-            }
-        }
-
-
-        public static void CancelCalc()
-        {
-            lock (mLock)
-            {
-                foreach (object[] task in TaskPoolQueue)
-                {
-                    ((CancellationTokenSource)task[INDEX_CTS]).Cancel();
-                }
-            }
-        }
-
-        private static void RemoveTaskQueue(Guid id)
-        {
-            lock (mLock)
-            {
-                object[] first = TaskPoolQueue.First(objects => objects[INDEX_ID].Equals(id));
-                if (first != null)
-                {
-                    TaskPoolQueue.Remove(first);
-                }
-            }
-        }
-
-        private static readonly object mLock = new object();
-
-        #endregion
     }
 }

@@ -7,6 +7,9 @@ using tEngine.Helpers;
 
 namespace tEngine.Markers
 {
+    /// <summary>
+    /// Инкапсуляция маркера левой руки
+    /// </summary>
     [DataContract]
     public class Marker
     {
@@ -56,6 +59,9 @@ namespace tEngine.Markers
             UpdateSource();
         }
 
+        /// <summary>
+        /// Оновляеет битмап, используя свойства маркера 
+        /// </summary>
         public void UpdateSource()
         {
             if (mWidth == 0 || mHeight == 0)
@@ -67,6 +73,11 @@ namespace tEngine.Markers
             Drawer.DrawRectangle(mSource, new Rect(0, 0, mSource.PixelWidth, mSource.PixelHeight), mColor);
         }
 
+        /// <summary>
+        /// Нарисовать маркер в битмап
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="yPos">Верхняя граница маркера</param>
         public virtual void Draw(WriteableBitmap bitmap, int yPos)
         {
             if (bitmap == null)

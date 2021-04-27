@@ -6,7 +6,7 @@ using System.Xml;
 using System.Xml.Serialization;
 
 namespace tEngine.Helpers
-{
+{/*
     public class Serializator
     {
         public static T DeserializeClass<T>(string filepath)
@@ -218,5 +218,5 @@ namespace tEngine.Helpers
                 return null;
             }
         }
-    }
+    }*/
 }

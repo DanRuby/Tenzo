@@ -6,6 +6,9 @@ using OxyPlot;
 
 namespace tEngine.Helpers
 {
+    /// <summary>
+    /// Расширения LINQ
+    /// </summary>
     public static class LINQExtention
     {
         /// <summary>

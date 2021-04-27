@@ -8,7 +8,7 @@ using tEngine.PlotCreator;
 namespace tEngine.Helpers
 {
     /// <summary>
-    /// Д: копирует все поля или свойсва объекта
+    /// Класс с методами копирования объектов
     /// </summary>
     public class Cloner
     {
@@ -21,6 +21,11 @@ namespace tEngine.Helpers
             return serializer.Deserialize(tempStream);
         }
 
+        /// <summary>
+        /// Скопировать значения всех полей
+        /// </summary>
+        /// <param name="dest"></param>
+        /// <param name="src"></param>
         public static void CopyAllFields(object dest, object src)
         {
             System.Reflection.FieldInfo[] srcFields = src.GetType().GetFields();
@@ -56,6 +61,11 @@ namespace tEngine.Helpers
             }
         }
 
+        /// <summary>
+        /// Скопировать значения всех свойств
+        /// </summary>
+        /// <param name="dest"></param>
+        /// <param name="src"></param>
         public static void CopyAllProperties(object dest, object src)
         {
             System.Reflection.PropertyInfo[] srcProp = src.GetType().GetProperties();

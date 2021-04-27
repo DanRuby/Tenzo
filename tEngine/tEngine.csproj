@@ -126,12 +126,14 @@
     <Compile Include="PlotCreator\PlotSettings.xaml.cs">
       <DependentUpon>PlotSettings.xaml</DependentUpon>
     </Compile>
+    <Compile Include="Recorder\DeviceCounters.cs" />
     <Compile Include="Recorder\Packet.cs" />
+    <Compile Include="Recorder\PerSeconds.cs" />
     <Compile Include="TMeter\DataModel\Measurement.cs" />
     <Compile Include="TMeter\DataModel\User.cs" />
     <Compile Include="Helpers\FileIO.cs" />
     <Compile Include="Helpers\JSONContractResolver.cs" />
-    <Compile Include="DataModel\Hand.cs" />
+    <Compile Include="DataModel\HandRawData.cs" />
     <Compile Include="DataModel\MeasurementData.cs" />
     <Compile Include="Helpers\AppSettings.cs" />
     <Compile Include="TMeter\Constants.cs" />

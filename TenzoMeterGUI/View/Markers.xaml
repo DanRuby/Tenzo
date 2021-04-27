@@ -11,6 +11,6 @@
     <Grid>
         <!--<ToggleButton x:Name="tgb" VerticalAlignment="Top" HorizontalAlignment="Left" Content="Отладка" Panel.ZIndex="2" Click="ToggleButton_Click"
                       Visibility="Visible"/>--> 
-        <markers:UIMarkers x:Name="MarkersArea"/> 
+        <markers:UIMarkers x:Name="UiMarkers"/> 
     </Grid>
 </Window>

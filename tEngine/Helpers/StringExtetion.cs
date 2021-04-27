@@ -8,7 +8,7 @@ namespace tEngine.Helpers
     public static class StringExtetion
     {
         /// <summary>
-        /// ..\path => ..\path\
+        /// Добавляет \ к концу пути
         /// </summary>
         public static string CorrectSlash(this string path)
         {
@@ -18,9 +18,15 @@ namespace tEngine.Helpers
             return path;
         }
 
+        /// <summary>
+        /// ОБрезать имя файла в пути
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static string CutFileName(this string path)
         {
-            if (string.IsNullOrEmpty(path)) return "";
+            if (string.IsNullOrEmpty(path)) 
+                return "";
             DirectoryInfo dinfo = new FileInfo(path).Directory;
             if (dinfo != null)
                 return dinfo.FullName;

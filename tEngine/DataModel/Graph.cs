@@ -4,11 +4,21 @@ using OxyPlot;
 
 namespace tEngine.DataModel
 {
+    /// <summary>
+    /// Инкапсуляция данных для графиков
+    /// </summary>
     public class Graph
     {
         private List<DataPoint> dataPoints;
-        public int Count { get; set; }
 
+        /// <summary>
+        /// Количество точек  
+        /// </summary>
+        public int Count => dataPoints.Count;
+
+        /// <summary>
+        /// Точки
+        /// </summary>
         public List<DataPoint> DataPoints
         {
             get => dataPoints;
@@ -17,7 +27,6 @@ namespace tEngine.DataModel
                 dataPoints = value;
                 if (dataPoints != null)
                 {
-                    Count = dataPoints.Count;
                     if (Count > 0)
                     {
                         Mean = dataPoints.Average(point => point.Y);
@@ -34,20 +43,31 @@ namespace tEngine.DataModel
             }
         }
 
+        /// <summary>
+        /// Имеются ли данные
+        /// </summary>
         public bool HasData => DataPoints != null && Count > 0;
-
+        
+        /// <summary>
+        /// Максимум на графике 
+        /// </summary>
         public double Max { get; private set; }
+
+        /// <summary>
+        /// Среднее значение
+        /// </summary>
         public double Mean { get; private set; }
+
+        /// <summary>
+        /// Минимум на графике
+        /// </summary>
         public double Min { get; private set; }
 
-        public Graph()
-        {
-            DataPoints = new List<DataPoint>();
-        }
+        public Graph() => DataPoints = new List<DataPoint>();
 
-        public void Clear()
-        {
-            DataPoints = new List<DataPoint>();
-        }
+        /// <summary>
+        /// Очистить данные
+        /// </summary>
+        public void Clear() => DataPoints = new List<DataPoint>();
     }
 }

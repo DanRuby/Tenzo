@@ -6,8 +6,18 @@ using System.Windows.Media.Imaging;
 
 namespace tEngine.Markers
 {
+    /// <summary>
+    /// Методы для рисования маркеров
+    /// </summary>
     public class Drawer
     {
+        /// <summary>
+        /// Скопировать рисунок в другой
+        /// </summary>
+        /// <param name="source"> Откуда копировать</param>
+        /// <param name="sourceRect"> Что копировать</param>
+        /// <param name="dest"> Куда копировать</param>
+        /// <param name="destRect"> В какое место копировать</param>
         public static void CopyPart(WriteableBitmap source, Rect sourceRect, WriteableBitmap dest, Rect destRect)
         {
             var sourceRc_ = CorrectRect(source, sourceRect);
@@ -40,7 +50,13 @@ namespace tEngine.Markers
                 data, stride, 0);
         }
 
-        public static Rect? CorrectRect(WriteableBitmap bitmap, Rect rect)
+        /// <summary>
+        /// Корректирует прямоугольник на рисунке. Возвращает null, если он не может существовать внутри рисунка
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="rect"></param>
+        /// <returns></returns>
+        private static Rect? CorrectRect(WriteableBitmap bitmap, Rect rect)
         {
             Rect result = new Rect(rect.Location, rect.Size);
             if (result.X > bitmap.PixelWidth || result.Y > bitmap.PixelHeight)
@@ -67,6 +83,12 @@ namespace tEngine.Markers
             return result;
         }
 
+        /// <summary>
+        /// Нарисовать прямоугольник 
+        /// </summary>
+        /// <param name="writeableBitmap">Источник для создания прямоугольника </param>
+        /// <param name="rect">Прямоугольник</param>
+        /// <param name="color">Цвет прямоугольника</param>
         public static void DrawRectangle(WriteableBitmap writeableBitmap, Rect rect, Color color)
         {
             try

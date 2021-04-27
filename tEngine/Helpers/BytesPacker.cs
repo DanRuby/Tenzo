@@ -7,24 +7,29 @@ using OxyPlot;
 namespace tEngine.Helpers
 {
     /// <summary>
-    /// Д: класс с методами перевода массивов байтов в другие типы и разбиения массивов
+    /// Класс с методами перевода массивов байтов в другие типы и разбиения массивов
     /// </summary>
     public static class BytesPacker
     {
-        public static byte[] GetBytes(string str)
+        private static byte[] GetBytes(string str)
         {
             byte[] bytes = new byte[str.Length * sizeof(char)];
             Buffer.BlockCopy(str.ToCharArray(), 0, bytes, 0, bytes.Length);
             return bytes;
         }
 
-        public static string GetString(byte[] bytes)
+        private static string GetString(byte[] bytes)
         {
             char[] chars = new char[bytes.Length / sizeof(char)];
             Buffer.BlockCopy(bytes, 0, chars, 0, bytes.Length);
             return new string(chars);
         }
 
+        /// <summary>
+        /// Сереиализовать объект класса в JSON объект  
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public static byte[] JSONObj(object obj)
         {
             JsonSerializerSettings settings = new JsonSerializerSettings { ContractResolver = new JSONContractResolver() };
@@ -32,11 +37,19 @@ namespace tEngine.Helpers
             return GetBytes(json);
         }
 
-        public static T LoadJSONObj<T>(byte[] json)
-        {
-            return JsonConvert.DeserializeObject<T>(GetString(json));
-        }
+        /// <summary>
+        /// Десериалиазовать строку JSON в объект типа Т 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="json"></param>
+        /// <returns></returns>
+        public static T LoadJSONObj<T>(byte[] json) => JsonConvert.DeserializeObject<T>(GetString(json));
 
+        /// <summary>
+        /// Переформировать несколько массивов в один 
+        /// </summary>
+        /// <param name="arrays"></param>
+        /// <returns></returns>
         public static byte[] PackBytes(params byte[][] arrays)
         {
             uint count = Convert.ToUInt32(arrays.Length);
@@ -62,6 +75,11 @@ namespace tEngine.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Распаковать массив байтов на несколько массивов
+        /// </summary>
+        /// <param name="array"></param>
+        /// <returns></returns>
         public static byte[][] UnpackBytes(byte[] array)
         {
             if (array.Length == 0)

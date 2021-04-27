@@ -8,6 +8,9 @@ using tEngine.Helpers;
 
 namespace tEngine.Markers
 {
+    /// <summary>
+    /// Инкапсулирует маркеры и предоставляет методы для их рисования
+    /// </summary>
     [DataContract]
     public class MArea
     {
@@ -61,15 +64,15 @@ namespace tEngine.Markers
             UpdateArea(area);
         }
 
-        public void DrawAll(int left, int right)
+        public void RedrawEverything(int left, int right)
         {
             DrawBackground();
-            CopyBacground();
+            CopyBackground();
             DrawMarkers(left, right);
             CopyMarkers();
         }
 
-        public void DrawPart(int left, int right)
+        public void RedrawMarkers(int left, int right)
         {
             DrawMarkers(left, right);
             CopyMarkers();
@@ -97,27 +100,38 @@ namespace tEngine.Markers
             Color = Colors.Azure;
         }
 
+        /// <summary>
+        /// Сохранить параметры
+        /// </summary>
         public void SaveSettings()
         {
             JsonSerializerSettings settings = new JsonSerializerSettings() { ContractResolver = new JSONContractResolver() };
             string json = JsonConvert.SerializeObject(this, settings);
-            FileIO.WriteText(AppSettings.Constants.MarkersSettings, json);
+            FileIO.WriteString(AppSettings.Constants.MarkersSettings, json);
         }
 
+        /// <summary>
+        /// Обновить битмап на новую
+        /// </summary>
+        /// <param name="area">Новая битмап</param>
         public void UpdateArea(WriteableBitmap area)
         {
-            if (area == null) return;
+            if (area == null)
+                return;
             mSource = new WriteableBitmap(area.Clone());
             mBackground = new WriteableBitmap(area.Clone());
             mDest = area;
-            DrawAll(mLastLeft, mLastRight);
+            RedrawEverything(mLastLeft, mLastRight);
         }
 
+        /// <summary>
+        /// Обновить параметры
+        /// </summary>
         public void UpdateSettings()
         {
             MArea set;
             string json;
-            bool result = FileIO.ReadText(AppSettings.Constants.MarkersSettings, out json);
+            bool result = FileIO.ReadString(AppSettings.Constants.MarkersSettings, out json);
             try
             {
                 if (result)
@@ -150,12 +164,18 @@ namespace tEngine.Markers
             MarkerRightHand.UpdateSource();
         }
 
-        private void CopyBacground()
+        /// <summary>
+        /// Скопировать фон
+        /// </summary>
+        private void CopyBackground()
         {
             Rect rect = new Rect(0, 0, mSource.PixelWidth, mSource.PixelHeight);
             Drawer.CopyPart(mBackground, rect, mDest, rect);
         }
 
+        /// <summary>
+        /// Скопировать маркеры
+        /// </summary>
         private void CopyMarkers()
         {
             Rect rect = new Rect();
@@ -167,6 +187,9 @@ namespace tEngine.Markers
             Drawer.CopyPart(mSource, rect, mDest, rect);
         }
 
+        /// <summary>
+        /// Нарисовать фон
+        /// </summary>
         private void DrawBackground()
         {
             Rect rect = new Rect(0, 0, mSource.PixelWidth, mSource.PixelHeight);
@@ -189,6 +212,11 @@ namespace tEngine.Markers
             Drawer.CopyPart(mBackground, rect, mSource, rect);
         }
 
+        /// <summary>
+        /// Нарисовать маркеры
+        /// </summary>
+        /// <param name="left"></param>
+        /// <param name="right"></param>
         private void DrawMarkers(int left, int right)
         {
             int y1 = RelToAbsY(left);
@@ -208,6 +236,13 @@ namespace tEngine.Markers
             mLastRight = right;
         }
 
+        /// <summary>
+        /// Зарисовать маркеры
+        /// </summary>
+        /// <param name="bitmap"></param>
+        /// <param name="y"></param>
+        /// <param name="width"></param>
+        /// <param name="height"></param>
         private void HideMarker(WriteableBitmap bitmap, int y, int width, int height)
         {
             Rect rect = new Rect();
@@ -219,6 +254,11 @@ namespace tEngine.Markers
             Drawer.CopyPart(mBackground, rect, bitmap, rect);
         }
 
+        /// <summary>
+        /// Получить положительную координату относительно размеров зоны и ее параметров  
+        /// </summary>
+        /// <param name="y"></param>
+        /// <returns></returns>
         private int RelToAbsY(int y)
         {
             if (Minimum == Maximum || mDest == null)

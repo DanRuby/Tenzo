@@ -9,7 +9,7 @@ namespace tEngine.DataModel
     /// Список значений на каждую руку
     /// </summary>
     [DataContract]
-    public class Hand
+    public class HandRawData
     {
         private const int MaxLength = 50 * 1024 * 1024; // 50 мБ Д: по факту будет хранится 200 МБ инфы потому что шорт= 2 Б и 2 списка
 
@@ -20,10 +20,10 @@ namespace tEngine.DataModel
         public int BeginPoint { get; set; }
 
         ///<summary>
-        ///Д:Список не треморных значений?
+        ///Произвольная составляющая
         ///</summary>
         [DataMember]
-        public List<short> Const { get; set; }
+        public List<short> Constant { get; set; }
 
         /// <summary>
         /// Точка конца выбранного диапазона
@@ -32,30 +32,23 @@ namespace tEngine.DataModel
         public int EndPoint { get; set; }
 
         /// <summary>
-        /// Д: Список треморных значений?
+        /// Тремор
         /// </summary>
         [DataMember]
         public List<short> Tremor { get; set; }
 
-        public Hand()
+        public HandRawData()
         {
-            Const = new List<short>();
+            Constant = new List<short>();
             Tremor = new List<short>();
             ResetPoints();
         }
 
         public void Clear()
         {
-            Const.Clear();
+            Constant.Clear();
             Tremor.Clear();
             ResetPoints();
-        }
-
-        public int GetLength()
-        {
-            if (Const != null)
-                return Const.Count;
-            return 0;
         }
 
         public bool LoadFromArray(byte[] array)
@@ -63,37 +56,37 @@ namespace tEngine.DataModel
             byte[][] data = BytesPacker.UnpackBytes(array);
             if (data.Length != 2 || data[0].Length != data[1].Length)
                 return false;
-            Const = data[0].GetCollectionInt16().ToList();
+            Constant = data[0].GetCollectionInt16().ToList();
             Tremor = data[1].GetCollectionInt16().ToList();
             return true;
         }
 
-        public static Hand operator +(Hand a, Hand b)
+        public static HandRawData operator +(HandRawData a, HandRawData b)
         {
             if (a == null)
-                a = new Hand();
+                a = new HandRawData();
             if (b == null)
-                b = new Hand();
-            Hand result = new Hand();
-            result.Const.AddRange(a.Const);
-            result.Const.AddRange(b.Const);
+                b = new HandRawData();
+            HandRawData result = new HandRawData();
+            result.Constant.AddRange(a.Constant);
+            result.Constant.AddRange(b.Constant);
 
             result.Tremor.AddRange(a.Tremor);
             result.Tremor.AddRange(b.Tremor);
 
-            int notFit = result.Const.Count - MaxLength;
+            int notFit = result.Constant.Count - MaxLength;
             if (notFit > 0)
-                result.Const.RemoveRange(0, notFit);
+                result.Constant.RemoveRange(0, notFit);
             result.ResetPoints();
             return result;
         }
 
-        public byte[] ToByteArray() => BytesPacker.PackBytes(Const.ToByteArray(), Tremor.ToByteArray());
+        public byte[] ToByteArray() => BytesPacker.PackBytes(Constant.ToByteArray(), Tremor.ToByteArray());
 
         private void ResetPoints()
         {
             BeginPoint = 0;
-            EndPoint = Const.Count - 1;
+            EndPoint = Constant.Count - 1;
         }
 
         #region No References
@@ -102,14 +95,14 @@ namespace tEngine.DataModel
         /// </summary>
         /// <param name="count"></param>
         /// <returns></returns>
-        public Hand GetHand(int count)
+        public HandRawData GetHand(int count)
         {
-            if (count > Const.Count)
-                count = Const.Count;
-            int first = Const.Count - count;
+            if (count > Constant.Count)
+                count = Constant.Count;
+            int first = Constant.Count - count;
 
-            Hand result = new Hand();
-            result.Const = Const.GetRange(first, count);
+            HandRawData result = new HandRawData();
+            result.Constant = Constant.GetRange(first, count);
             result.Tremor = Tremor.GetRange(first, count);
 
             return result;

@@ -88,7 +88,7 @@ namespace TenzoMeterGUI.View
             return mWindow;
         }
 
-        public void UpdateSettings() => MarkersArea.UpdateArea();
+        public void UpdateSettings() => UiMarkers.UpdateArea();
 
         internal Markers()
         {
@@ -114,16 +114,16 @@ namespace TenzoMeterGUI.View
         /// <param name="requestID"></param>
         /// <param name="hand1"></param>
         /// <param name="hand2"></param>
-        private void HandCallBack(ushort requestID, Hand hand1, Hand hand2)
+        private void HandCallBack(ushort requestID, HandRawData hand1, HandRawData hand2)
         {
-            LeftHand = (int)hand1.Const.Average(s => s);
-            RightHand = (int)hand2.Const.Average(s => s);
+            LeftHand = (int)hand1.Constant.Average(s => s);
+            RightHand = (int)hand2.Constant.Average(s => s);
             return;
         }
 
-        private void TimerDrawOnTick(object sender, EventArgs eventArgs) => MarkersArea.DrawPart(LeftHand, RightHand);
+        private void TimerDrawOnTick(object sender, EventArgs eventArgs) => UiMarkers.DrawMarkers(LeftHand, RightHand);
 
-        public void ReDraw() => MarkersArea.DrawPart(LeftHand, RightHand);
+        public void ReDraw() =>UiMarkers.DrawMarkers(LeftHand, RightHand);
 
         private void Window_OnClosing(object sender, CancelEventArgs e)
         {

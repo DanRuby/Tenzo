@@ -307,9 +307,9 @@ namespace TenzoMeterGUI.View
             }
         }
 
-        private void HandCallBack(ushort id, Hand hand1, Hand hand2)
+        private void HandCallBack(ushort id, HandRawData hand1, HandRawData hand2)
         {
-            HandsData = string.Format("{0:F2} - {1:F2}", hand1.Const.Average(s => s), hand2.Const.Average(s => s));
+            HandsData = string.Format("{0:F2} - {1:F2}", hand1.Constant.Average(s => s), hand2.Constant.Average(s => s));
             NotifyPropertyChanged(m => m.HandsData);
             CurrentMsm.AddData(hand1, hand2);
         }

@@ -3,13 +3,12 @@ using System.Text;
 
 namespace tEngine.Helpers
 {
+    /// <summary>
+    /// Предоставляет методы по работе с файловым вводом/выводом
+    /// </summary>
     public class FileIO
     {
-        private static string mLastError = "";
-        private static object mLockRead = new object();
-        private static object mLockWrite = new object();
-
-        public static bool CreateDirectory(string path, bool empty = false)
+        private static bool CreateDirectory(string path, bool empty = false)
         {
             DirectoryInfo dinfo = new DirectoryInfo(path);
             if (empty)
@@ -23,8 +22,24 @@ namespace tEngine.Helpers
             return true;
         }
 
-        public static string GetLastError() => mLastError;
+        private static void CheckFilePath(string filePath)
+        {
+            FileInfo finfo = new FileInfo(filePath);
+            if (finfo.Directory != null)
+            {
+                if (finfo.Directory.Exists == false)
+                {
+                    CreateDirectory(finfo.Directory.FullName);
+                }
+            }
+        }
 
+        /// <summary>
+        /// Считать файл и вернуть байты
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="bytes"></param>
+        /// <returns>В случае неудачи возвращает false, иначе true</returns>
         public static bool ReadBytes(string filePath, out byte[] bytes)
         {
             FileInfo finfo = new FileInfo(filePath);
@@ -42,7 +57,13 @@ namespace tEngine.Helpers
             return true;
         }
 
-        public static bool ReadText(string filePath, out string text)
+        /// <summary>
+        /// Считать файл и вернуть строку
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="text"></param>
+        /// <returns>В случае неудачи возвращает false, иначе true</returns>
+        public static bool ReadString(string filePath, out string text)
         {
             FileInfo finfo = new FileInfo(filePath);
             if (finfo.Exists == false)
@@ -59,36 +80,34 @@ namespace tEngine.Helpers
             return true;
         }
 
+        /// <summary>
+        /// Записать байты в файл
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="bytes"></param>
         public static void WriteBytes(string filePath, byte[] bytes)
         {
-            FileInfo finfo = new FileInfo(filePath);
-            if (finfo.Directory != null)
-            {
-                if (finfo.Directory.Exists == false)
-                {
-                    CreateDirectory(finfo.Directory.FullName);
-                }
-            }
+            CheckFilePath(filePath);
             using (FileStream outfile = File.OpenWrite(filePath))
             {
                 outfile.Write(bytes, 0, bytes.Length);
             }
         }
 
-        public static void WriteText(string filePath, string text)
+        /// <summary>
+        /// Записать строку в файл
+        /// </summary>
+        /// <param name="filePath"></param>
+        /// <param name="text"></param>
+        public static void WriteString(string filePath, string text)
         {
-            FileInfo finfo = new FileInfo(filePath);
-            if (finfo.Directory != null)
-            {
-                if (finfo.Directory.Exists == false)
-                {
-                    CreateDirectory(finfo.Directory.FullName);
-                }
-            }
+            CheckFilePath(filePath);
             using (StreamWriter outfile = new StreamWriter(filePath, false))
             {
                 outfile.Write(text);
             }
         }
+
+    
     }
 }

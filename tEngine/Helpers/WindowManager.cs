@@ -7,11 +7,17 @@ using System.Windows.Threading;
 
 namespace tEngine.Helpers
 {
+    /// <summary>
+    /// Класс для работы с окнами приложения
+    /// </summary>
     public class WindowManager
     {
 
         private static Dictionary<Guid, Window> mWindows = new Dictionary<Guid, Window>();
 
+        /// <summary>
+        /// Закрыть все окна программы 
+        /// </summary>
         public static void CloseAll()
         {
             KeyValuePair<Guid, Window>[] windows = mWindows.ToArray();
@@ -28,21 +34,27 @@ namespace tEngine.Helpers
             }
         }
 
-        public static IEnumerable<Window> GetOpenWindows<T>()
-        {
-            return mWindows.Where(item => item.Value.GetType().Name.Equals(typeof(T).Name)).Select(item => item.Value);
-        }
+        public static IEnumerable<Window> GetOpenWindows<T>() => mWindows.Where(item => item.Value.GetType().Name.Equals(typeof(T).Name)).Select(item => item.Value);
+       
+        /// <summary>
+        /// Создать новое окно типа Т
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T NewWindow<T>() where T : Window, new() => NewWindow<T>(Guid.NewGuid());
 
-        public static T NewWindow<T>() where T : Window, new()
-        {
+        /// <summary>
+        /// Создать новое окно типа Т с установленным идентификатором
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
+        public static T NewWindow<T>(int id) where T : Window, new() => NewWindow<T>(new Guid(id, 0, 0, new byte[8]));
 
-            return NewWindow<T>(Guid.NewGuid());
-        }
-        public static T NewWindow<T>(int id) where T : Window, new()
-        {
-            return NewWindow<T>(new Guid(id, 0, 0, new byte[8]));
-        }
-
+        /// <summary>
+        /// Создать новое окно типа Т с установленным идентификатором
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static T NewWindow<T>(Guid id) where T : Window, new()
         {
             T result = new T();
@@ -51,17 +63,23 @@ namespace tEngine.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Создать окно типа Т 
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <returns></returns>
         public static T GetWindow<T>(int id) where T : Window
         {
             Guid guid = new Guid(id, 0, 0, new byte[8]);
             return mWindows.ContainsKey(guid) ? (T)mWindows[guid] : null;
         }
-        public static T GetWindow<T>(Guid id) where T : Window
-        {
-            return mWindows.ContainsKey(id) ? (T)mWindows[id] : null;
-        }
+        public static T GetWindow<T>(Guid id) where T : Window => mWindows.ContainsKey(id) ? (T)mWindows[id] : null;
 
-
+        /// <summary>
+        /// Сохранить габариты и положение окна
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="wnd"></param>
         public static void SaveWindowPos(string key, Window wnd)
         {
             int wndCount = mWindows.Count(w => w.GetType().Name.Equals(key));
@@ -76,6 +94,11 @@ namespace tEngine.Helpers
             AppSettings.SetValue(key + "_WS", ws);
         }
 
+        /// <summary>
+        /// Обновить габариты и положение окна
+        /// </summary>
+        /// <param name="key"></param>
+        /// <param name="wnd"></param>
         public static void UpdateWindowPos(string key, Window wnd)
         {
             Rect rect = AppSettings.GetValue(key, new Rect(100, 100, wnd.MinHeight, wnd.MinWidth));

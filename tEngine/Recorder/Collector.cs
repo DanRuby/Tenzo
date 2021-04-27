@@ -9,7 +9,7 @@ using System.Threading;
 namespace tEngine.Recorder
 {
     /// <summary>
-    /// Д: загружет длл и работает с устройством по юсб
+    /// Загружет длл и работает с устройством по юсб
     /// </summary>
     public class Collector
     {
@@ -115,9 +115,9 @@ namespace tEngine.Recorder
             {
                 if (mUSBReadData == null)
                     return false;
-                IntPtr pBuf = Marshal.AllocHGlobal(64);
-                bool result = mUSBReadData(pBuf, 64);
-                Marshal.Copy(pBuf, buffer, 0, 64);
+                IntPtr pBuf = Marshal.AllocHGlobal(Packet.PACKET_SIZE);
+                bool result = mUSBReadData(pBuf, Packet.PACKET_SIZE);
+                Marshal.Copy(pBuf, buffer, 0, Packet.PACKET_SIZE);
                 return result;
             }
             catch (Exception ex)
@@ -138,9 +138,9 @@ namespace tEngine.Recorder
             try
             {
                 if (mUSBWriteData == null) return false;
-                IntPtr pBuf = Marshal.AllocHGlobal(64);
-                Marshal.Copy(buffer, 0, pBuf, 64);
-                bool result = mUSBWriteData(pBuf, 64);
+                IntPtr pBuf = Marshal.AllocHGlobal(Packet.PACKET_SIZE);
+                Marshal.Copy(buffer, 0, pBuf, Packet.PACKET_SIZE);
+                bool result = mUSBWriteData(pBuf, Packet.PACKET_SIZE);
                 return result;
             }
             catch (Exception ex)
@@ -151,7 +151,7 @@ namespace tEngine.Recorder
         }
 
         /// <summary>
-        /// Д: присваивает остальным делегатам адресы из загруженной длл
+        /// Присваивает остальным делегатам адресы из загруженной длл
         /// </summary>
         /// <param name="dll"></param>
         private void InitMethods(IntPtr dll)
@@ -180,7 +180,7 @@ namespace tEngine.Recorder
         }
 
         /// <summary>
-        /// Д: методы ядра для длл и нахождения адреса функции 
+        /// Методы ядра для длл и нахождения адреса функции 
         /// </summary>
         private static class NativeMethods
         {
@@ -209,9 +209,6 @@ namespace tEngine.Recorder
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate bool USBWriteData(IntPtr buffer, int size);
 
-        /// <summary>
-        /// Д: как понимаю симуляция синуса для демоверсии
-        /// </summary>
 
         #region TestData
 
@@ -241,12 +238,12 @@ namespace tEngine.Recorder
                 pack.RequestId = FakeRequestID;
                 pack.Command = Commands.FromDevice.DATA;
 
-                pack.Left.Const.AddRange(adc);
+                pack.Left.Constant.AddRange(adc);
                 pack.Left.Tremor.AddRange(adc.Select(s => (short)(s / 10.0)));
-                pack.Right.Const.AddRange(adc.Select(s => (short)(s + 2000)));
+                pack.Right.Constant.AddRange(adc.Select(s => (short)(s + 2000)));
                 pack.Right.Tremor.AddRange(adc.Select(s => (short)((s + 2000) / 10.0)));
 
-                buffer = Packet.Packet2Bytes(pack);
+                buffer = Packet.PacketToBytes(pack);
 
                 Thread.Sleep(2);
                 return true;

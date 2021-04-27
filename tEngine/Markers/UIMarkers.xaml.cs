@@ -23,14 +23,14 @@ namespace tEngine.Markers
             Init();
         }
 
-        public void DrawAll(int left, int right)
+        public void RedrawEverything(int left, int right)
         {
-            mArea.DrawAll(left, right);
+            mArea.RedrawEverything(left, right);
         }
 
-        public void DrawPart(int left, int right)
+        public void DrawMarkers(int left, int right)
         {
-            mArea.DrawPart(left, right);
+            mArea.RedrawMarkers(left, right);
         }
 
         public void Init() { }

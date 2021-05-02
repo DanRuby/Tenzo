@@ -9,7 +9,7 @@ namespace tEngine.Helpers
     /// <summary>
     /// Сохраняет и загружает настройки программы
     /// </summary>
-    public class AppSettings
+    public static class AppSettings
     {
        /* public enum Project
         {
@@ -127,10 +127,10 @@ namespace tEngine.Helpers
             Settings[key] = jsonString;
         }
 
-        static AppSettings()
-        {
-            //ConstantsClass.Add(Project.Meter, typeof(TMeter.Constants));
-            //ConstantsClass.Add(Project.Actual, typeof(TActual.Constants));
-        }
+        //static AppSettings()
+        //{
+        //    //ConstantsClass.Add(Project.Meter, typeof(TMeter.Constants));
+        //    //ConstantsClass.Add(Project.Actual, typeof(TActual.Constants));
+        //}
     }
 }

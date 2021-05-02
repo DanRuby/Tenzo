@@ -29,10 +29,17 @@ namespace tEngine.TMeter.DataModel
 
         public Measurement(Measurement msm)
         {
-            Init();
+            //Init();
+            ID = msm.ID;
+            Owner = msm.Owner;
+            MsmTime = msm.MsmTime;
+            this.mData = msm.mData;
+            this.Title = msm.Title;
+            this.Comment = msm.Comment;
+            this.CreateTime = msm.CreateTime;
             // полное копирование Msm
             //Д: пизда какое медленное копирование
-            LoadFromArray(msm.ToByteArray());
+            //LoadFromArray(msm.ToByteArray());
         }
 
         public void AddData(HandRawData left, HandRawData right) => mData.AddHands(left, right);

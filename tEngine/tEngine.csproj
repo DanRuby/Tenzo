@@ -128,7 +128,7 @@
     </Compile>
     <Compile Include="Recorder\DeviceCounters.cs" />
     <Compile Include="Recorder\Packet.cs" />
-    <Compile Include="Recorder\PerSeconds.cs" />
+    <Compile Include="Recorder\PacketsPerSecondCounter.cs" />
     <Compile Include="TMeter\DataModel\Measurement.cs" />
     <Compile Include="TMeter\DataModel\User.cs" />
     <Compile Include="Helpers\FileIO.cs" />
@@ -138,7 +138,6 @@
     <Compile Include="Helpers\AppSettings.cs" />
     <Compile Include="TMeter\Constants.cs" />
     <Compile Include="Helpers\Logger.cs" />
-    <Compile Include="Helpers\Serializator.cs" />
     <Compile Include="Helpers\WindowManager.cs" />
     <Compile Include="MVVM\AsynchronousCommand.cs" />
     <Compile Include="MVVM\Command.cs" />

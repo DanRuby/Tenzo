@@ -15,6 +15,7 @@ namespace TenzoMeterGUI.View
     public partial class Markers : Window
     {
         private const int INTEGRATE_COUNT = 15;
+        private const int TIMER_UPDATE_INTERVAL= 40;
         private static Device mDevice;
         private static Markers mWindow;
         private DispatcherTimer dispetcherTimer;
@@ -22,9 +23,10 @@ namespace TenzoMeterGUI.View
         private Queue<int> mRight = new Queue<int>();
         private object mLock = new object();
 
-        public static bool WindowNotNull => mWindow != null;
-
-        public int LeftHand
+        /// <summary>
+        /// Среднее последних значений  усилия левой руки
+        /// </summary>
+        private int LeftHand
         {
             get
             {
@@ -35,7 +37,7 @@ namespace TenzoMeterGUI.View
                     return (int)mLeft.Average();
                 }
             }
-            private set
+            set
             {
                 lock (mLock)
                 {
@@ -46,7 +48,10 @@ namespace TenzoMeterGUI.View
             }
         }
 
-        public int RightHand
+        /// <summary>
+        /// Среднее последних значений усилия правой руки
+        /// </summary>
+        private int RightHand
         {
             get
             {
@@ -57,7 +62,7 @@ namespace TenzoMeterGUI.View
                     return (int)mRight.Average();
                 }
             }
-            private set
+           set
             {
                 lock (mLock)
                 {
@@ -68,26 +73,31 @@ namespace TenzoMeterGUI.View
             }
         }
 
+        public static bool WindowNotNull => mWindow != null;
+
+        /// <summary>
+        /// Закрыть окно
+        /// </summary>
         public static void CloseWindow()
         {
             if (mWindow != null)
                 mWindow.Close();
         }
 
-        public void FreeWindow()
-        {
-            mWindow = null;
-        }
-
+        /// <summary>
+        /// Получить ссылку на окно
+        /// </summary>
+        /// <returns></returns>
         public static Markers GetWindow()
         {
             if (!WindowNotNull)
-            {
                 mWindow = new Markers();
-            }
             return mWindow;
         }
 
+        /// <summary>
+        /// Обновить настройки маркеров
+        /// </summary>
         public void UpdateSettings() => UiMarkers.UpdateArea();
 
         internal Markers()
@@ -102,14 +112,20 @@ namespace TenzoMeterGUI.View
             WindowManager.UpdateWindowPos(GetType().Name, this);
             dispetcherTimer = new DispatcherTimer();
             dispetcherTimer.Tick += TimerDrawOnTick;
-            dispetcherTimer.Interval = new TimeSpan(0, 0, 0, 0, 40);
+            dispetcherTimer.Interval = new TimeSpan(0, 0, 0, 0, TIMER_UPDATE_INTERVAL);
             dispetcherTimer.Start();
 
             mDevice.AddListener(HandCallBack);
         }
 
+
         /// <summary>
-        /// отрисовка
+        /// Перерисовать маркеры
+        /// </summary>
+        public void ReDraw() =>UiMarkers.DrawMarkers(LeftHand, RightHand);
+
+        /// <summary>
+        /// Получение новых значений усилия
         /// </summary>
         /// <param name="requestID"></param>
         /// <param name="hand1"></param>
@@ -118,13 +134,20 @@ namespace TenzoMeterGUI.View
         {
             LeftHand = (int)hand1.Constant.Average(s => s);
             RightHand = (int)hand2.Constant.Average(s => s);
-            return;
         }
 
+        /// <summary>
+        /// Метод вызываемый по изменению таймера
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="eventArgs"></param>
         private void TimerDrawOnTick(object sender, EventArgs eventArgs) => UiMarkers.DrawMarkers(LeftHand, RightHand);
 
-        public void ReDraw() =>UiMarkers.DrawMarkers(LeftHand, RightHand);
-
+        /// <summary>
+        /// Метод вызываемый при закрытии метода
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_OnClosing(object sender, CancelEventArgs e)
         {
             mDevice.RemoveListener(HandCallBack);
@@ -134,14 +157,21 @@ namespace TenzoMeterGUI.View
             WindowManager.SaveWindowPos(GetType().Name, this);
         }
 
+        /// <summary>
+        /// Метод вызываемый при открытии формы
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Markers_OnLoaded(object sender, RoutedEventArgs e) => mDevice.Start();
 
+        //Тестовая кнопка
+        /*
         private void ToggleButton_Click(object sender, RoutedEventArgs e)
         {
             ToggleButton cb = (sender as ToggleButton);
             if (cb == null)
                 return;
             mDevice.DemoMode = cb.IsChecked == true;
-        }
+        }*/
     }
 }

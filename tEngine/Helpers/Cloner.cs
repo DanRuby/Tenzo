@@ -10,7 +10,7 @@ namespace tEngine.Helpers
     /// <summary>
     /// Класс с методами копирования объектов
     /// </summary>
-    public class Cloner
+    public static class Cloner
     {
         public static object Clone(object something)
         {

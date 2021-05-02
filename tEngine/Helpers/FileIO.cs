@@ -6,7 +6,7 @@ namespace tEngine.Helpers
     /// <summary>
     /// Предоставляет методы по работе с файловым вводом/выводом
     /// </summary>
-    public class FileIO
+    public static class FileIO
     {
         private static bool CreateDirectory(string path, bool empty = false)
         {

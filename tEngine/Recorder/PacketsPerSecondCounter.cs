@@ -7,12 +7,12 @@ namespace tEngine.Recorder
     /// <summary>
     /// Счетчик пакетов в секунду
     /// </summary>
-    public class PerSeconds
+    public class PacketsPerSecondCounter
     {
         private object mLock = new object();
         private FixedSizedQueue<DateTime> mQueue = new FixedSizedQueue<DateTime>();
 
-        public PerSeconds()
+        public PacketsPerSecondCounter()
         {
             mQueue.Limit = 2;
             mQueue.Enqueue(DateTime.Now);
@@ -27,16 +27,16 @@ namespace tEngine.Recorder
         {
             lock (mLock)
             {
-                double time = (mQueue.Last() - mQueue.First()).TotalMilliseconds;
+                double timeElapsed = (mQueue.Last() - mQueue.First()).TotalMilliseconds;
                 // лимит корректируется во времени
                 if (mQueue.Count == mQueue.Limit)
                 {
-                    if (time < 500)
+                    if (timeElapsed < 500)
                         mQueue.Limit++;
-                    if (time > 2000)
+                    if (timeElapsed > 2000)
                         mQueue.Limit--;
                 }
-                return (mQueue.Count / time) * 1000;
+                return (mQueue.Count / timeElapsed) * 1000;
             }
         }
 

@@ -32,8 +32,9 @@ namespace tEngine.Recorder
             Normal,
             AdcCheck
         }
+
         public Action<bool[], short[]> AdcTestCallBack;
-        public DeviceCounters Counters { get; set; }
+        private DeviceCounters Counters;
 
         private static Dictionary<int, Device> Devices = new Dictionary<int, Device>();
         private bool isAbort = false;
@@ -46,7 +47,7 @@ namespace tEngine.Recorder
         private ushort? mLastPacketId = null;
         private object mLock = new object();
         private Task mRunTask;
-
+        private const int CYCLE_DELAY = 200;
     
         public bool DemoMode
         {
@@ -71,7 +72,6 @@ namespace tEngine.Recorder
             }
         }
        
-
         /// <summary>
         /// Удаляет устройство
         /// </summary>
@@ -211,7 +211,7 @@ namespace tEngine.Recorder
         public void Stop() => isRun = false;
 
         /// <summary>
-        /// Д:Получает байты от тензометра
+        /// Получает байты от тензометра
         /// </summary>
         /// <returns></returns>
         internal byte[] GetBytes()
@@ -311,8 +311,6 @@ namespace tEngine.Recorder
                         Counters.TotalPack++;
                         byte[] bytes = GetBytes();
                         Packet packet = Packet.BytesToPacket(bytes);
-                        //Д: с учетом закоменченных строк у меня ощущение что это все не нужно
-                        //достаточно проверки пакета
                         if (packet.Command == Commands.FromDevice.DATA)
                         {
                             if (PacketIsValidAndNotaCopy(packet))
@@ -320,11 +318,11 @@ namespace tEngine.Recorder
                                 SendPacket(packet);
                             }
                         }
-                        else if (packet.Command == Commands.FromDevice.ADCCHECK)
-                        {
-                            //if( AdcTestCallBack != null )
-                            //    AdcTestCallBack( pack.DataReadyM2, pack.ADCDataM2 );
-                        }
+                        //else if (packet.Command == Commands.FromDevice.ADCCHECK)
+                        //{
+                        //    //if( AdcTestCallBack != null )
+                        //    //    AdcTestCallBack( pack.DataReadyM2, pack.ADCDataM2 );
+                        //}
                         else
                         {
                             Counters.InvalidPack++;
@@ -333,10 +331,10 @@ namespace tEngine.Recorder
                     else
                     {
                         Counters.Connections++;
-                        Thread.Sleep(200);
+                        Thread.Sleep(CYCLE_DELAY);
                     }
                 }
-                else Thread.Sleep(200);
+                else Thread.Sleep(CYCLE_DELAY);
             }
             return;
         }

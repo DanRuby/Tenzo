@@ -10,7 +10,7 @@ namespace tEngine.Helpers
     /// <summary>
     /// Класс для работы с окнами приложения
     /// </summary>
-    public class WindowManager
+    public static class WindowManager
     {
 
         private static Dictionary<Guid, Window> mWindows = new Dictionary<Guid, Window>();

@@ -26,6 +26,9 @@ namespace TenzoMeterGUI.View
         private MsmCreatorVM mDataContext;
         public bool? NotDialogButResult { get; set; }
 
+        /// <summary>
+        /// Результатом формы является новое измереник
+        /// </summary>
         public Measurement Result => mDataContext == null ? null : mDataContext.CurrentMsm;
 
         public MsmCreator()
@@ -36,14 +39,29 @@ namespace TenzoMeterGUI.View
             DataContext = mDataContext;
         }
 
+        /// <summary>
+        /// Выполнение сохранения в файл по окончанию измерения
+        /// </summary>
         public void PostSave() => mDataContext.PostSave();
 
+        /// <summary>
+        /// Запуск скрипта по окончанию измерения
+        /// </summary>
         public void PostScript() => mDataContext.PostScript();
 
+        /// <summary>
+        /// Установка нового измерения
+        /// </summary>
+        /// <param name="msm"></param>
         public void SetMsm(Measurement msm) => mDataContext.SetMsm(msm);
 
         internal void PlotSelectedTab() => TabControl.SelectedIndex = 1;
 
+        /// <summary>
+        /// Метод вызывается при закрытии формы
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Window_OnClosing(object sender, CancelEventArgs e)
         {
             if (mDataContext != null)
@@ -65,6 +83,11 @@ namespace TenzoMeterGUI.View
 
     public class MsmCreatorVM : Observed<MsmCreatorVM>
     {
+        /// <summary>
+        /// Активность кнопки "OK" 
+        /// </summary>
+        public bool ConfirmationButtonActive => CurrentMsm.Data.HasBaseData && !IsMsmRun;
+
         private bool mDoPostSave;
         private bool mDoPostScript;
         private bool mIsMsmRun;
@@ -73,16 +96,32 @@ namespace TenzoMeterGUI.View
         private bool mSelectionEnable;
         private DispatcherTimer mTimerProgress;
 
+        /// <summary>
+        /// Начальная точка измерения
+        /// </summary>
         public int BeginPoint
         {
             get => CurrentMsm.Data.BeginPoint;
             set => CurrentMsm.Data.BeginPoint = value;
         }
 
+        /// <summary>
+        /// Команда от кнопки ОК
+        /// </summary>
         public Command CMDAcceptMsm { get; private set; }
+        /// <summary>
+        /// Комманда для окна выбора файлов
+        /// </summary>
         public Command CMDBrowse { get; private set; }
+        /// <summary>
+        /// Команда кнопки отмена
+        /// </summary>
         public Command CMDCancelMsm { get; private set; }
+        /// <summary>
+        /// Команда старт
+        /// </summary>
         public Command CMDStartMsm { get; private set; }
+
         public Measurement CurrentMsm { get; private set; }
 
         public MsmCreatorVM()
@@ -114,6 +153,9 @@ namespace TenzoMeterGUI.View
         /// </summary>
         public string CurrentTime { get; set; }
 
+        /// <summary>
+        /// Флаг сохранения данных в файл
+        /// </summary>
         public bool DoPostSave
         {
             get => mDoPostSave;
@@ -124,6 +166,9 @@ namespace TenzoMeterGUI.View
             }
         }
 
+        /// <summary>
+        /// Флаг запуска скрипта
+        /// </summary>
         public bool DoPostScript
         {
             get => mDoPostScript;
@@ -134,14 +179,23 @@ namespace TenzoMeterGUI.View
             }
         }
 
+        /// <summary>
+        /// Конечная точка измерения
+        /// </summary>
         public int EndPoint
         {
             get => CurrentMsm.Data.EndPoint;
             set => CurrentMsm.Data.EndPoint = value;
         }
 
+        /// <summary>
+        /// TODO видимо уже не нужно
+        /// </summary>
         public string HandsData { get; set; }
 
+        /// <summary>
+        /// Измерение в процессе
+        /// </summary>
         public bool IsMsmRun
         {
             get => mIsMsmRun;
@@ -152,12 +206,21 @@ namespace TenzoMeterGUI.View
             }
         }
 
+        /// <summary>
+        /// Отложенный старт
+        /// </summary>
         public bool IsPauseBeforeStart { get; set; }
 
         public int Maximum => CurrentMsm.Data.CountBase;
 
+        /// <summary>
+        /// Прогресс измерения
+        /// </summary>
         public double Progress { get; set; }
 
+        /// <summary>
+        /// ПУть сохранения файла
+        /// </summary>
         public string SavePath
         {
             get => mSavePath;
@@ -168,6 +231,9 @@ namespace TenzoMeterGUI.View
             }
         }
 
+        /// <summary>
+        /// Путь запуска скрипта
+        /// </summary>
         public string ScriptPath
         {
             get => mScriptPath;
@@ -309,7 +375,7 @@ namespace TenzoMeterGUI.View
 
         private void HandCallBack(ushort id, HandRawData hand1, HandRawData hand2)
         {
-            HandsData = string.Format("{0:F2} - {1:F2}", hand1.Constant.Average(s => s), hand2.Constant.Average(s => s));
+            HandsData = $"{hand1.Constant.Average(s => s):F2} - {hand2.Constant.Average(s => s):F2}";
             NotifyPropertyChanged(m => m.HandsData);
             CurrentMsm.AddData(hand1, hand2);
         }

@@ -6,29 +6,58 @@ namespace tEngine.TMeter
     public class Constants //: BConstants
     {
         public const int DEVICE_ID = 11;
+
 //        public const string RSCH_EXT = ".tmr";
+        /// <summary>
+        /// Расширение файлов пациентов
+        /// </summary>
         public const string USER_EXT = ".tmu";
-        public  static string AppDataFolder { get; set; }
-        public static string AppImageFolder { get; set; }
-        public  static string ApplicationFolder { get; set; }
-        public string AppSettings => ApplicationFolder + "\\app.settings";
-        public string MarkersSettings => ApplicationFolder + "\\mark.settings";
+        
+        /// <summary>
+        ///Основная папка приложениня 
+        /// </summary>
+        public  static string AppDataFolder { get; private set; }
+
+        /// <summary>
+        /// Папка для хранения картинок
+        /// </summary>
+        public static string AppImageFolder { get; private set; }
+
+        /// <summary>
+        /// Путь до файла с настройками приложения
+        /// </summary>
+        public string AppSettings => userProfileFolder + "\\app.settings";
+
+        /// <summary>
+        /// Путь до файла с настройками маркеров
+        /// </summary>
+        public string MarkersSettings => userProfileFolder + "\\mark.settings";
+
+        /// <summary>
+        /// Путь до папки с файлами пациентов
+        /// </summary>
         public static string UsersFolder => AppDataFolder + @"\Users";
+
+        private static string userProfileFolder;
 
         public Constants()
         {
             AppDataFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TenzoMeter";
-            ApplicationFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.TenzoMeter";
+            userProfileFolder = Environment.GetFolderPath(Environment.SpecialFolder.UserProfile) + "\\.TenzoMeter";
             AppImageFolder = Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments) + "\\TenzoMeter\\Images";
             //base.AppDataFolder = AppDataFolder;
             //base.ApplicationFolder = ApplicationFolder;
             CreateDirectory(AppDataFolder);
-            CreateDirectory(ApplicationFolder, true);
+            CreateDirectory(userProfileFolder, true);
             CreateDirectory(AppImageFolder);
         }
 
-
-        private static void CreateDirectory(string path, bool hidden = false)
+        /// <summary>
+        /// Создать папку по пути
+        /// </summary>
+        /// <param name="path">путь до папки</param>
+        /// <param name="hidden">true, чтобы скрать папку</param>
+        private void CreateDirectory(string path, bool hidden = false)
         {
             DirectoryInfo dinfo = new DirectoryInfo(path);
             if (dinfo.Exists == false)

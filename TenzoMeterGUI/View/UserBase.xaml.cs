@@ -334,7 +334,7 @@ namespace TenzoMeterGUI.View
             foreach (FileInfo finfo in files)
             {
                 User user;
-                if (User.Open(finfo.FullName, out user))
+                if (User.GetUser(finfo.FullName, out user))
                 {
                     list.Add(user);
                 }

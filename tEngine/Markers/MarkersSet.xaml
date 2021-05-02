@@ -123,17 +123,17 @@
             <DockPanel>
                 <TextBlock Text="Шаг сетки:" />
                 <TextBox Text="{Binding Path=Grid, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock Text="у.е." HorizontalAlignment="Left" Margin="3,0,0,0"/>
+                <TextBlock Text="грамм" HorizontalAlignment="Left" Margin="3,0,0,0"/>
             </DockPanel>
             <DockPanel>
                 <TextBlock Text="Максимум:" />
                 <TextBox Text="{Binding Path=Maximum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock Text="у.е." HorizontalAlignment="Left" Margin="3,0,0,0"/>
+                <TextBlock Text="грамм" HorizontalAlignment="Left" Margin="3,0,0,0"/>
             </DockPanel>
             <DockPanel>
                 <TextBlock Text="Минимум:" />
                 <TextBox Text="{Binding Path=Minimum, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}"/>
-                <TextBlock Text="у.е." HorizontalAlignment="Left" Margin="3,0,0,0"/>
+                <TextBlock Text="грамм" HorizontalAlignment="Left" Margin="3,0,0,0"/>
             </DockPanel>
             <DockPanel Margin="0,3,0,0" Height="30">
                 <TextBlock Text="Цвет сетки:" Width="80" />

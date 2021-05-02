@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -23,12 +24,6 @@ namespace TenzoMeterGUI.View
     {
         private UserInfoVM mDataContext;
 
-        //public bool EditMode
-        //{
-        //    get => mDataContext != null && mDataContext.EditMode;
-        //    set { if (mDataContext != null) mDataContext.EditMode = value; }
-        //}
-
         public User Result => mDataContext == null ? null : mDataContext.GetUser();
 
         public UserInfo()
@@ -39,20 +34,20 @@ namespace TenzoMeterGUI.View
             DataContext = mDataContext;
         }
 
-        public void SetUser(User user)
-        {
-            mDataContext.SetUser(user);
-        }
+        public void SetUser(User user) => mDataContext.SetUser(user);
 
+        /// <summary>
+        /// Метод перевода каретки на следующий элемент при нажатии ентер
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void TextBox_KeyDown(object sender, KeyEventArgs e)
         {
             if (e.Key == Key.Enter)
             {
                 UIElement element = sender as UIElement;
                 if (element != null)
-                {
                     element.MoveFocus(new TraversalRequest(FocusNavigationDirection.Next));
-                }
             }
         }
 
@@ -60,14 +55,13 @@ namespace TenzoMeterGUI.View
         {
             if (mDataContext != null)
             {
-                mDataContext.PreClosed();
                 try
                 {
                     DialogResult = mDataContext.DialogResult;
                 }
-                catch
+                catch (Exception ex)
                 {
-                    /*если окно не диалог - вылетит исключение, ну и пусть*/
+                    Debug.WriteLine(ex.Message);
                 }
             }
             WindowManager.SaveWindowPos(GetType().Name, this);
@@ -79,23 +73,11 @@ namespace TenzoMeterGUI.View
         private string mFileTitle;
         private bool mIsEditableName;
         private User mUser;
-        //private bool mEditMode;
-        public Command CMDBrowse { get; private set; }
-        public Command CMDCancel { get; private set; }
-        public Command CMDCreate { get; private set; }
-        public string CurrentDir { get; set; }
-        public Stack<string> DirPaths { get; set; }
 
-        //public bool EditMode
-        //{
-        //    get => mEditMode;
-        //    set =>
-        //        //mEditMode = value;
-        //        // всегда можно редактировать
-        //        mEditMode = true;
-        //}
+        private string CurrentDir { get; set; }
+        private Stack<string> DirPaths { get; set; }
 
-        public string FileTitle
+        private string FileTitle
         {
             get
             {
@@ -110,7 +92,7 @@ namespace TenzoMeterGUI.View
             }
         }
 
-        public bool IsEditableName
+        private bool IsEditableName
         {
             get => mIsEditableName;
             set
@@ -123,40 +105,29 @@ namespace TenzoMeterGUI.View
             }
         }
 
+        //public Command CMDBrowse { get; private set; }
+        public Command CMDCancel { get; private set; }
+        public Command CMDCreate { get; private set; }
+
         public UserInfoVM()
         {
-            CMDCreate = new Command(Create);
-            CMDCancel = new Command(Cancel);
-            CMDBrowse = new Command(Browse);
-
-            //EditMode = false;
+            CMDCreate = new Command(CreateCommandMethod);
+            CMDCancel = new Command(CancelCommandMethod);
+            //CMDBrowse = new Command(BrowseCommandMehod);
 
             DirPaths = AppSettings.GetValue("LastDirPaths", DirPaths ?? new Stack<string>());
             DirPaths.Push(Constants.AppDataFolder);
 
             if (IsDesignMode)
-            {
                 SetUser(User.GetTestUser(msmCount: 2));
-            }
             else
-            {
                 SetUser(new User());
-            }
         }
 
-        public User GetUser()
-        {
-            return mUser;
-        }
-
-        public void PreClosed()
-        {
-            //
-        }
+        public User GetUser() => mUser;
 
         public void SetUser(User user)
         {
-            //mUser = new User( user );
             mUser = user;
 
             DirectoryInfo dInfo = new FileInfo(mUser.FilePath).Directory ?? new DirectoryInfo(Constants.AppDataFolder);
@@ -174,57 +145,52 @@ namespace TenzoMeterGUI.View
                 .ForEach(info => { NotifyPropertyChanged(info.Name); });
         }
 
-        private void Browse()
-        {
-            FolderBrowserDialog ofd = new FolderBrowserDialog();
-            DirectoryInfo dinfo = new DirectoryInfo(CurrentDir);
-            if (dinfo.Exists)
-                ofd.SelectedPath = dinfo.FullName + @"\";
-            if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-            {
-                CurrentDir = ofd.SelectedPath;
-            }
-        }
+        //private void BrowseCommandMehod()
+        //{
+        //    FolderBrowserDialog ofd = new FolderBrowserDialog();
+        //    DirectoryInfo dinfo = new DirectoryInfo(CurrentDir);
+        //    if (dinfo.Exists)
+        //        ofd.SelectedPath = dinfo.FullName + @"\";
+        //    if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
+        //    {
+        //        CurrentDir = ofd.SelectedPath;
+        //    }
+        //}
 
-        private void Cancel()
-        {
-            EndDialog(dialogResult: false);
-        }
+        private void CancelCommandMethod() => EndDialog(dialogResult: false);
 
-        private bool CheckValid()
+        /// <summary>
+        /// Проверяет корректность ввода фамилии, имени и отчества
+        /// </summary>
+        /// <returns></returns>
+        private bool CheckFieldsAreValid()
         {
             string msg = "";
             if (string.IsNullOrWhiteSpace(Name))
-            {
                 msg = "Необходимо заполнить поле \"Имя\"";
-            }
             else if (string.IsNullOrWhiteSpace(SName))
-            {
                 msg = "Необходимо заполнить поле \"Фамилия\"";
-            }
             else
             {
+                Regex validSymbols = new Regex(@"[*. \-_a-zA-Z0-9а-яА-Я]*");
+                
                 Name = Name.Trim(' ');
+                string nameBad = validSymbols.Replace(Name, "");
+                if (nameBad.Length > 0)
+                    msg = $"Поле \"Имя\" содержит недопустимые символы: {nameBad}";
+
                 SName = SName.Trim(' ');
+                string snameBad = validSymbols.Replace(SName, "");
+                if (snameBad.Length > 0)
+                    msg = $"Поле \"Фамилия\" содержит недопустимые символы: {snameBad}";
+
                 if(!string.IsNullOrEmpty(FName))
                     FName = FName.Trim(' ');
-                Regex validSymbols = new Regex(@"[*. \-_a-zA-Z0-9а-яА-Я]*");
-                string nameBad = validSymbols.Replace(Name, "");
-                string snameBad = validSymbols.Replace(SName, "");
                 if (!string.IsNullOrWhiteSpace(FName))
                 {
                     string fnameBad = validSymbols.Replace(FName, "");
                     if (fnameBad.Length > 0)
                         msg = $"Поле \"Отчество\" содержит недопустимые символы: {fnameBad}";
-                }
-
-                if (nameBad.Length > 0)
-                {
-                    msg = $"Поле \"Имя\" содержит недопустимые символы: {nameBad}";
-                }
-                else if (snameBad.Length > 0)
-                {
-                    msg = $"Поле \"Фамилия\" содержит недопустимые символы: {snameBad}";
                 }
             }
 
@@ -233,18 +199,13 @@ namespace TenzoMeterGUI.View
                 MessageBox.Show(msg, "Ошибка!", MessageBoxButton.OK, MessageBoxImage.Error);
                 return false;
             }
-
-
             return true;
         }
 
-        private void Create()
+        private void CreateCommandMethod()
         {
-           // if (EditMode)
-            //{
-                if (CheckValid() == false)
-                    return;
-            //}
+            if (CheckFieldsAreValid() == false)
+                return;
             DirPaths.Push(CurrentDir);
             AppSettings.SetValue("LastDirPaths", new Stack<string>(DirPaths.Distinct()));
             mUser.FilePath = CurrentDir + @"\" + FileTitle + Constants.USER_EXT;
@@ -252,7 +213,6 @@ namespace TenzoMeterGUI.View
         }
 
         #region User Fields
-
         public DateTime BirthDate
         {
             get => mUser.BirthDate;
@@ -305,7 +265,6 @@ namespace TenzoMeterGUI.View
                 NotifyPropertyChanged(m => m.FileTitle);
             }
         }
-
         #endregion User Fields
     }
 }

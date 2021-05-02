@@ -28,7 +28,7 @@
         /// <summary>
         /// Всего пакетов в секунду, включая повторяющиеся
         /// </summary>
-        public PerSeconds PPS { get; internal set; }
+        public PacketsPerSecondCounter PPS { get; internal set; }
 
         /// <summary>
         /// Потеряно пакетов
@@ -43,7 +43,7 @@
         /// <summary>
         /// Принятые к запись пакеты в секунду
         /// </summary>
-        public PerSeconds ValidPPS { get; internal set; }
+        public PacketsPerSecondCounter ValidPPS { get; internal set; }
 
         public DeviceCounters()
         {
@@ -55,10 +55,10 @@
             FullPack = 0;
             InvalidPack = 0;
             LostPack = 0;
-            PPS = new PerSeconds();
+            PPS = new PacketsPerSecondCounter();
             RepeatPack = 0;
             TotalPack = 0;
-            ValidPPS = new PerSeconds();
+            ValidPPS = new PacketsPerSecondCounter();
         }
     }
 }

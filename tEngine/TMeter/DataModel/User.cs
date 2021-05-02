@@ -14,17 +14,21 @@ using tEngine.Helpers;
 namespace tEngine.TMeter.DataModel
 {
     [DataContract]
-    public class User:INotifyPropertyChanged
+    public class User: INotifyPropertyChanged
     {
-        public const string FOLDER_KEY = "LastUserFolder";
+        private string name;
+        private string sName;
+        private string fName;
+        private DateTime birthDate;
+        private string comment;
         private List<Measurement> mMsms;
 
-    
+        public const string FOLDER_KEY = "LastUserFolder";
 
         public string FilePath { get; set; }
         public bool IsNotSaveChanges { get; set; }
 
-        public ObservableCollection<Measurement> Msms => new ObservableCollection<Measurement>(mMsms);
+        public ObservableCollection<Measurement> Measurements => new ObservableCollection<Measurement>(mMsms);
 
         public User() => Init();
 
@@ -32,8 +36,8 @@ namespace tEngine.TMeter.DataModel
         {
             msm.Owner=this;
             mMsms.Add(msm);
-            RaisePropertyChanged(() => Msms);
-            RaisePropertyChanged(() => Msms.Count);
+            RaisePropertyChanged(() => Measurements);
+            RaisePropertyChanged(() => Measurements.Count);
             IsNotSaveChanges = true;
         }
 
@@ -45,6 +49,12 @@ namespace tEngine.TMeter.DataModel
             return dinfo.GetFiles().Where(finfo => finfo.Extension.Equals(Constants.USER_EXT));
         }
 
+        /// <summary>
+        /// Создание тестового пациента
+        /// </summary>
+        /// <param name="name"></param>
+        /// <param name="msmCount"></param>
+        /// <returns></returns>
         public static User GetTestUser(string name = "Имя", int msmCount = 10)
         {
             StringBuilder sb = new StringBuilder();
@@ -69,7 +79,7 @@ namespace tEngine.TMeter.DataModel
             return testUser;
         }
 
-        public static bool Open(string filePath, out User user)
+        public static bool GetUser(string filePath, out User user)
         {
             try
             {
@@ -85,7 +95,7 @@ namespace tEngine.TMeter.DataModel
 
                 DirectoryInfo folder = new FileInfo(user.FilePath).Directory;
                 if (folder != null)
-                    AppSettings.SetValue(User.FOLDER_KEY, folder.FullName);
+                    AppSettings.SetValue(FOLDER_KEY, folder.FullName);
 
                 user.IsNotSaveChanges = false;
                 return result;
@@ -100,12 +110,12 @@ namespace tEngine.TMeter.DataModel
         public void RemoveMsm(Measurement msm)
         {
             mMsms.Remove(msm);
-            RaisePropertyChanged(()=>Msms);
-            RaisePropertyChanged(() => Msms.Count);
+            RaisePropertyChanged(()=>Measurements);
+            RaisePropertyChanged(() => Measurements.Count);
             IsNotSaveChanges = true;
         }
 
-        public bool Restore()
+        public bool RollBack()
         {
             byte[] bytes;
             if (FileIO.ReadBytes(FilePath, out bytes))
@@ -187,16 +197,12 @@ namespace tEngine.TMeter.DataModel
         }
         public void NotifyMeasurmentChanged()
         {
-            RaisePropertyChanged(() => Msms);
-            RaisePropertyChanged(() => Msms.Count);
+            RaisePropertyChanged(() => Measurements);
+            RaisePropertyChanged(() => Measurements.Count);
         }
         #endregion
 
-        private string name;
-        private string sName;
-        private string fName;
-        private DateTime birthDate;
-        private string comment;
+       
 
         #region JSON
 
@@ -329,8 +335,15 @@ namespace tEngine.TMeter.DataModel
 
         public User(User user)
         {
-            Init();
-            LoadFromArray(user.ToByteArray());
+           // Init();
+            this.BirthDate = user.BirthDate;
+            this.Comment = user.Comment;
+            this.Name = user.Name;
+            this.SName = user.SName;
+            this.FName = user.FName;
+            this.FilePath = user.FilePath;
+            this.mMsms = user.mMsms;
+           // LoadFromArray(user.ToByteArray());
 
 
             /*var pinfo = user.GetType().GetProperties();

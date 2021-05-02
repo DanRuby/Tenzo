@@ -191,7 +191,7 @@ namespace TenzoMeterGUI.View
             }
         }
 
-        public ObservableCollection<Measurement> Msms => User.Msms;
+        public ObservableCollection<Measurement> Msms => User.Measurements;
 
         public bool SelectByIndex { get; set; }
 
@@ -324,7 +324,7 @@ namespace TenzoMeterGUI.View
                 else 
                 {
                     IsBusy = true;
-                    await Task.Factory.StartNew(() => { User.Restore(); });
+                    await Task.Factory.StartNew(() => { User.RollBack(); });
                 User.NotifyMeasurmentChanged();
                     IsBusy = false;
                 }
@@ -438,7 +438,7 @@ namespace TenzoMeterGUI.View
             if (wnd == null)
             {
                 wnd = WindowManager.NewWindow<ResultWindow>(mResultWindowID);
-                wnd.SetMsmCollection(User.Msms);
+                wnd.SetMsmCollection(User.Measurements);
             }
             wnd.Show();
         }
@@ -468,18 +468,19 @@ namespace TenzoMeterGUI.View
             MarkersSet ms = new MarkersSet();
             if (ms.ShowDialog() == true)
             {
-                bool needClose = !Markers.WindowNotNull;
+                bool needClose = !IsMarkersShow;
 
                 Markers wnd = Markers.GetWindow();
                 wnd.UpdateSettings();
                 wnd.ReDraw();
-                if (needClose) wnd.FreeWindow();
+                if (needClose)
+                    Markers.CloseWindow();
             }
         }
 
         private void CMDSpectrumCalc_Func()
         {
-            Measurement first = User.Msms.First(msm => SelectedMsm.ID.Equals(msm.ID));
+            Measurement first = User.Measurements.First(msm => SelectedMsm.ID.Equals(msm.ID));
             if (first == null) 
                 return;
             IsBusy = true;
@@ -499,7 +500,7 @@ namespace TenzoMeterGUI.View
 
         private Task CMDSpectrumCalc_Func_Async()
         {
-            Measurement first = User.Msms.First(msm => SelectedMsm.ID.Equals(msm.ID));
+            Measurement first = User.Measurements.First(msm => SelectedMsm.ID.Equals(msm.ID));
             if (first == null) return null;
             IsBusy = true;
             Task task = Task.Factory.StartNew(() =>
@@ -561,6 +562,7 @@ namespace TenzoMeterGUI.View
                     SelectedMsm = wnd.Result;
                     await CMDSpectrumCalc_Func_Async();
 
+                    
                     wnd.PostSave();
                     wnd.PostScript();
                 }

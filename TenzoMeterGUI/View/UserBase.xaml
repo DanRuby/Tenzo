@@ -42,7 +42,7 @@
             <GridViewColumn DisplayMemberBinding="{Binding BirthDate, StringFormat=\{0:dd/MM/yyyy\}}" uc:GridViewSort.PropertyName="BirthDate">
                 <GridViewColumnHeader Content="Дата рождения" ToolTip="{Binding Content, RelativeSource={RelativeSource Self}}"/>
             </GridViewColumn>
-            <GridViewColumn DisplayMemberBinding="{Binding Msms.Count}" uc:GridViewSort.PropertyName="Msms.Count">
+            <GridViewColumn DisplayMemberBinding="{Binding Measurements.Count}" uc:GridViewSort.PropertyName="Measurements.Count">
                 <GridViewColumnHeader Content="Измерений" ToolTip="Проведено измерений для пользователя"/>
             </GridViewColumn>
         </GridView>
@@ -128,7 +128,7 @@
                                     Command="{Binding CMDOpenUser}" Width="190"/>
                             <DockPanel>
                                 <TextBlock DockPanel.Dock="Top" Text="Список проведенных измерений:"/>
-                                <ListView x:Name="MsmList" ItemsSource="{Binding SelectedUser.Msms}" SelectedValue="{Binding SelectedMsm}">
+                                <ListView x:Name="MsmList" ItemsSource="{Binding SelectedUser.Measurements}" SelectedValue="{Binding SelectedMsm}">
                                     <ListView.Resources>
                                         <Style TargetType="{x:Type ListViewItem}" >
                                             <Setter Property="HorizontalContentAlignment" Value="Stretch"/>

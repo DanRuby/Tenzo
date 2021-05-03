@@ -231,7 +231,8 @@
                                                     <TextBox Text="{Binding SelectedMsm.Title, Mode=OneWay, StringFormat='{}Название: {0}'}"/>
                                                     <TextBox Text="{Binding SelectedMsm.CreateTime, Mode=OneWay, StringFormat='{}Дата проведения: {0:dd.MM.yy HH:mm}'}"/>
                                                     <TextBox Text="{Binding SelectedMsm.MsmTime, Mode=OneWay, StringFormat='{}Длительность измерения: {0:F2} сек.'}"/>
-                                                    <TextBox Text="{Binding SelectedMsm.Data.Count, Mode=OneWay, StringFormat='{}Отсчетов на руку: {0:F2}'}" Visibility="Collapsed"/>
+                                                    <TextBox Text="{Binding SelectedMsm.Data.CorrelationCoef, Mode=OneWay, StringFormat='{}Коэффициент корреляции тремора: {0:F2}'}"/>
+                                                    <!--<TextBox Text="{Binding SelectedMsm.Data.Count, Mode=OneWay, StringFormat='{}Отсчетов на руку: {0:F2}'}"  Visibility="Collapsed"/>-->
                                                 </StackPanel>
                                                 <Grid DockPanel.Dock="Top" Margin="0,5">
                                                     <ListView ItemsSource="{Binding DataToShowList}" Background="Transparent" BorderThickness="0"

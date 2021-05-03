@@ -12,7 +12,7 @@
         
         Closing="Window_OnClosing"
         Title="Измерение" 
-        MinHeight="350" MinWidth="450"
+        MinHeight="350" MinWidth="500"
         Height="484"
         Width="550">
     <Grid>
@@ -80,9 +80,14 @@
                 <TabItem Header="Главное">
                     <GroupBox Header="Информация об измерении" Padding="5" MinHeight="150">
                         <DockPanel>
-                            <DockPanel DockPanel.Dock="Top" >
-                                <TextBlock DockPanel.Dock="Left"  Text="Название:" VerticalAlignment="Center" Margin="3,0"/>
-                                <TextBox Width="Auto" Text="{Binding CurrentMsm.Title, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>
+                            <DockPanel DockPanel.Dock="Top" Margin="0,0,194,0" >
+                                <TextBlock DockPanel.Dock="Left"  Text="Название:" VerticalAlignment="Center" Margin="3,0" Width="70"/>
+                                <ComboBox Name="Titles" Width="115"  IsEditable="True" ItemsSource="{Binding Path=TitlesList}" SelectedItem="{Binding Path=CurrentMsm.Title}">
+                                    
+                                </ComboBox>
+                                <!--<TextBox Width="Auto" Text="{Binding CurrentMsm.Title, Mode=TwoWay, UpdateSourceTrigger=LostFocus}"/>-->
+                               
+
                             </DockPanel>
                             <DockPanel >
                                 <Label DockPanel.Dock="Top" Content="Комментарий:" HorizontalAlignment="Left"/>

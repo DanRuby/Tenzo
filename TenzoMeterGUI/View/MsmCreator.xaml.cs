@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
+using System.Reflection;
 using System.Threading;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,10 +28,11 @@ namespace TenzoMeterGUI.View
         private MsmCreatorVM mDataContext;
         public bool? NotDialogButResult { get; set; }
 
-        /// <summary>
-        /// Результатом формы является новое измереник
-        /// </summary>
-        public Measurement Result => mDataContext == null ? null : mDataContext.CurrentMsm;
+
+    /// <summary>
+    /// Результатом формы является новое измереник
+    /// </summary>
+    public Measurement Result => mDataContext == null ? null : mDataContext.CurrentMsm;
 
         public MsmCreator()
         {
@@ -68,8 +71,8 @@ namespace TenzoMeterGUI.View
             {
                 try
                 {
-                    mDataContext.TimerProgress.Stop();
                     //mDataContext.PreClosed();
+                    mDataContext.TimerProgress.Stop();
                     DialogResult = mDataContext.DialogResult;
                 }
                 catch (Exception )
@@ -83,6 +86,10 @@ namespace TenzoMeterGUI.View
 
     public class MsmCreatorVM : Observed<MsmCreatorVM>
     {
+        /// блок данных для комбобокса имен
+        private List<string> titlesList;//= new List<string>() { "T1", "T2", "T3", "T4", "T5", "T6" };
+        public List<string> TitlesList => titlesList;
+
         /// <summary>
         /// Активность кнопки "OK" 
         /// </summary>
@@ -131,10 +138,12 @@ namespace TenzoMeterGUI.View
             CMDCancelMsm = new Command(CMDCancelMsm_Func);
             CMDStartMsm = new Command(CMDStartMsm_Func);
 
+
             DoPostSave = AppSettings.GetValue("DoPostSave", false);
             SavePath = AppSettings.GetValue("SavePath", "");
             DoPostScript = AppSettings.GetValue("DoPostScript", false);
             ScriptPath = AppSettings.GetValue("ScriptPath", "");
+            titlesList = AppSettings.GetValue("TitleNames", new List<string>() { "T1", "T2", "T3", "T4", "T5", "T6"});
 
             CurrentMsm = new Measurement();
 
@@ -357,7 +366,8 @@ namespace TenzoMeterGUI.View
         {
             PreClosed();
             StopRecord();
-            CurrentMsm = null;
+            //if(CurrentMsm.Data.HasSomeData==false)
+                CurrentMsm = null;
             EndDialog(false);
         }
 
@@ -461,6 +471,7 @@ namespace TenzoMeterGUI.View
             AppSettings.SetValue("DoPostScript", DoPostScript);
             AppSettings.SetValue("ScriptPath", ScriptPath);
             AppSettings.SetValue("DataTime", CurrentMsm.MsmTime);
+            AppSettings.SetValue("TitleNames", titlesList);
         }
     }
 }

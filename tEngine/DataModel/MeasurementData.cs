@@ -29,6 +29,12 @@ namespace tEngine.DataModel
         private List<HandGraphs> mHandsData = new List<HandGraphs>() { new HandGraphs(), new HandGraphs() };
         private double mTime;
 
+        /// <summary>
+        /// Коэффициент корреляции тремора
+        /// </summary>
+        [DataMember]
+        public float CorrelationCoef { get; private set; }
+
         [DataMember]
         public int BeginPoint
         {
@@ -121,6 +127,8 @@ namespace tEngine.DataModel
                 bool result = Async_BaseAnalys((CancellationToken)param, percentAction);
                 if (result == false)
                     ClearData();
+                else CalculateTremorCorrelationCoef();
+
                 if (finalCallBack != null)
                     finalCallBack(this, result);
                 RemoveTaskQueue(id);
@@ -130,6 +138,32 @@ namespace tEngine.DataModel
             AddTaskQueue(id, taska, cts);
 
             return id;
+        }
+
+        /// <summary>
+        /// Расчитывает коэффициент кореляции тремора
+        /// </summary>
+        private void CalculateTremorCorrelationCoef()
+        {
+            float leftAverage = (float)Left.Tremor.Mean;
+            float rightAverage = (float)Right.Tremor.Mean;
+
+            float cov = 0f;
+            float leftDeviation = 0f;
+            float rightDeviation = 0f;
+            for(int i=0;i<Left.Tremor.Count;i++)
+            {
+                float leftDiff = (float)(Left.Tremor.DataPoints[i].Y - leftAverage);
+                leftDeviation += leftDiff * leftDiff;
+                
+                float rightDiff= (float)(Right.Tremor.DataPoints[i].Y - rightAverage);
+                rightDeviation += rightDiff * rightDiff;
+
+                cov += leftDiff*rightDiff;
+            }
+            leftDeviation = (float)Math.Sqrt(leftDeviation); 
+            rightDeviation = (float)Math.Sqrt(rightDeviation);
+            CorrelationCoef = cov / (leftDeviation * rightDeviation);   
         }
 
         public void Clear()
@@ -220,7 +254,7 @@ namespace tEngine.DataModel
                         mHandsData.ForEach(hd => hd.Spectrum.Clear());
                         mHandsData.ForEach(hd => hd.AutoCorrelation.Clear());
                     }
-                }
+                } else CalculateTremorCorrelationCoef();
                 if (finalCallBack != null)
                     finalCallBack(this, result);
                 RemoveTaskQueue(id);
@@ -334,6 +368,7 @@ namespace tEngine.DataModel
             return true;
         }
 
+        #region JSON
         public bool LoadFromArray(byte[] array)
         {
             byte[][] handsData = BytesPacker.UnpackBytes(array);
@@ -373,6 +408,7 @@ namespace tEngine.DataModel
             {
                 MeasurementData obj = BytesPacker.LoadJSONObj<MeasurementData>(handsData[8]);
                 Time = obj.Time;
+                CorrelationCoef = obj.CorrelationCoef;
             }
 
             if (handsData.Length >= 11)
@@ -406,6 +442,7 @@ namespace tEngine.DataModel
 
             return handsData;
         }
+        #endregion
 
         #region TaskPool
 

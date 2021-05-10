@@ -4,6 +4,8 @@ using System.Runtime.Serialization;
 using System.Text;
 using tEngine.DataModel;
 using tEngine.Helpers;
+using System.IO;
+using System.Globalization;
 
 namespace tEngine.TMeter.DataModel
 {
@@ -93,41 +95,52 @@ namespace tEngine.TMeter.DataModel
 
         public void Msm2CSV(string filePath)
         {
-            StringBuilder sb = new StringBuilder();
-            sb.AppendLine("Time;Hz;Delta;" + "LConstant;LTremor;LSpectrum;LCorrelation;" +
-                           "RConstant;RTremor;RSpectrum;RCorrelation");
+            OutputDataRows(filePath);
+            CreateGraphs(filePath);
+        }
 
-            int length = Data.Count;
+        private void OutputDataRows(string filePath)
+        {
+             StringBuilder sb = new StringBuilder();
+             sb.AppendLine("Time;Hz;Delta;" + "LConstant;LTremor;LSpectrum;LCorrelation;" +
+                            "RConstant;RTremor;RSpectrum;RCorrelation");
 
-            double[] Time = Data.GetConst(Hands.Left).Select(dp => dp.X).ToArray();
+             int length = Data.Count;
 
-            double[] LConstant = Data.GetConst(Hands.Left).Select(dp => dp.Y).ToArray();
-            double[] LTremor = Data.GetTremor(Hands.Left).Select(dp => dp.Y).ToArray();
-            double[] RConstant = Data.GetConst(Hands.Right).Select(dp => dp.Y).ToArray();
-            double[] RTremor = Data.GetTremor(Hands.Right).Select(dp => dp.Y).ToArray();
+             double[] Time = Data.GetConst(Hands.Left).Select(dp => dp.X).ToArray();
 
-            double[] Hz = Data.GetSpectrum(Hands.Left).Select(dp => dp.X).ToArray();
-            double[] LSpectrum = Data.GetSpectrum(Hands.Left).Select(dp => dp.Y).ToArray();
-            double[] RSpectrum = Data.GetSpectrum(Hands.Right).Select(dp => dp.Y).ToArray();
+             double[] LConstant = Data.GetConst(Hands.Left).Select(dp => dp.Y).ToArray();
+             double[] LTremor = Data.GetTremor(Hands.Left).Select(dp => dp.Y).ToArray();
+             double[] RConstant = Data.GetConst(Hands.Right).Select(dp => dp.Y).ToArray();
+             double[] RTremor = Data.GetTremor(Hands.Right).Select(dp => dp.Y).ToArray();
 
-            double[] Delta = Data.GetCorrelation(Hands.Left).Select(dp => dp.X).ToArray();
-            double[] LCorrelation = Data.GetCorrelation(Hands.Left).Select(dp => dp.Y).ToArray();
-            double[] RCorrelation = Data.GetCorrelation(Hands.Right).Select(dp => dp.Y).ToArray();
+             double[] Hz = Data.GetSpectrum(Hands.Left).Select(dp => dp.X).ToArray();
+             double[] LSpectrum = Data.GetSpectrum(Hands.Left).Select(dp => dp.Y).ToArray();
+             double[] RSpectrum = Data.GetSpectrum(Hands.Right).Select(dp => dp.Y).ToArray();
 
-            for (int i = 0; i < length; i++)
-            {
-                if (i < length / 2)
-                {
-                    sb.AppendLine($"{Time[i]};{Hz[i]};{Delta[i]};{LConstant[i]};{LTremor[i]};{LSpectrum[i]};{LCorrelation[i]};" +
-                        $"{RConstant[i]};{RTremor[i]};{RSpectrum[i]};{RCorrelation[i]}");
-                }
-                else
-                {
-                    sb.AppendLine($"{Time[i]};{"\"\""};{Delta[i]};{LConstant[i]};{LTremor[i]};{"\"\""};{LCorrelation[i]};" +
-                        $"{RConstant[i]};{RTremor[i]};{"\"\""};{RCorrelation[i]}");
-                }
-            }
-            FileIO.WriteString(filePath, sb.ToString());
+             double[] Delta = Data.GetCorrelation(Hands.Left).Select(dp => dp.X).ToArray();
+             double[] LCorrelation = Data.GetCorrelation(Hands.Left).Select(dp => dp.Y).ToArray();
+             double[] RCorrelation = Data.GetCorrelation(Hands.Right).Select(dp => dp.Y).ToArray();
+
+             for (int i = 0; i < length; i++)
+             {
+                 if (i < length / 2)
+                 {
+                     sb.AppendLine($"{Time[i]};{Hz[i]};{Delta[i]};{LConstant[i]};{LTremor[i]};{LSpectrum[i]};{LCorrelation[i]};" +
+                         $"{RConstant[i]};{RTremor[i]};{RSpectrum[i]};{RCorrelation[i]}");
+                 }
+                 else
+                 {
+                     sb.AppendLine($"{Time[i]};{"\"\""};{Delta[i]};{LConstant[i]};{LTremor[i]};{"\"\""};{LCorrelation[i]};" +
+                         $"{RConstant[i]};{RTremor[i]};{"\"\""};{RCorrelation[i]}");
+                 }
+             }
+             FileIO.WriteString(filePath, sb.ToString());
+        }
+
+        private void CreateGraphs(string filePath)
+        {
+
         }
 
         public void SetData(MeasurementData data)

@@ -93,7 +93,7 @@ namespace TenzoMeterGUI.View
         /// <summary>
         /// Активность кнопки "OK" 
         /// </summary>
-        public bool ConfirmationButtonActive => CurrentMsm.Data.HasBaseData && !IsMsmRun;
+        public bool ConfirmationButtonActive => CurrentMsm.Data.HasRawData && !IsMsmRun;
 
         private bool mDoPostSave;
         private bool mDoPostScript;
@@ -255,7 +255,7 @@ namespace TenzoMeterGUI.View
 
         public bool SelectionEnable
         {
-            get => mSelectionEnable && CurrentMsm.Data.HasSomeData;
+            get => mSelectionEnable && CurrentMsm.Data.HasRawData;
             set
             {
                 mSelectionEnable = value;
@@ -308,7 +308,7 @@ namespace TenzoMeterGUI.View
                 System.Windows.Forms.MessageBox.Show(@"Введите название измерения", @"Ошибка", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
             }
-            if (CurrentMsm.Data.HasSomeData == false)
+            if (CurrentMsm.Data.HasRawData == false)
             {
                 if (System.Windows.Forms.MessageBox.Show(@"Измерение не проведено, закрыть окно?", @"Предупреждение", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == System.Windows.Forms.DialogResult.Yes)
                     EndDialog(true);

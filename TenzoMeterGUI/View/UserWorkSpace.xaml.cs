@@ -110,8 +110,14 @@ namespace TenzoMeterGUI.View
         public Command CMDSpectrumCalc { get; private set; }
         public Command CMDUpdateOxy { get; private set; }
 
+     
+
+     
+
         public UserWorkSpaceVM()
         {
+  
+
             CMDExportCSV = new Command(CMDExportCSV_Func);
             CMDResultShow = new Command(CMDResultShow_Func);
             CMDOxyPanelLoaded = new Command(CMDOxyPanelLoaded_Func);
@@ -397,7 +403,8 @@ namespace TenzoMeterGUI.View
 
         private void CMDOxyUnload_Func(object param)
         {
-            if (param is PlotViewEx == false) return;
+            if (param is PlotViewEx == false) 
+                return;
             PlotViewEx pve = (PlotViewEx)param;
             if (pve.Tag != null)
                 if (mGraphics.ContainsKey(pve.Tag))

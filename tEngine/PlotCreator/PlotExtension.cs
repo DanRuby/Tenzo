@@ -17,11 +17,19 @@ namespace tEngine.PlotCreator
     {
         private static string mSelectionTag = "SelectionMode";
 
+        /// <summary>
+        /// Добавить временной ряд на график
+        /// </summary>
+        /// <param name="ls"></param>
+        /// <param name="data"></param>
+        /// <param name="title"></param>
+        /// <param name="thickness"></param>
+        /// <param name="color"></param>
         public static void AddLineSeries(this IList<LineSeries> ls, IList<DataPoint> data, string title = "", int thickness = 1,
             Color? color = null)
         {
             if (data == null || data.Count <= 0) return;
-            LineSeries series = new OxyPlot.Series.LineSeries
+            LineSeries series = new LineSeries
             {
                 Smooth = false,
                 Title = title,
@@ -30,7 +38,6 @@ namespace tEngine.PlotCreator
                 MinimumSegmentLength = 10,
                 MarkerSize = 3,
                 MarkerStroke = OxyColors.ForestGreen,
-                //MarkerType = MarkerType.Plus
             };
             series.Points.AddRange(data);
             if (color != null) series.Color = color.Value.GetColorOxy();
@@ -310,35 +317,17 @@ namespace tEngine.PlotCreator
             });
         }
 
-        public static System.Drawing.Color GetColorDrawing(this OxyColor color)
-        {
-            return System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B);
-        }
+        public static System.Drawing.Color GetColorDrawing(this OxyColor color) => System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B);
 
-        public static System.Drawing.Color GetColorDrawing(this Color color)
-        {
-            return System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B);
-        }
+        public static System.Drawing.Color GetColorDrawing(this Color color) => System.Drawing.Color.FromArgb(color.A, color.R, color.G, color.B);
 
-        public static Color GetColorMedia(this OxyColor oxyColor)
-        {
-            return Color.FromArgb(oxyColor.A, oxyColor.R, oxyColor.G, oxyColor.B);
-        }
+        public static Color GetColorMedia(this OxyColor oxyColor) => Color.FromArgb(oxyColor.A, oxyColor.R, oxyColor.G, oxyColor.B);
 
-        public static Color GetColorMedia(this System.Drawing.Color color)
-        {
-            return Color.FromArgb(color.A, color.R, color.G, color.B);
-        }
+        public static Color GetColorMedia(this System.Drawing.Color color) => Color.FromArgb(color.A, color.R, color.G, color.B);
 
-        public static OxyColor GetColorOxy(this Color color)
-        {
-            return OxyColor.FromArgb(color.A, color.R, color.G, color.B);
-        }
+        public static OxyColor GetColorOxy(this Color color) => OxyColor.FromArgb(color.A, color.R, color.G, color.B);
 
-        public static OxyColor GetColorOxy(this System.Drawing.Color color)
-        {
-            return OxyColor.FromArgb(color.A, color.R, color.G, color.B);
-        }
+        public static OxyColor GetColorOxy(this System.Drawing.Color color) => OxyColor.FromArgb(color.A, color.R, color.G, color.B);
 
         public static IEnumerable<DataPoint> GetPoints(this Series series)
         {
@@ -396,7 +385,7 @@ namespace tEngine.PlotCreator
         public static void SetSelection(this PlotModel model, double min, double max)
         {
             RectangleAnnotation range = model.Annotations.First(an => (an.Tag != null) && an.Tag.Equals(mSelectionTag))
-                as OxyPlot.Annotations.RectangleAnnotation;
+                as RectangleAnnotation;
             if (range == null)
                 return;
             range.MinimumX = min;

@@ -10,6 +10,7 @@ namespace tEngine.PlotCreator
 {
     public class PlotModelEx : PlotModel
     {
+        public Guid ID => mID;
         private Guid mID;
 
         public PlotModelEx()
@@ -18,30 +19,22 @@ namespace tEngine.PlotCreator
             InvalidatePlot(true);
         }
 
-        private void Init()
+        public PlotModelEx(OxyPlot.Wpf.PlotView plotView)
         {
-            mID = Guid.NewGuid();
-            AcceptModelSettings();
-            //var ps = new PlotSet( this );
-            //AcceptSettings( ps );
-        }
-
-        public PlotModelEx(OxyPlot.Wpf.PlotView pv)
-        {
-            if (pv != null)
+            if (plotView != null)
             {
 
                 // определение источника, 
                 // если уже есть модель - она в приоритете
-                object source = pv;
-                IEnumerable sAxes = pv.Axes;
-                IEnumerable sSeries = pv.Series;
+                object source = plotView;
+                IEnumerable sAxes = plotView.Axes;
+                IEnumerable sSeries = plotView.Series;
 
-                if (pv.Model != null)
+                if (plotView.Model != null)
                 {
-                    source = pv.Model;
-                    sAxes = pv.Model.Axes;
-                    sSeries = pv.Model.Series;
+                    source = plotView.Model;
+                    sAxes = plotView.Model.Axes;
+                    sSeries = plotView.Model.Series;
                 }
 
 
@@ -101,11 +94,13 @@ namespace tEngine.PlotCreator
             InvalidatePlot(true);
         }
 
-        // Применить настройки c текущей модели
-        public void AcceptModelSettings()
+        /// <summary>
+        /// Обнуляет график
+        /// </summary>
+        public void ResetModel()
         {
-            PlotSet ps = new PlotSet(this);
-            AcceptSettings(ps);
+            ResetAllAxes();
+            InvalidatePlot(true);
         }
 
         /// <summary>
@@ -129,23 +124,15 @@ namespace tEngine.PlotCreator
             switch (ps.AxesStyle)
             {
                 case EAxesStyle.Boxed:
-                    axes1.PositionAtZeroCrossing = false;
-                    axes2.PositionAtZeroCrossing = false;
-                    axes1.IsAxisVisible = true;
-                    axes2.IsAxisVisible = true;
-
+                    SetAxesPositionAtCrossing(axes1, axes2, false);
+                    SetAxesVisibility(axes1, axes2,true);
                     break;
                 case EAxesStyle.Cross:
-                    axes1.PositionAtZeroCrossing = true;
-                    axes2.PositionAtZeroCrossing = true;
-                    axes1.IsAxisVisible = true;
-                    axes2.IsAxisVisible = true;
-
+                    SetAxesPositionAtCrossing(axes1, axes2, true);
+                    SetAxesVisibility(axes1, axes2, true);
                     break;
                 case EAxesStyle.None:
-                    axes1.IsAxisVisible = false;
-                    axes2.IsAxisVisible = false;
-
+                    SetAxesVisibility(axes1, axes2, false);
                     break;
             }
             axes1.TitleFontSize = ps.AxesFontSize;
@@ -155,7 +142,6 @@ namespace tEngine.PlotCreator
             PlotAreaBackground = ps.BackColor.GetColorOxy();
             Title = ps.ShowTitle ? ps.Title : "";
             TitleFontSize = ps.TitleFontSize;
-            // TitlePos = ETitlePos.Top; 
 
             Axes.Clear();
             Axes.Add(axes1);
@@ -173,19 +159,29 @@ namespace tEngine.PlotCreator
             InvalidatePlot(true);
         }
 
-        public Guid ID => mID;
-
-        public void ResetModel()
+        /// <summary>
+        /// Инициализация нового ID и настроек
+        /// </summary>
+        private void Init()
         {
-            ScaleAxes();
-            InvalidatePlot(true);
+            mID = Guid.NewGuid();
+            AcceptModelSettings();
         }
 
-        public void ScaleAxes()
+        /// <summary>
+        ///  Применить настройки c текущей модели
+        /// </summary>
+        private void AcceptModelSettings()
         {
-            ResetAllAxes();
+            PlotSet ps = new PlotSet(this);
+            AcceptSettings(ps);
         }
 
+        /// <summary>
+        /// Создает ось с предустановленными настройками
+        /// </summary>
+        /// <param name="pa"></param>
+        /// <returns></returns>
         private Axis CreateAxis(PlotAxes pa)
         {
             Axis axes;
@@ -202,23 +198,15 @@ namespace tEngine.PlotCreator
                 System.Windows.Media.Color color = pa.GridColor;
                 color.A = 200;
                 axes.MajorGridlineColor = color.GetColorOxy();
-                //axes.ExtraGridlines = //min, max -> grid          
                 if (pa.AutoGrid)
-                {
                     axes.MajorGridlineStyle = LineStyle.Solid;
-                }
             }
             axes.Title = pa.ShowTitle ? pa.Title : "";
             axes.FontSize = pa.ShowNumbers ? pa.NumbersFontSize : 0.1d;
             axes.LabelFormatter = d => GetNumber(pa.DecimalCount, pa.ExponentCount, d);
-            //AutoScale = true;
-
-            //DecimalCount = 2;
-            //ExponentCount = 3;
             if (pa.AutoScale)
             {
                 this.AutoScale();
-                //this.AutoScale(axes);
             }
             else
             {
@@ -228,6 +216,18 @@ namespace tEngine.PlotCreator
 
             Cloner.CopyAllProperties(axes, pa);
             return axes;
+        }
+
+        private static void SetAxesVisibility(Axis axes1, Axis axes2, bool visibility)
+        {
+            axes2.IsAxisVisible = visibility;
+            axes1.IsAxisVisible = visibility;
+        }
+
+        private static void SetAxesPositionAtCrossing(Axis axes1, Axis axes2, bool value)
+        {
+            axes2.PositionAtZeroCrossing = value;
+            axes1.PositionAtZeroCrossing = value;
         }
 
         /// <summary>
@@ -240,12 +240,12 @@ namespace tEngine.PlotCreator
         {
             int order = GetOrder(value);
             int E = 0;
-            string str = "{" + string.Format("0:F{0}", dec) + "}";
+            string str = "{" + $"0:F{dec}" + "}";
             if (Math.Abs(order) > exp)
             {
                 E = (int)(Math.Abs(order) - exp);
                 E *= Math.Sign(order);
-                str = string.Format("{0}e{2}{1}", str, Math.Abs(E), E >= 0 ? "+" : "-");
+                str = $"{str}e{(E >= 0 ? "+" : "-")}{Math.Abs(E)}";
             }
             str = string.Format(str, value / Math.Pow(10, E));
             return str;

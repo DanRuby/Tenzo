@@ -38,6 +38,7 @@
                                 <Image Source="/tEngine;Component/icons/plot_edit.bmp" Stretch="None" />
                             </ToggleButton.Content>
                         </ToggleButton>
+                        
                     </StackPanel>
                     <Button ToolTip="Настройки графика" Click="ButtonSettings_OnClick" HorizontalAlignment="Right">
                         <Button.Content>

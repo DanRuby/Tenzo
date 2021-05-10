@@ -299,7 +299,7 @@
                                     <TabItem Header="Графики">
                                         <Grid>
                                             <DockPanel>
-                                                <Button DockPanel.Dock="Top" Content="Пересчитать спектр и АКФ" Width="Auto" Height="35" Command="{Binding CMDSpectrumCalc}"/>
+                                                <Button DockPanel.Dock="Top" Content="Пересчитать спектр и АКФ" Width="Auto" Height="20" Command="{Binding CMDSpectrumCalc}"/>
                                                 <Grid>
                                                     <uc:PlotViewEx Visibility="Hidden" x:Name="PlotViewEx2" Loaded="PlotViewEx2_OnLoaded" Height="200" Panel.ZIndex="100" VerticalAlignment="Top"/>
 

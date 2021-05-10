@@ -15,6 +15,7 @@ using tEngine.DataModel;
 using tEngine.Helpers;
 using tEngine.MVVM;
 using tEngine.MVVM.Converters;
+using tEngine.PlotCreator;
 using tEngine.TMeter;
 using tEngine.TMeter.DataModel;
 using tEngine.UControls;
@@ -99,7 +100,14 @@ namespace TenzoMeterGUI.View
 
             foreach (FileInfo file in new DirectoryInfo(Constants.AppImageFolder).GetFiles())
             {
-                file.Delete();
+                try
+                {
+                    file.Delete();
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine(ex.Message);
+                }
             }
         }
 
@@ -257,12 +265,14 @@ namespace TenzoMeterGUI.View
         private BitmapSource GetImage(PlotViewEx pve, ResultWindowVM.PlotSetResult set, IList<DataPoint> data)
         {
             pve.Clear();
+
             if (set.Normalize)
             {
                 data = data.Normalized();
             }
             if (data.IsNullOrEmpty())
                 data = new[] { new DataPoint(0, 0) };
+
             pve.AddLineSeries(data, thickness: 2);
             pve.PlotModel.AcceptSettings(set);
 
@@ -270,7 +280,9 @@ namespace TenzoMeterGUI.View
             pve.PlotView.Background = new SolidColorBrush(System.Windows.Media.Colors.White);
             pve.Background = new SolidColorBrush(System.Windows.Media.Colors.White);
 
-            pve.ReDraw(false);
+            //Фикс бага с отрисовкой 
+            //Не учитывалось автомасштабирование
+            pve.ReDraw(set.AutoScale);
             return PlotModelToBitmap.GetBitmapFromPM(pve.PlotModel);
         }
     }

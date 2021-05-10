@@ -88,3 +88,4 @@ D:\GithubRepositories\Tenzo\TenzoMeterGUI\obj\x86\Release\TenzoMeterGUI.csproj.C
 D:\GithubRepositories\Tenzo\TenzoMeterGUI\obj\x86\Release\TenzoMeterGUI.csproj.CopyComplete
 D:\GithubRepositories\Tenzo\TenzoMeterGUI\obj\x86\Release\TenzoMeterGUI.exe
 D:\GithubRepositories\Tenzo\TenzoMeterGUI\obj\x86\Release\TenzoMeterGUI.pdb
+D:\GithubRepositories\Tenzo\TenzoMeterGUI\obj\x86\Release\TenzoMeterGUI.exe.config

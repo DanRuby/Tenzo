@@ -74,7 +74,7 @@ namespace tEngine.DataModel
 
         public bool HasCorrelation => mHandsData[(int)Hands.Left].HasAutoCorrelation && mHandsData[(int)Hands.Right].HasAutoCorrelation;
 
-        public bool HasSomeData => !(mHands[(int)Hands.Left].Constant.IsNullOrEmpty() || mHands[(int)Hands.Right].Constant.IsNullOrEmpty());
+        public bool HasRawData => !(mHands[(int)Hands.Left].Constant.IsNullOrEmpty() || mHands[(int)Hands.Right].Constant.IsNullOrEmpty());
 
         public bool HasSpectrum => mHandsData[(int)Hands.Left].HasSpectrum && mHandsData[(int)Hands.Right].HasSpectrum;
 

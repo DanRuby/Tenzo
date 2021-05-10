@@ -9,6 +9,7 @@ using System.Windows.Threading;
 using OxyPlot;
 using OxyPlot.Wpf;
 using tEngine.Helpers;
+using tEngine.MVVM;
 using tEngine.PlotCreator;
 
 namespace tEngine.UControls
@@ -22,6 +23,8 @@ namespace tEngine.UControls
         private PlotSet mPlotSet;
         private PlotView mPlotView;
         private DispatcherTimer mResizeDrawing = new DispatcherTimer();
+
+     
 
         public ImageSource Bitmap
         {
@@ -116,10 +119,13 @@ namespace tEngine.UControls
         }
 
 
+
         public void AddLineSeries(IList<DataPoint> data, string title = "", int thickness = 1,
             Color? color = null)
         {
-            if (data == null || data.Count <= 0) return;
+            if (data == null || data.Count <= 0) 
+                return;
+
             OxyPlot.Series.LineSeries series = new OxyPlot.Series.LineSeries
             {
                 Smooth = false,
@@ -132,16 +138,15 @@ namespace tEngine.UControls
                 //MarkerType = MarkerType.Plus
             };
             series.Points.AddRange(data);
-            if (color != null) series.Color = color.Value.GetColorOxy();
+            if (color != null) 
+                series.Color = color.Value.GetColorOxy();
             PlotModel.Series.Add(series);
         }
 
         public void Clear()
         {
             if (PlotModel != null)
-            {
                 PlotModel.Series.Clear();
-            }
         }
 
         /// <summary>

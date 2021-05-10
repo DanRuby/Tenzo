@@ -1,13 +1,10 @@
 ﻿using System;
 using System.ComponentModel;
 using System.Diagnostics;
-using System.Runtime.Serialization;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
-using OxyPlot;
-using OxyPlot.Axes;
 using tEngine.Helpers;
 using tEngine.MVVM;
 using UIElement = System.Windows.UIElement;
@@ -25,224 +22,6 @@ namespace tEngine.PlotCreator
     {
         Top,
         Bottom
-    }
-
-    [DataContract]
-    public class PlotSet
-    {
-        [DataMember]
-        public double AxesFontSize { get; set; }
-
-        [DataMember]
-        public PlotAxes AxesOX { get; set; }
-
-        [DataMember]
-        public PlotAxes AxesOY { get; set; }
-
-        [DataMember]
-        public EAxesStyle AxesStyle { get; set; }
-
-        [DataMember]
-        public Color BackColor { get; set; }
-
-        [DataMember]
-        public bool ShowTitle { get; set; }
-
-        [DataMember]
-        public string Title { get; set; }
-
-        [DataMember]
-        public double TitleFontSize { get; set; }
-
-        [DataMember]
-        public ETitlePos TitlePos { get; set; }
-
-        public PlotSet()
-        {
-            Init(null);
-        }
-
-        public PlotSet(PlotModelEx pm)
-        {
-            Init(pm);
-        }
-
-        public void CopyScale(PlotModel pm)
-        {
-            Axis axes1 = pm.Axes.Count > 0 ? pm.Axes[0] : null;
-            Axis axes2 = pm.Axes.Count > 1 ? pm.Axes[1] : null;
-            Debug.Assert(axes1 != null && axes2 != null);
-
-            CopyScale(AxesOY, axes1);
-            CopyScale(AxesOX, axes2);
-        }
-
-        public void CopyScale(PlotAxes dest, Axis source)
-        {
-            dest.Minimum = source.ActualMinimum;
-            dest.Maximum = source.ActualMaximum;
-        }
-
-        public void LoadFromModel(PlotModelEx pm)
-        {
-            BackColor = pm.Background.GetColorMedia();
-            Title = pm.Title;
-            TitleFontSize = (int)pm.TitleFontSize;
-            ShowTitle = true;
-            
-
-            Axis axes1 = pm.Axes.Count > 0 ? pm.Axes[0] : null;
-            Axis axes2 = pm.Axes.Count > 1 ? pm.Axes[1] : null;
-            if (axes1 == null || axes2 == null) return;
-            Debug.Assert(axes1 != null && axes2 != null);
-
-            if ((axes1.IsAxisVisible || axes2.IsAxisVisible) == false)
-                AxesStyle = EAxesStyle.None;
-            else
-                AxesStyle = (axes1.PositionAtZeroCrossing || axes2.PositionAtZeroCrossing)
-                    ? EAxesStyle.Cross
-                    : EAxesStyle.Boxed;
-
-
-            AxesFontSize = (int)axes1.FontSize;
-
-            Cloner.CopyAllProperties(AxesOY, axes1);
-            Cloner.CopyAllProperties(AxesOX, axes2);
-            CopyScale(AxesOY, axes1);
-            CopyScale(AxesOX, axes2);
-        }
-
-        public void SetDefault()
-        {
-            AxesOX.SetDefault();
-            AxesOY.SetDefault();
-            AxesStyle = EAxesStyle.Boxed;
-            BackColor = Colors.White;
-            Title = "";
-            TitleFontSize = 12; 
-            ShowTitle = true;
-            TitlePos = ETitlePos.Top;
-            AxesFontSize = 12;  
-        }
-
-        private void Init(PlotModelEx pm)
-        {
-            AxesOX = new PlotAxes();
-            AxesOY = new PlotAxes();
-            if (pm == null)
-            {
-                SetDefault();
-            }
-            else
-            {
-                LoadFromModel(pm);
-            }
-        }
-
-        #region Byte <=> Object
-
-        public byte[] ToByteArray()
-        {
-            return BytesPacker.JSONObj(this);
-        }
-
-        public bool LoadFromArray(byte[] array)
-        {
-            PlotSet obj = BytesPacker.LoadJSONObj<PlotSet>(array);
-            Cloner.CopyAllProperties(this, obj);
-            return true;
-        }
-
-        #endregion
-    }
-
-    [DataContract]
-    public class PlotAxes
-    {
-        [DataMember]
-        public bool AutoGrid { get; set; }
-
-        [DataMember]
-        public bool AutoScale { get; set; }
-
-        /// <summary>
-        /// Количество знаков после запятой
-        /// </summary>
-        [DataMember]
-        public int DecimalCount { get; set; }
-
-        /// <summary>
-        /// После какого порядка рисовать степень (по модулю, одинакого и в +, и в -)
-        /// </summary>
-        [DataMember]
-        public uint ExponentCount { get; set; }
-
-        /// <summary>
-        /// Шаг сетки
-        /// </summary>
-        [DataMember]
-        public double Grid { get; set; }
-
-        [DataMember]
-        public Color GridColor { get; set; }
-
-        [DataMember]
-        public bool IsAxisVisible { get; set; }
-
-        [DataMember]
-        public bool IsPanEnabled { get; set; }
-
-        [DataMember]
-        public bool IsZoomEnabled { get; set; }
-
-        [DataMember]
-        public bool LogScale { get; set; }
-
-        [DataMember]
-        public double Maximum { get; set; }
-
-        [DataMember]
-        public double Minimum { get; set; }
-
-        [DataMember]
-        public double NumbersFontSize { get; set; }
-
-        [DataMember]
-        public bool ShowGrid { get; set; }
-
-        [DataMember]
-        public bool ShowNumbers { get; set; }
-
-        [DataMember]
-        public bool ShowTitle { get; set; }
-
-        [DataMember]
-        public string Title { get; set; }
-
-        public PlotAxes()
-        {
-            SetDefault();
-        }
-
-        public void SetDefault()
-        {
-            LogScale = false;
-            ShowGrid = false;
-            GridColor = Colors.LightGray;
-            ShowNumbers = true;
-            AutoScale = true;
-            AutoGrid = true;
-            Minimum = 0;
-            Maximum = 10;
-            Grid = 2;
-            DecimalCount = 2;
-            ExponentCount = 3;
-            NumbersFontSize = 12; 
-            Title = "";
-            ShowTitle = true;
-            IsPanEnabled = true;
-            IsZoomEnabled = true;
-        }
     }
 
     /// <summary>
@@ -279,10 +58,7 @@ namespace tEngine.PlotCreator
             mDataContext.UpdateAllProperties();
         }
 
-        private void ColorSelect_OnClick(object sender, RoutedEventArgs e)
-        {
-            mDataContext.CMDColorSelect.DoExecute((sender as Button));
-        }
+        private void ColorSelect_OnClick(object sender, RoutedEventArgs e) => mDataContext.CMDColorSelect.DoExecute(sender as Button);
 
         private void SimpleTextBox_OnKeyDown(object sender, KeyEventArgs e)
         {
@@ -325,6 +101,18 @@ namespace tEngine.PlotCreator
         public Command CMDColorSelect { get; private set; }
         public Command CMDOkButton { get; private set; }
 
+        public PlotSettingsVM()
+        {
+            CMDColorSelect = new Command(CMDColorSelect_Func);
+            CMDOkButton = new Command(CMDOkButton_Func);
+            CMDAcceptButton = new Command(CMDAcceptButton_Func);
+            CMDCancelButton = new Command(CMDCancelButton_Func);
+
+            PlotSet = PlotSet ?? new PlotSet();
+
+            UpdateAllProperties();
+        }
+
         public PlotModelEx PlotModel
         {
             get => mPlotModel;
@@ -346,28 +134,9 @@ namespace tEngine.PlotCreator
             }
         }
 
-        public PlotSettingsVM()
-        {
-            CMDColorSelect = new Command(CMDColorSelect_Func);
-            CMDOkButton = new Command(CMDOkButton_Func);
-            CMDAcceptButton = new Command(CMDAcceptButton_Func);
-            CMDCancelButton = new Command(CMDCancelButton_Func);
 
-            PlotSet = PlotSet ?? new PlotSet();
 
-            UpdateAllProperties();
-        }
-
-        private void CMDAcceptButton_Func()
-        {
-            if (AcceptSettingsAction != null)
-                AcceptSettingsAction(PlotSet);
-        }
-
-        private void CMDCancelButton_Func()
-        {
-            EndDialog(false);
-        }
+        private void CMDAcceptButton_Func() => AcceptSettingsAction?.Invoke(PlotSet);
 
         /// <summary>
         /// Принимает саму кнопку
@@ -387,9 +156,7 @@ namespace tEngine.PlotCreator
             }
         }
 
-        private void CMDOkButton_Func()
-        {
-            EndDialog(true);
-        }
+        private void CMDCancelButton_Func() => EndDialog(false);
+        private void CMDOkButton_Func() => EndDialog(true);
     }
 }

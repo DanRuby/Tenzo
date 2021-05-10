@@ -20,9 +20,9 @@ namespace tEngine.Recorder
 #endif
         public string DllName = "none";
         private IntPtr mDLLFile = IntPtr.Zero;
-        private DLLIsConnect mDLLIsConnect = null;
+        private DLLIsConnected mDLLIsConnected = null;
         private USBInit mUSBInit = null;
-        private USBIsConnect mUSBIsConnect = null;
+        private USBIsConnected mUSBIsConnected = null;
         private USBReadData mUSBReadData = null;
         private USBWriteData mUSBWriteData = null;
 
@@ -45,7 +45,7 @@ namespace tEngine.Recorder
                 if (addr == IntPtr.Zero)
                     continue;
 
-                DLLIsConnect check = (DLLIsConnect)Marshal.GetDelegateForFunctionPointer(addr, typeof(DLLIsConnect));
+                DLLIsConnected check = (DLLIsConnected)Marshal.GetDelegateForFunctionPointer(addr, typeof(DLLIsConnected));
 
                 if (check() == true)
                 {
@@ -79,8 +79,8 @@ namespace tEngine.Recorder
         {
             try
             {
-                if (mUSBIsConnect != null)
-                    return mUSBIsConnect();
+                if (mUSBIsConnected != null)
+                    return mUSBIsConnected();
                 return false;
             }
             catch (Exception ex)
@@ -95,8 +95,8 @@ namespace tEngine.Recorder
         {
             try
             {
-                if (mDLLIsConnect != null)
-                    return mDLLIsConnect();
+                if (mDLLIsConnected != null)
+                    return mDLLIsConnected();
                 return false;
             }
             catch (Exception ex)
@@ -159,13 +159,13 @@ namespace tEngine.Recorder
             try
             {
                 IntPtr addr = NativeMethods.GetProcAddress(dll, "DLLIsConnect");
-                mDLLIsConnect = (DLLIsConnect)Marshal.GetDelegateForFunctionPointer(addr, typeof(DLLIsConnect));
+                mDLLIsConnected = (DLLIsConnected)Marshal.GetDelegateForFunctionPointer(addr, typeof(DLLIsConnected));
 
                 addr = NativeMethods.GetProcAddress(dll, "USBInit");
                 mUSBInit = (USBInit)Marshal.GetDelegateForFunctionPointer(addr, typeof(USBInit));
 
                 addr = NativeMethods.GetProcAddress(dll, "USBIsConnect");
-                mUSBIsConnect = (USBIsConnect)Marshal.GetDelegateForFunctionPointer(addr, typeof(USBIsConnect));
+                mUSBIsConnected = (USBIsConnected)Marshal.GetDelegateForFunctionPointer(addr, typeof(USBIsConnected));
 
                 addr = NativeMethods.GetProcAddress(dll, "USBReadData");
                 mUSBReadData = (USBReadData)Marshal.GetDelegateForFunctionPointer(addr, typeof(USBReadData));
@@ -195,10 +195,10 @@ namespace tEngine.Recorder
         }
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool DLLIsConnect();
+        private delegate bool DLLIsConnected();
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
-        private delegate bool USBIsConnect();
+        private delegate bool USBIsConnected();
 
         [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
         private delegate bool USBInit();

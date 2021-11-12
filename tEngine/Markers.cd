@@ -25,5 +25,47 @@
       <FileName>Markers\MarkerWithHole.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="tEngine.Helpers.ImageHelper">
+    <Position X="15.5" Y="2.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Helpers\ImageHelper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tEngine.Helpers.WindowManager" Collapsed="true">
+    <Position X="15.75" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AABAAAAAAAAAAAAAEARAAAAAAABAAAAAAAAAAACAAAI=</HashCode>
+      <FileName>Helpers\WindowManager.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tEngine.Helpers.Cloner" Collapsed="true">
+    <Position X="15.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAIAAABA=</HashCode>
+      <FileName>Helpers\Cloner.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tEngine.Helpers.AppSettings">
+    <Position X="13.75" Y="1" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAIAAIAAIAgAIgAAAAQAAAAAAAAAAAgAgAACAAAAAAA=</HashCode>
+      <FileName>Helpers\AppSettings.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tEngine.Helpers.FileIO">
+    <Position X="15" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAgAAAAAAQAAAAUAAAAAAAAAAIQA=</HashCode>
+      <FileName>Helpers\FileIO.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tEngine.Markers.Drawer">
+    <Position X="17.75" Y="3.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAQAAAAIAAAAAAAAAAAAQAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>Markers\Drawer.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

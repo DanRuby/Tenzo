@@ -349,9 +349,11 @@ namespace TenzoMeterGUI.View
                         SelectedMsm.Msm2CSV(sfd.FileName);
                         MessageBox.Show("Измерение записано в файл " + sfd.FileName, "Сообщение", MessageBoxButton.OK);
                     }
-                    catch (Exception)
+                    catch (Exception ex)
                     {
-                        MessageBox.Show("Ошибка записи файла", "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        MessageBox.Show("В процессе сохранения произошла ошибка "+ex.Message, "Ошибка", MessageBoxButton.OK, MessageBoxImage.Error);
+                        Debug.WriteLine(ex.StackTrace);
+                        Debug.WriteLine(ex.Message);
                     }
                 }
             }

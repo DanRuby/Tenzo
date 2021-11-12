@@ -32,6 +32,10 @@ namespace tEngine.TMeter.DataModel
 
         public User() => Init();
 
+        /// <summary>
+        /// Метод добавления измерения 
+        /// </summary>
+        /// <param name="msm">Добавляемое измерение</param>
         public void AddMsm(Measurement msm)
         {
             msm.Owner=this;
@@ -107,14 +111,22 @@ namespace tEngine.TMeter.DataModel
             }
         }
 
+        /// <summary>
+        /// Удалить измерение
+        /// </summary>
+        /// <param name="msm">Удаляемое измерение</param>
         public void RemoveMsm(Measurement msm)
         {
             mMsms.Remove(msm);
+            //Сигнализация об изменении коллекции
             RaisePropertyChanged(()=>Measurements);
             RaisePropertyChanged(() => Measurements.Count);
             IsNotSaveChanges = true;
         }
-
+        /// <summary>
+        /// Восстановить сохраненные поля
+        /// </summary>
+        /// <returns>Успех операции</returns>
         public bool RollBack()
         {
             byte[] bytes;
@@ -125,7 +137,10 @@ namespace tEngine.TMeter.DataModel
             }
             return false;
         }
-
+        /// <summary>
+        /// Сохранить в файл по умолчанию
+        /// </summary>
+        /// <returns>Успех операции</returns>
         public bool SaveDefaultPath()
         {
             string filepath = DefaultPath(this);
@@ -147,14 +162,20 @@ namespace tEngine.TMeter.DataModel
             return str;
         }
 
-
+        /// <summary>
+        /// Получить путь по умолчанию
+        /// </summary>
+        /// <param name="user">Пользователь, для которого нужно получить путь</param>
+        /// <returns>Путь к файлу сохранения</returns>
         private string DefaultPath(User user)
         {
             string filepath = Constants.UsersFolder.CorrectSlash();
             filepath += user.ID + Constants.USER_EXT;
             return filepath;
         }
-
+        /// <summary>
+        /// Метод инициализации объекта
+        /// </summary>
         private void Init()
         {
             ID = Guid.NewGuid();
@@ -169,7 +190,11 @@ namespace tEngine.TMeter.DataModel
             Measurement[] enumerable = msms as Measurement[] ?? msms.ToArray();
             return enumerable.Any() ? enumerable[0] : null;
         }
-
+        /// <summary>
+        /// Сохранить данные объекта
+        /// </summary>
+        /// <param name="filePath">Путь к файлу сохранения</param>
+        /// <returns>Успех операции</returns>
         private bool Save(string filePath)
         {
             try
@@ -184,8 +209,15 @@ namespace tEngine.TMeter.DataModel
         }
 
         #region INotifyProoperty implementation
+        /// <summary>
+        /// Событие изменения свойства. Вызывается внутри метода RaisePropertyChanged()
+        /// </summary>
         public event PropertyChangedEventHandler PropertyChanged;
-
+        /// <summary>
+        /// Оповестить об изменении свойства
+        /// </summary>
+        /// <typeparam name="T">Тип свойства</typeparam>
+        /// <param name="raiser">Имя свойства</param>
         void RaisePropertyChanged<T>(Expression<Func<T>> raiser)
         {
             var e = PropertyChanged;
@@ -195,11 +227,15 @@ namespace tEngine.TMeter.DataModel
                 e(this, new PropertyChangedEventArgs(propName));
             }
         }
+        /// <summary>
+        /// Оповестить об изменении списка измерений
+        /// </summary>
         public void NotifyMeasurmentChanged()
         {
             RaisePropertyChanged(() => Measurements);
             RaisePropertyChanged(() => Measurements.Count);
         }
+        
         #endregion
 
        
@@ -267,7 +303,10 @@ namespace tEngine.TMeter.DataModel
         #endregion
 
         #region Byte <=> Object
-
+        /// <summary>
+        /// Метод для сериализации объекта в массив байтов
+        /// </summary>
+        /// <returns>Массив байтов</returns>
         public byte[] ToByteArray()
         {
             byte[] obj = BytesPacker.JSONObj(this);
@@ -280,7 +319,11 @@ namespace tEngine.TMeter.DataModel
             byte[] msms = BytesPacker.PackBytes(msmData);
             return BytesPacker.PackBytes(obj, msms);
         }
-
+        /// <summary>
+        /// Метод для десериализации объекта из массива байт
+        /// </summary>
+        /// <param name="array">Массив байт</param>
+        /// <returns>Успех операции</returns>
         public bool LoadFromArray(byte[] array)
         {
             byte[][] objData = BytesPacker.UnpackBytes(array);

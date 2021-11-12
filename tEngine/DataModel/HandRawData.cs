@@ -43,14 +43,20 @@ namespace tEngine.DataModel
             Tremor = new List<short>();
             ResetPoints();
         }
-
+        /// <summary>
+        /// Очистка хранимых данных
+        /// </summary>
         public void Clear()
         {
             Constant.Clear();
             Tremor.Clear();
             ResetPoints();
         }
-
+        /// <summary>
+        /// Десериализация объекта из массива байтов
+        /// </summary>
+        /// <param name="array">Массив байтов</param>
+        /// <returns>Успех операции</returns>
         public bool LoadFromArray(byte[] array)
         {
             byte[][] data = BytesPacker.UnpackBytes(array);
@@ -60,7 +66,13 @@ namespace tEngine.DataModel
             Tremor = data[1].GetCollectionInt16().ToList();
             return true;
         }
-
+        /// <summary>
+        /// Перегрузка оператора +
+        /// Конкатинирует два списка
+        /// </summary>
+        /// <param name="a"></param>
+        /// <param name="b"></param>
+        /// <returns>Объект с соединенными списками</returns>
         public static HandRawData operator +(HandRawData a, HandRawData b)
         {
             if (a == null)
@@ -80,9 +92,14 @@ namespace tEngine.DataModel
             result.ResetPoints();
             return result;
         }
-
+        /// <summary>
+        /// Сериализация объекта в массив байтов
+        /// </summary>
+        /// <returns>Масиив байтов</returns>
         public byte[] ToByteArray() => BytesPacker.PackBytes(Constant.ToByteArray(), Tremor.ToByteArray());
-
+        /// <summary>
+        /// Сбрасывает начальную и конечную точку
+        /// </summary>
         private void ResetPoints()
         {
             BeginPoint = 0;

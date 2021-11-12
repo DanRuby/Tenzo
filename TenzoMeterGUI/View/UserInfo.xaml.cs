@@ -6,7 +6,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows;
-using System.Windows.Forms;
 using System.Windows.Input;
 using tEngine.Helpers;
 using tEngine.MVVM;
@@ -105,7 +104,6 @@ namespace TenzoMeterGUI.View
             }
         }
 
-        //public Command CMDBrowse { get; private set; }
         public Command CMDCancel { get; private set; }
         public Command CMDCreate { get; private set; }
 
@@ -113,7 +111,6 @@ namespace TenzoMeterGUI.View
         {
             CMDCreate = new Command(CreateCommandMethod);
             CMDCancel = new Command(CancelCommandMethod);
-            //CMDBrowse = new Command(BrowseCommandMehod);
 
             DirPaths = AppSettings.GetValue("LastDirPaths", DirPaths ?? new Stack<string>());
             DirPaths.Push(Constants.AppDataFolder);
@@ -145,19 +142,11 @@ namespace TenzoMeterGUI.View
                 .ForEach(info => { NotifyPropertyChanged(info.Name); });
         }
 
-        //private void BrowseCommandMehod()
-        //{
-        //    FolderBrowserDialog ofd = new FolderBrowserDialog();
-        //    DirectoryInfo dinfo = new DirectoryInfo(CurrentDir);
-        //    if (dinfo.Exists)
-        //        ofd.SelectedPath = dinfo.FullName + @"\";
-        //    if (ofd.ShowDialog() == System.Windows.Forms.DialogResult.OK)
-        //    {
-        //        CurrentDir = ofd.SelectedPath;
-        //    }
-        //}
-
-        private void CancelCommandMethod() => EndDialog(dialogResult: false);
+        private void CancelCommandMethod()
+        {
+            mUser.RollBack();
+            EndDialog(dialogResult: false);
+        }
 
         /// <summary>
         /// Проверяет корректность ввода фамилии, имени и отчества

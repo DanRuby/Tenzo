@@ -213,7 +213,7 @@ namespace tEngine.Recorder
         /// <summary>
         /// Получает байты от тензометра
         /// </summary>
-        /// <returns></returns>
+        /// <returns>Массив байтов размера 64, хранящих пакет</returns>
         internal byte[] GetBytes()
         {
             byte[] buffer = new byte[Packet.PACKET_SIZE];
@@ -237,7 +237,11 @@ namespace tEngine.Recorder
             isRun = false;
             mRunTask = new TaskFactory().StartNew(Run);
         }
-
+        /// <summary>
+        /// Проверка пакета на правильность
+        /// </summary>
+        /// <param name="packet">Пакет данных</param>
+        /// <returns>true, если пакет не является копией и корректен. Иначе - false</returns>
         private bool PacketIsValidAndNotaCopy(Packet packet)
         {
             if (mLastPacketId == null)
@@ -318,11 +322,6 @@ namespace tEngine.Recorder
                                 SendPacket(packet);
                             }
                         }
-                        //else if (packet.Command == Commands.FromDevice.ADCCHECK)
-                        //{
-                        //    //if( AdcTestCallBack != null )
-                        //    //    AdcTestCallBack( pack.DataReadyM2, pack.ADCDataM2 );
-                        //}
                         else
                         {
                             Counters.InvalidPack++;

@@ -15,9 +15,9 @@
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="Constant" />
-      <Property Name="Tremor" />
-      <Property Name="Spectrum" />
       <Property Name="AutoCorrelation" />
+      <Property Name="Spectrum" />
+      <Property Name="Tremor" />
     </ShowAsAssociation>
   </Class>
   <Class Name="tEngine.DataModel.HandRawData">
@@ -29,9 +29,6 @@
   </Class>
   <Class Name="tEngine.DataModel.MeasurementData">
     <Position X="5.25" Y="3.25" Width="1.5" />
-    <Compartments>
-      <Compartment Name="Methods" Collapsed="true" />
-    </Compartments>
     <NestedTypes>
       <Enum Name="tEngine.DataModel.MeasurementData.DataMode" Collapsed="true">
         <TypeIdentifier>
@@ -39,10 +36,21 @@
         </TypeIdentifier>
       </Enum>
     </NestedTypes>
+    <AssociationLine Name="mHandsData" Type="tEngine.DataModel.HandGraphs" ManuallyRouted="true">
+      <Path>
+        <Point X="6.75" Y="11.807" />
+        <Point X="10.008" Y="11.807" />
+        <Point X="10.008" Y="2.824" />
+      </Path>
+    </AssociationLine>
     <TypeIdentifier>
-      <HashCode>gkAAACoCACAAcAAiEKAAQAQYyAAADAkJDKGEADBBYQE=</HashCode>
+      <HashCode>gkAAACoCACAAcAAiEKAAQAQQyAAADAkJDKGEADBBYQE=</HashCode>
       <FileName>DataModel\MeasurementData.cs</FileName>
     </TypeIdentifier>
+    <ShowAsAssociation>
+      <Property Name="Left" />
+      <Property Name="Right" />
+    </ShowAsAssociation>
     <ShowAsCollectionAssociation>
       <Field Name="mHands" />
       <Field Name="mHandsData" />

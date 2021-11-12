@@ -2,29 +2,6 @@
 <ClassDiagram MajorVersion="1" MinorVersion="1">
   <Class Name="tEngine.Recorder.Device">
     <Position X="3" Y="2.75" Width="2.25" />
-    <Members>
-      <Method Name="Abort" Hidden="true" />
-      <Method Name="AbortAll" Hidden="true" />
-      <Field Name="AdcTestCallBack" Hidden="true" />
-      <Method Name="CreateDevice" Hidden="true" />
-      <Method Name="Device" Hidden="true" />
-      <Field Name="Devices" Hidden="true" />
-      <Method Name="GetBytes" Hidden="true" />
-      <Method Name="GetDevice" Hidden="true" />
-      <Method Name="GetState" Hidden="true" />
-      <Field Name="isAbort" Hidden="true" />
-      <Method Name="IsDllLoad" Hidden="true" />
-      <Field Name="isRun" Hidden="true" />
-      <Field Name="mCallBacks" Hidden="true" />
-      <Field Name="mDemoMode" Hidden="true" />
-      <Field Name="mDeviceState" Hidden="true" />
-      <Field Name="mLock" Hidden="true" />
-      <Field Name="mRunTask" Hidden="true" />
-      <Method Name="SetMode" Hidden="true" />
-    </Members>
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
     <NestedTypes>
       <Enum Name="tEngine.Recorder.Device.WorkMode" Collapsed="true">
         <TypeIdentifier>
@@ -44,34 +21,13 @@
   </Class>
   <Class Name="tEngine.Recorder.Collector">
     <Position X="6.5" Y="6.75" Width="1.5" />
-    <Members>
-      <Method Name="Collector" Hidden="true" />
-      <Field Name="DllName" Hidden="true" />
-      <Field Name="FakeFirst" Hidden="true" />
-      <Field Name="FakePackID" Hidden="true" />
-      <Property Name="FakeRequestId" Hidden="true" />
-      <Field Name="FakeRequestID" Hidden="true" />
-      <Method Name="FakeSin" Hidden="true" />
-      <Method Name="InitMethods" Hidden="true" />
-      <Field Name="mDLLFile" Hidden="true" />
-      <Field Name="mDLLIsConnected" Hidden="true" />
-      <Field Name="mUSBInit" Hidden="true" />
-      <Field Name="mUSBIsConnected" Hidden="true" />
-      <Field Name="mUSBReadData" Hidden="true" />
-      <Field Name="mUSBWriteData" Hidden="true" />
-      <Method Name="ReadFakeData" Hidden="true" />
-      <Method Name="UnLoad" Hidden="true" />
-    </Members>
-    <Compartments>
-      <Compartment Name="Fields" Collapsed="true" />
-    </Compartments>
     <NestedTypes>
-      <Class Name="tEngine.Recorder.Collector.NativeMethods">
+      <Class Name="tEngine.Recorder.Collector.NativeMethods" Collapsed="true">
         <TypeIdentifier>
           <NewMemberFileName>Recorder\Collector.cs</NewMemberFileName>
         </TypeIdentifier>
       </Class>
-      <Delegate Name="tEngine.Recorder.Collector.DLLIsConnected" Collapsed="true">
+      <Delegate Name="tEngine.Recorder.Collector.DLLIsConnected">
         <TypeIdentifier>
           <NewMemberFileName>Recorder\Collector.cs</NewMemberFileName>
         </TypeIdentifier>
@@ -115,6 +71,7 @@
     </TypeIdentifier>
     <ShowAsAssociation>
       <Property Name="PPS" />
+      <Property Name="ValidPPS" />
     </ShowAsAssociation>
   </Class>
   <Class Name="tEngine.Recorder.PacketsPerSecondCounter">
@@ -122,6 +79,20 @@
     <TypeIdentifier>
       <HashCode>AAACAAAAAAAAAAAAIAAAAAAAAAAACAAAAAAAAABAAAA=</HashCode>
       <FileName>Recorder\PacketsPerSecondCounter.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="tEngine.Recorder.Packet">
+    <Position X="12.25" Y="6.5" Width="1.5" />
+    <NestedTypes>
+      <Struct Name="tEngine.Recorder.Packet.PacketStruct" Collapsed="true">
+        <TypeIdentifier>
+          <NewMemberFileName>Recorder\Packet.cs</NewMemberFileName>
+        </TypeIdentifier>
+      </Struct>
+    </NestedTypes>
+    <TypeIdentifier>
+      <HashCode>AEAAgABIBAAAAAQAAAoARAAAAEIAAEAACACAAAAAQAA=</HashCode>
+      <FileName>Recorder\Packet.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Enum Name="tEngine.Recorder.DeviceStates">
